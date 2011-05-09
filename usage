@@ -1,0 +1,20 @@
+xray [option] target           # scan target with specified rules
+'option' can be:
+    --js                       # scan javascript files only
+    --css                      # scan css files only
+    --html                     # scan html files only
+    --rule=/path/to/rule/file  # with specified rule file
+
+'target' can be one file, files or folder(s)
+
+output:
+1. perfect (no fatals, warnings or notice)
+    Congraturations! Your codes are very good.
+2. with fatals, warnings or notice
+    Total: 0 fatals, 1 warnings, 0 notice
+    [fileN]
+    F - R:C Rule-Message
+    W - R:C Rule-Message
+    N - R:C Rule-Message
+    
+
