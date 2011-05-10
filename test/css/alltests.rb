@@ -1,7 +1,5 @@
-require 'test/unit'
-require 'cls-xray-test'
-require 'cls-xray-test-rule'
-require 'css/xray-test-css-star'
+$LOAD_PATH << File.dirname(File.expand_path(__FILE__))
+require 'xray-test-css-star'
 
 module XRayTest; module CSS; module Rule
 

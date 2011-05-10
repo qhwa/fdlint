@@ -2,8 +2,10 @@ $LOAD_PATH << '.'
 $LOAD_PATH << '../lib'
 require 'xray'
 require 'test/unit'
-require 'xray-test-css'
-require 'css/parser/xray-css-parser-test'
+require 'cls-xray-test'
+require 'cls-xray-test-rule'
+require 'css/alltests'
+require 'css/parser/alltests'
 
 class XRayTest_All
 
