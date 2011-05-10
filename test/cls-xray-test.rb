@@ -1,17 +1,18 @@
-require 'test/unit'
+module XRayTest
 
-class XRayTest < Test::Unit::TestCase
+    class XRayTestCase < Test::Unit::TestCase
 
-    def setup
-        # '.xrr' means 'xray rules'
-        @ray = XRay.new( :rules=>'sample_css_rule.xrr' )
+        def setup
+            # '.xrr' means 'xray rules'
+            @ray = XRay.new( :rules=>'sample_css_rule.xrr' )
+        end
+
+        def teardown
+        end
+
+        def xray
+            @ray
+        end
+
     end
-
-    def teardown
-    end
-
-    def xray
-        @ray
-    end
-
 end
