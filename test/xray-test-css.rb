@@ -1,7 +1,7 @@
 $LOAD_PATH << '.'
 require 'test/unit'
-require 'xray-test'
-require 'xray-test-rule'
+require 'cls-xray-test'
+require 'cls-xray-test-rule'
 require 'css/xray-test-css-star'
 
 class Test_AllCSSTest

@@ -1,5 +1,3 @@
-require 'xray-test'
-
 class XRayRuleTest < XRayTest
 
     def check_css( css, param )
