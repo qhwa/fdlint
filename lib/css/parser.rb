@@ -13,9 +13,11 @@ module XRay
     class Parser
       attr_accessor :log
       
-      def initialize(css)
-        log 'initialize'
+      def initialize(css, log = nil)
+        @log = log
         
+        log 'initialize'
+        css = filter(css)
         @scanner = StringScanner.new(css)
       end
 
@@ -69,20 +71,40 @@ module XRay
         semicolon = @scanner.check(/\s*}\s*/) ? /;?/ : /;/
         pass semicolon
         
-        log "   [#{property}: #{expression}]"
-        
         Declaration.new(property, expression)
       end
       
       def parse_property
-        scan /[^:]+/
+        log '     parse property'
+        property = scan /[^:]+/
+        log "     [#{property}]"
+        property
       end
       
       def parse_expression
-        scan /[^;}]+/
+        log '     parse expression'
+        quot_expr = "[^;}]*'[^']*'[^;}]*"
+        dquot_expr = '[^;}]*"[^"]*"[^;}]*'
+        term = '[^;}]+'
+        
+        expr = scan %r"(?:#{quot_expr})|(?:#{dquot_expr})|(?:#{term})"
+        log "     [#{expr}]"
+        expr
       end
       
       private
+      
+      def filter(css)
+        filter_comment css
+      end
+      
+      def filter_comment(css)
+        re_comment = /\/\*[^*]*\*+([^\/*][^*]*\*+)*\//
+        css.gsub(re_comment) do |m| 
+          log "ignore comments: \n#{m}"
+          ' ' * m.length
+        end
+      end
 
       def skip_empty
         @scanner.skip(/\s*/)
