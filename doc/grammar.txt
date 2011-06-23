@@ -1,0 +1,9 @@
+stylesheet :
+	ruleset*
+
+ruleset :
+	selector '{' declaration* '}'
+
+declaration :
+	property : expression ';'
+
