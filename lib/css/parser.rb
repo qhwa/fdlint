@@ -102,7 +102,7 @@ module XRay
         re_comment = /\/\*[^*]*\*+([^\/*][^*]*\*+)*\//
         css.gsub(re_comment) do |m| 
           log "ignore comments: \n#{m}"
-          ' ' * m.length
+          m.gsub(/\S/, ' ')
         end
       end
 
