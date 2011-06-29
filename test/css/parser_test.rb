@@ -1,4 +1,3 @@
-require 'strscan'
 require 'logger'
 
 require_relative '../helper'
@@ -43,33 +42,33 @@ module XRayTest
         
         # body
         rs = rulesets[0]
-        assert_equal 'body', rs.selector
+        assert_equal 'body', rs.selector.text
         
         decs = rs.declarations
         assert_equal 2, decs.length
         
         dec = decs[0];
-        assert_equal 'color', dec.property
-        assert_equal '#333', dec.expression
+        assert_equal 'color', dec.property.text
+        assert_equal '#333', dec.expression.text
         
         dec = decs[1];
-        assert_equal 'background', dec.property
-        assert_equal '#ffffff url(img/bg.png) no-repeat left top', dec.expression
+        assert_equal 'background', dec.property.text
+        assert_equal '#ffffff url(img/bg.png) no-repeat left top', dec.expression.text
         
         # #content
         rs = rulesets[1]
-        assert_equal '#content', rs.selector
+        assert_equal '#content', rs.selector.text
         
         decs = rs.declarations
         assert_equal 1, decs.length
         
         dec = decs[0];
-        assert_equal 'font-size', dec.property
-        assert_equal '12px', dec.expression
+        assert_equal 'font-size', dec.property.text
+        assert_equal '12px', dec.expression.text
         
         # a:hover
         rs = rulesets[2]
-        assert_equal 'a:hover', rs.selector
+        assert_equal 'a:hover', rs.selector.text
       end
       
       def test_parse_with_doc_comment
@@ -95,7 +94,7 @@ module XRayTest
 
         assert_equal 3, sheet.rulesets.length
         rs = sheet.rulesets[1]
-        assert_equal 'div a.open', rs.selector
+        assert_equal 'div a.open', rs.selector.text
       end
       
       def test_parse_with_inline_comment
@@ -117,8 +116,8 @@ module XRayTest
         rs = sheet.rulesets[1]
         dec = rs.declarations[0]
         
-        assert_equal 'color', dec.property
-        assert_equal '#f7300', dec.expression
+        assert_equal 'color', dec.property.text
+        assert_equal '#f7300', dec.expression.text
       end
       
       def test_parse_expression_with_special
@@ -126,7 +125,7 @@ module XRayTest
         parser = create_parser(css)
         
         expr = parser.parse_expression
-        assert_equal css, expr
+        assert_equal css, expr.text
       end
       
       def test_parse_with_special
@@ -140,18 +139,18 @@ module XRayTest
         sheet = parser.parse_stylesheet
         
         rs = sheet.rulesets[0]
-        assert_equal 'div ul>li:first', rs.selector
+        assert_equal 'div ul>li:first', rs.selector.text
         
         decs = rs.declarations
         assert_equal 2, decs.length
         
         dec = decs[0]
-        assert_equal 'content', dec.property
-        assert_equal %q['{123}hello"'], dec.expression
+        assert_equal 'content', dec.property.text
+        assert_equal %q['{123}hello"'], dec.expression.text
         
         dec = decs[1]
-        assert_equal 'background', dec.property
-        assert_equal %q[url("http://alibaba.com/{123}456")], dec.expression
+        assert_equal 'background', dec.property.text
+        assert_equal %q[url("http://alibaba.com/{123}456")], dec.expression.text
       end
       
       def create_parser(css)

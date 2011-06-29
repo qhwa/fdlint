@@ -1,26 +1,11 @@
-require 'strscan'
-
-require_relative '../parse_error'
+require_relative '../base_parser'
+require_relative 'struct'
 
 module XRay
   module CSS
     
-    StyleSheet = Struct.new(:rulesets)
-    RuleSet = Struct.new(:selector, :declarations)
-    Declaration = Struct.new(:property, :expression)
-    
-    
-    class Parser
-      attr_accessor :log
+    class Parser < XRay::BaseParser
       
-      def initialize(css, log = nil)
-        @log = log
-        
-        log 'initialize'
-        css = filter(css)
-        @scanner = StringScanner.new(css)
-      end
-
       def parse_stylesheet
         log 'parse stylesheet'
         
@@ -52,7 +37,7 @@ module XRay
       def parse_selector
         log ' parse selector'
         selector = scan /[^\{]+/
-        log " [#{selector}]"
+        log " [#{selector}] #{selector.position}"
         selector
       end
       
@@ -77,7 +62,7 @@ module XRay
       def parse_property
         log '     parse property'
         property = scan /[^:]+/
-        log "     [#{property}]"
+        log "     [#{property}] #{property.position}"
         property
       end
       
@@ -88,13 +73,19 @@ module XRay
         term = '[^;}]+'
         
         expr = scan %r"(?:#{quot_expr})|(?:#{dquot_expr})|(?:#{term})"
-        log "     [#{expr}]"
+        log "     [#{expr}] #{expr.position}"
         expr
       end
-      
+     
+      protected 
+
+      def filter_text(css)
+        filter_css(css)
+      end
+
       private
       
-      def filter(css)
+      def filter_css(css)
         filter_comment css
       end
       
@@ -106,39 +97,6 @@ module XRay
         end
       end
 
-      def skip_empty
-        @scanner.skip(/\s*/)
-      end
-      
-      def pass(pattern)
-        skip_empty
-        unless @scanner.skip(pattern)
-          raise ParseError
-        end
-      end
-      
-      def scan(pattern)
-        skip_empty
-        result = @scanner.scan(pattern)
-        result ? result.strip : error
-      end
-      
-      def batch(name, &block)
-        result = []
-        while (block ? block.call : true) && item = send(name)
-          result << item
-        end
-        result
-      end
-      
-      def error
-        raise ParseError
-      end
-      
-      def log(message)
-        @log && @log.info('CSS Parser: ' + message)
-      end
-      
     end
     
   end
