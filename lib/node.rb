@@ -2,8 +2,7 @@ module XRay
 
   class Node
 
-    attr_reader :text
-    attr_reader :position
+    attr_reader :text, :position
 
     def initialize(text = '', position = nil)
       @text, @position = text, position
