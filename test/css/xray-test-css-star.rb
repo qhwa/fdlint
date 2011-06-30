@@ -33,7 +33,7 @@ module XRayTest
                     expect.file_name    = nil
                     expect.row          = 0
                     expect.col          = text.index( '*' )
-                    expect.level        = LEVEL_INFO
+                    expect.level        = :info
 
                     assert_equal [ expect ], result, 'hack性质的星号，应该以notice级别提醒'
                 end

@@ -1,3 +1,4 @@
+# encoding: utf-8
 require_relative 'helper'
 
 require 'position_info'
@@ -7,42 +8,42 @@ module XRayTest
   class PositionInfoTest < Test::Unit::TestCase
 
     PositionInfo = XRay::PositionInfo
+    Position = XRay::Position
+
+    @@test_paragraph = %(this is line one
+   this is line two this is line two  
+ this is line three  
+       this is ine 4   )
+
+    def test_position_of_first_line
+        text, info, lines = prepair @@test_paragraph
+        len = lines[0].length
+        assert_equal Position.new(0,0,0), info.locate(0), "第一行第一个字符"
+        assert_equal Position.new(6,0,6), info.locate(6), "第一行第7个字符"
+        assert_equal Position.new(len-1, 0, len-1), info.locate(len-1), "第一行最后一个字符"
+    end
+
+    def test_position_of_middle_line
+        text, info, lines = prepair @@test_paragraph
+        len = lines[0].length
+        assert_equal Position.new(len, 1, 0), info.locate(len), "第2行的第一个字符"
+        assert_equal Position.new(len+1, 1, 1), info.locate(len+1), "第2行的第2个字符"
+        assert_equal Position.new(len+5, 1, 5), info.locate(len+5), "第2行的第6个字符"
+    end
     
-    def test_position
-      lines = [
-        "this is line one\n",
-        "   this is line two this is line two  \n",
-        " this is line three  \n",
-        "       this is ine 4   "
-      ]
-      text = lines.join('')
-
-      info = PositionInfo.new(text)
-      assert_pos_equal(info, 0, [0, 0, 0])
-      assert_pos_equal(info, 6, [6, 0, 6])
-
-      n1 = lines[0].length
-      assert_pos_equal(info, n1 - 1, [n1 - 1, 0, n1 - 1])
-      assert_pos_equal(info, n1, [n1, 1, 0])
-      assert_pos_equal(info, n1 + 2, [n1 + 2, 1, 2])
-
-      assert_pos_equal(info, n1 + 5, [n1 + 5, 1, 5])
-      assert_pos_equal(info, n1 + 10, [n1 + 10, 1, 10])
-
-      n2 = lines[1].length
-      assert_pos_equal(info, n1 + n2 - 2, [n1 + n2 - 2, 1, n2 - 2])
-      assert_pos_equal(info, n1 + n2 - 1, [n1 + n2 - 1, 1, n2 - 1])
-      assert_pos_equal(info, n1 + n2, [n1 + n2, 2, 0])
-      assert_pos_equal(info, n1 + n2 + 1, [n1 + n2 + 1, 2, 1])
-      assert_pos_equal(info, n1 + n2 + 3, [n1 + n2 + 3, 2, 3])
+    def test_position_of_last_line
+        text, info, lines = prepair @@test_paragraph
+        len = 0
+        (0..2).each {|n| len += lines[n].length }
+        assert_equal Position.new(len, 3, 0), info.locate(len), "第4行的第一个字符"
+        assert_equal Position.new(len+1, 3, 1), info.locate(len+1), "第4行的第2个字符"
+        assert_equal Position.new(len+5, 3, 5), info.locate(len+5), "第4行的第6个字符"
     end
 
-    def assert_pos_equal(info, pos, expect)
-      pos = info.position(pos)
-      assert_equal expect[0], pos.pos
-      assert_equal expect[1], pos.line
-      assert_equal expect[2], pos.column
+    def prepair( text )
+        info = PositionInfo.new text
+        lines = text.split("\n").map { |l| "#{l}\n" }
+        [text, info, lines]
     end
-  
   end
 end
