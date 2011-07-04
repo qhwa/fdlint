@@ -9,11 +9,11 @@ module XRay
       def parse_stylesheet
         log 'parse stylesheet'
         
-        StyleSheet.new(parse_rulesets)
+        StyleSheet.new parse_rulesets
       end
       
       def parse_rulesets
-        batch(:parse_ruleset)
+        batch :parse_ruleset
       end
       
       def parse_ruleset
@@ -36,7 +36,16 @@ module XRay
       
       def parse_selector
         log ' parse selector'
-        selector = scan /[^\{]+/
+        simple_selectors = batch(:parse_simple_selector) { !@scanner.check(/\s*\{\s*/) }
+        Selector.new simple_selectors
+      end
+
+      def parse_simple_selector
+        log '   parse simple selector'
+        selector = scan /[^,\{]+/
+
+        @scanner.check(/,/) && pass(/,/)
+
         log " [#{selector}] #{selector.position}"
         selector
       end
@@ -80,7 +89,7 @@ module XRay
       protected 
 
       def filter_text(css)
-        filter_css(css)
+        filter_css css
       end
 
       private
@@ -93,7 +102,7 @@ module XRay
         re_comment = /\/\*[^*]*\*+([^\/*][^*]*\*+)*\//
         css.gsub(re_comment) do |m| 
           log "ignore comments: \n#{m}"
-          m.gsub(/\S/, ' ')
+          m.gsub /\S/, ' '
         end
       end
 

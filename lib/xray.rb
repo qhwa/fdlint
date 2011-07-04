@@ -1,11 +1,15 @@
+require_relative 'parser_visitable'
+
 require_relative 'css/parser'
-require_relative 'css/rule/default'
+require_relative 'css/rule/check_list_rule'
 
 
 module XRay
+  class BaseParser
+    include ParserVisitable
+  end
 
   class SimpleObserver
-
     def update(result, parser)
       puts "#{result}"
     end
@@ -21,8 +25,8 @@ module XRay
     end
 
     def check_css(css)
-      parser = CSS::Parser.new(css)
-      visitor = CSS::Rule::DefaultRule.new
+      parser = CSS::Parser.new css
+      visitor = CSS::Rule::CheckListRule.new
       observer = SimpleObserver.new
 
       parser.add_visitor visitor

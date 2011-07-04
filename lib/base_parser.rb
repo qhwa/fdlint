@@ -3,13 +3,10 @@ require 'strscan'
 require_relative 'node'
 require_relative 'parse_error'
 require_relative 'position_info'
-require_relative 'parser_visitable'
 
 module XRay
   
   class BaseParser
-
-    include ParserVisitable
 
     attr_reader :log
 
@@ -17,18 +14,18 @@ module XRay
       super()
 
       @log = log
-      text = filter_text(text)
-      @pos_info = PositionInfo.new(text)
-      @scanner = StringScanner.new(text)
+      text = filter_text text
+      @pos_info = PositionInfo.new text
+      @scanner = StringScanner.new text
     end
 
     def skip_empty
-      @scanner.skip(/\s*/)
+      @scanner.skip /\s*/
     end
       
     def pass(pattern)
       skip_empty
-      unless @scanner.skip(pattern)
+      unless @scanner.skip pattern
         parse_error "pass fail: #{pattern}"
       end
     end
@@ -36,7 +33,7 @@ module XRay
     def scan(pattern)
       skip_empty
       pos = @pos_info.position(@scanner.pos)
-      text = @scanner.scan(pattern)
+      text = @scanner.scan pattern
       text ? create_node(text, pos) : parse_error("scan fail: #{pattern}")
     end
       
@@ -61,7 +58,7 @@ module XRay
     def parse_error(message)
       pos = @pos_info.position(@scanner.pos)
       log "#{message}#{pos}", :error
-      raise ParseError(message, pos)
+      raise ParseError.new(message, pos)
     end
       
     def log(message, level = :info)

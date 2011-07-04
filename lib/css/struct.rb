@@ -40,6 +40,22 @@ module XRay
       end
     end
 
+    class Selector < Node
+      attr_reader :simple_selectors
+
+      def initialize(simple_selectors)
+        @simple_selectors = simple_selectors
+      end
+
+      def text
+        @simple_selectors.collect(&:text).join(', ')
+      end
+
+      def position
+        simple_selectors.length ? simple_selectors[0] : nil
+      end
+    end
+
     class Declaration < Node
       attr_reader :property, :expression
 

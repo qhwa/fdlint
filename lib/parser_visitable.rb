@@ -1,5 +1,7 @@
 require 'observer'
 
+require_relative 'base_parser'
+
 module XRay
   
   VisitResult = Struct.new(:node, :message, :level)
@@ -32,7 +34,7 @@ module XRay
 
     def self.wrap(klass, method)
       method = method.to_s
-      unless method.index('parse_')
+      unless method.index 'parse_'
         return
       end
 
@@ -64,16 +66,27 @@ module XRay
       @visitors.each { |visitor|
         method = 'visit_' + name
         if visitor.respond_to? method
-          message, level = visitor.send(method, node)
-          if message
-            result = VisitResult.new(node, message, level || :info)
-            @parse_results << result
-            self.changed
-            notify_observers(result, self)
-          end
+          results = visitor.send(method, node)
+          results && notify(node, results)
         end
       }
     end
 
+    def notify(node, results)
+      results = [results] unless results[0].class == Array
+      results.each { |ret|
+        message, level = ret
+        result = VisitResult.new(node, message, level || :info)
+        @parse_results << result
+        self.changed
+        notify_observers(result, self)
+      }
+    end
+
   end
+
+  class BaseParser
+    include ParserVisitable
+  end
+
 end

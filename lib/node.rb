@@ -8,6 +8,10 @@ module XRay
       @text, @position = text, position
     end
 
+    def =~(other)
+      @text =~ other
+    end
+
     def to_s
       text
     end

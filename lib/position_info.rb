@@ -11,7 +11,7 @@ module XRay
   
     def initialize(text)
       lines = (text || '').split(/\r?\n/)
-      @lines_info = lines.map(&:length)
+      @lines_info = lines.map &:length
     end
 
     def position(pos)

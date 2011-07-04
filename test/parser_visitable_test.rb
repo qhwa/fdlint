@@ -15,37 +15,66 @@ module XRayTest
 
       include ParserVisitable
 
-      def parse_mock1
-        puts 'parse_mock1'
-        Node.new('mock node1') 
+      def parse_node
+        puts 'parse node'
+
+        parse_node_a
+        parse_node_b
+
+        Node.new 'node'
       end
 
-      def parse_mock2
-        puts 'parse_mock2'
-        Node.new('mock node2')
+      def parse_node_a
+        puts 'parse node a'
+        Node.new 'node a'
+      end
+
+      def parse_node_b
+        puts 'parse node b'
+
+        parse_node_c
+
+        Node.new 'node b'
+      end
+
+      def parse_node_c
+        puts 'parse node c'
+        Node.new 'node c'
       end
 
     end
 
     class SimpleVisitor
       
-      def visit_mock1(node)
-        puts "in visit_mock1: #{node}"
-        ['visit_mock1', :info]
+      def visit_node(node)
+        puts "visit node: #{node}"
+        ['visit node', :info]
       end
 
-      def visit_mock2(node)
-        puts "in visit_mock2: #{node}"
-        ['visit_mock2', :warn]
+      def visit_node_a(node)
+        puts "visit node a: #{node}"
+        ['visit node a', :warn]
       end
 
+      def visit_node_b(node)
+        puts "visit node b: #{node}"
+        [
+          ['visit node b 1', :warn],
+          ['visit node b 2', :info]
+        ]
+      end
+
+      def visit_node_c(node)
+        puts "visit node c: #{node}"
+        'visit node c'
+      end
     end
 
     class SimpleObserver
       attr_reader :times
 
       def update(result, parser)
-        puts "Observer: result"
+        puts "observer: #{result}"
         @times ||= 0
         @times += 1  
       end
@@ -61,17 +90,11 @@ module XRayTest
       observer = SimpleObserver.new
       parser.add_observer observer
 
-      parser.parse_mock1
-      parser.parse_mock2
-      
-      parser.parse_mock1_without_visit
-      parser.parse_mock2_without_visit
+      parser.parse_node
 
       results = parser.parse_results
-      assert_equal 2, results.length
-      puts results[0], results[1]
-
-      assert_equal 2, observer.times
+      assert_equal 5, results.length
+      assert_equal 5, observer.times
     end
     
   end

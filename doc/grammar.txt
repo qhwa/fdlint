@@ -4,6 +4,9 @@ stylesheet :
 ruleset :
 	selector '{' declaration* '}'
 
+selector:
+	simple_selector* 
+
 declaration :
 	property : expression ';'
 

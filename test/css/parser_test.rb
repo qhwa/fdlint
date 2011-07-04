@@ -11,7 +11,7 @@ module XRayTest
       
       def test_parse_empty
         css = "  \n ";
-        parser = create_parser(css)
+        parser = create_parser css
         sheet = parser.parse_stylesheet
 
         assert_equal 0, sheet.rulesets.size, 'test empty css text'
@@ -31,9 +31,9 @@ module XRayTest
               color: #ff7300;
             }'
             
-          parser = create_parser(css)
+          parser = create_parser css
           sheet = parser.parse_stylesheet
-          check_parse_simple(sheet)
+          check_parse_simple sheet
       end
       
       def check_parse_simple(sheet)
@@ -89,7 +89,7 @@ module XRayTest
               color: #ff7300;
             }'
             
-        parser = create_parser(css)
+        parser = create_parser css
         sheet = parser.parse_stylesheet
 
         assert_equal 3, sheet.rulesets.length
@@ -102,13 +102,13 @@ module XRayTest
             a {
               color: #333;
               text-decoration: none;
-            },
-            a: hover {
+            }
+            a:hover {
               color: #f7300; /* this is inline comment */
               text-decoration: underline;
             }
           '
-        parser = create_parser(css)
+        parser = create_parser css
         sheet = parser.parse_stylesheet
         
         assert_equal 2, sheet.rulesets.length
@@ -122,7 +122,7 @@ module XRayTest
       
       def test_parse_expression_with_special
         css = %q[url("http://alibaba.com/{123}456")]
-        parser = create_parser(css)
+        parser = create_parser css
         
         expr = parser.parse_expression
         assert_equal css, expr.text
@@ -135,7 +135,7 @@ module XRayTest
               background: url("http://alibaba.com/{123}456")
             }]
             
-        parser = create_parser(css)
+        parser = create_parser css
         sheet = parser.parse_stylesheet
         
         rs = sheet.rulesets[0]
@@ -152,10 +152,39 @@ module XRayTest
         assert_equal 'background', dec.property.text
         assert_equal %q[url("http://alibaba.com/{123}456")], dec.expression.text
       end
+
+      def test_simple_selector
+         css = %q[
+            div, #header .mypart, .div ul li {
+                font-size: 12px;
+            }
+            ul, body a, .part ul:first {
+              background: #f00;
+            }]
+
+            
+        parser = create_parser css
+        sheet = parser.parse_stylesheet
+
+        rs = sheet.rulesets[0];
+        s_selectors = rs.selector.simple_selectors
+        assert_equal 3, s_selectors.length
+        
+        assert_equal 'div', s_selectors[0].text
+        assert_equal '#header .mypart', s_selectors[1].text
+        assert_equal '.div ul li', s_selectors[2].text
+
+        rs = sheet.rulesets[1]
+        s_selectors = rs.selector.simple_selectors
+        assert_equal 3, s_selectors.length
+
+        assert_equal 'ul', s_selectors[0].text
+        assert_equal 'body a', s_selectors[1].text
+        assert_equal '.part ul:first', s_selectors[2].text
+      end
       
       def create_parser(css)
-        parser = Parser.new(css, Logger.new(STDOUT))
-        return parser
+        Parser.new(css, Logger.new(STDOUT))
       end
     
     end
