@@ -32,7 +32,7 @@ module XRay
       
     def scan(pattern)
       skip_empty
-      pos = @pos_info.position(@scanner.pos)
+      pos = @pos_info.locate(@scanner.pos)
       text = @scanner.scan pattern
       text ? create_node(text, pos) : parse_error("scan fail: #{pattern}")
     end
@@ -56,7 +56,7 @@ module XRay
     end
 
     def parse_error(message)
-      pos = @pos_info.position(@scanner.pos)
+      pos = @pos_info.locate(@scanner.pos)
       log "#{message}#{pos}", :error
       raise ParseError.new(message, pos)
     end

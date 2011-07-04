@@ -14,7 +14,7 @@ module XRay
       @lines_info = lines.map &:length
     end
 
-    def position(pos)
+    def locate(pos)
       line = 0
       col = pos
       now = @lines_info[line]
@@ -25,6 +25,6 @@ module XRay
       end
       now ? Position.new(pos, line, col) : nil
     end
-  end
 
+  end
 end
