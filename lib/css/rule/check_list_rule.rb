@@ -73,10 +73,12 @@ module XRay
         private
         
         def check(items, node)
-          items.inject([]) do |results, item|
+          results = []
+          items.each do |item|
             result = self.send(item, node)
             result && (results << result)
           end
+          results
         end
 
       end
