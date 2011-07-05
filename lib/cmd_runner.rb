@@ -8,6 +8,7 @@ module XRay
         def self.parse( args )
 
             css_files, js_files, html_files, common_files = [], [], [], []
+            encoding = :gb2312
             opts = OptionParser.new do |opts|
                 opts.banner = "Usage: xray"
                 %w(css js html).each do |type|
@@ -16,6 +17,9 @@ module XRay
                     end
                     opts.on("files", Array, "automatic detect file type") do |files|
                         common_files.concat files if files
+                    end
+                    opts.on("--charset set", "-c", "file charset") do |enc|
+                        encoding = enc
                     end
                 end
             end
@@ -29,6 +33,7 @@ module XRay
             end
 
             {
+                :encoding   => encoding,
                 :css_files  => css_files,
                 :js_files   => js_files,
                 :html_files => html_files,
@@ -42,21 +47,24 @@ module XRay
 
         def self.run
             options = XRay::CMDOptions.parse ARGV
+            enc     = options[:encoding]
             %w(css js html).each do |type|
                 files = options[:"#{type}_files"]
-                files.each { |file| check_file file, type } if files
+                files.each { |file| check_file file, type, enc } if files
             end
 
             options[:common_files].each do |file|
-                check_file file, get_file_type(file)
+                check_file file, get_file_type(file), enc
             end
         end
 
         private
-        def self.check_file( file, type=:html)
+        def self.check_file( file, type=:html, enc=:gb2312)
             puts "checking #{type} file: #{file}"
+            content = IO.read(file, :encoding=>enc.to_s)
+            content.encode! 'utf-8'
             runner = XRay::Runner.new
-            runner.send :"check_#{type}", IO.read(file)
+            runner.send :"check_#{type}", content
         end
 
         def self.get_file_type( name )
