@@ -21,10 +21,6 @@ module XRay
 
     CSS = XRay::CSS
 
-    def run
-      check_css '* html {}'
-    end
-
     def check_css(css)
       parser = CSS::Parser.new css
       visitor = CSS::Rule::CheckListRule.new
@@ -45,9 +41,4 @@ module XRay
     end
 
   end
-end
-
-if __FILE__ == $0
-  runner = XRay::Runner.new
-  runner.run
 end
