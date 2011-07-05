@@ -8,10 +8,6 @@ module XRay
       @position = position
     end
 
-    def to_s
-      "#{message}#{@position}"
-    end
-
   end
   
 end

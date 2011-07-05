@@ -7,6 +7,7 @@ require 'css/parser'
 module XRayTest
   module CSS
     class ParserTest < Test::Unit::TestCase
+      ParseError = XRay::ParseError
       include XRay::CSS
       
       def test_parse_empty
@@ -181,6 +182,23 @@ module XRayTest
         assert_equal 'ul', s_selectors[0].text
         assert_equal 'body a', s_selectors[1].text
         assert_equal '.part ul:first', s_selectors[2].text
+      end
+
+      def test_bloken_css_01
+        css = 'body {'
+        parser = create_parser css
+
+        assert_raise(ParseError) {
+          parser.parse_stylesheet 
+        }
+
+        parser.reset
+
+        begin
+          parser.parse_stylesheet
+        rescue ParseError => e
+          puts "#{e.message}#{e.position}"
+        end
       end
       
       def create_parser(css)

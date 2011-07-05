@@ -14,7 +14,7 @@ module XRay
       super()
 
       @log = log
-      text = filter_text text
+      text = filter_text(prepare_text(text))
       @pos_info = PositionInfo.new text
       @scanner = StringScanner.new text
     end
@@ -40,13 +40,17 @@ module XRay
     def batch(name, &block)
       result = []
       while (block ? block.call : true) && item = send(name)
-       result << item
+        result << item
       end
       result
     end
     
     def to_s
       self.class.to_s
+    end
+
+    def reset
+      @scanner.reset
     end
 
     protected
@@ -56,7 +60,8 @@ module XRay
     end
 
     def parse_error(message)
-      pos = @pos_info.locate(@scanner.pos)
+      pos = @scanner.pos
+      pos = @pos_info.locate(@scanner.eos? ? pos - 1 : pos)
       log "#{message}#{pos}", :error
       raise ParseError.new(message, pos)
     end
@@ -67,6 +72,12 @@ module XRay
 
     def create_node(text, pos)
       Node.new(text.strip, pos)
+    end
+
+    private
+
+    def prepare_text(text)
+      text.gsub(/\r\n/, "\n").gsub(/\r/, '\n')
     end
 
   end

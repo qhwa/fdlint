@@ -20,16 +20,24 @@ module XRay
   class Runner
 
     CSS = XRay::CSS
+  
+    def initialize(logger = nil)
+      @logger = logger
+    end
 
     def check_css(css)
-      parser = CSS::Parser.new css
+      parser = CSS::Parser.new(css, @logger)
       visitor = CSS::Rule::CheckListRule.new
       observer = SimpleObserver.new
 
       parser.add_visitor visitor
       parser.add_observer observer
 
-      parser.parse_stylesheet
+      begin
+        parser.parse_stylesheet
+      rescue ParseError => e
+        puts "#{e.message}#{e.position}"
+      end
     end
 
     def check_js(text)

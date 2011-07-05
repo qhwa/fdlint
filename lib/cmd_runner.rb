@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 require 'optparse'
+require 'logger'
+
 require_relative 'runner'
 
 module XRay
@@ -55,7 +57,10 @@ module XRay
         private
         def self.check_file( file, type=:html)
             puts "checking #{type} file: #{file}"
-            runner = XRay::Runner.new
+            logger = Logger.new(STDOUT)
+            logger.level = Logger::WARN
+            #logger.level = Logger::INFO
+            runner = XRay::Runner.new(logger)
             runner.send :"check_#{type}", IO.read(file)
         end
 

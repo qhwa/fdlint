@@ -1,7 +1,5 @@
 require 'observer'
 
-require_relative 'base_parser'
-
 module XRay
   
   VisitResult = Struct.new(:node, :message, :level)
@@ -19,7 +17,7 @@ module XRay
     attr_reader :parse_results
 
     def self.included(klass)
-      klass.instance_methods(false).each do |method|
+      klass.public_instance_methods(false).each do |method|
         wrap(klass, method)
       end
 
@@ -89,8 +87,5 @@ module XRay
 
   end
 
-  class BaseParser
-    include ParserVisitable
-  end
 
 end
