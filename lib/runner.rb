@@ -1,3 +1,4 @@
+require_relative 'base_parser'
 require_relative 'parser_visitable'
 
 require_relative 'css/parser'
