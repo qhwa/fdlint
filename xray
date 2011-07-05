@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require './lib/cmd_runner'
+XRay::CMDRunner.run
+
