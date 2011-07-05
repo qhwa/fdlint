@@ -73,6 +73,10 @@ module XRay
     end
 
     def notify(node, results)
+      if results.empty?
+        return
+      end
+
       results = [results] unless results[0].class == Array
       results.each { |ret|
         message, level = ret
