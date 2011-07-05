@@ -1,4 +1,3 @@
-require_relative 'base_parser'
 require_relative 'parser_visitable'
 
 require_relative 'css/parser'
@@ -6,9 +5,6 @@ require_relative 'css/rule/check_list_rule'
 
 
 module XRay
-  class BaseParser
-    include ParserVisitable
-  end
 
   class SimpleObserver
     def update(result, parser)

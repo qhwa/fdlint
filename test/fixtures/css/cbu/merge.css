@@ -1,0 +1,11 @@
+@import url(http://style.china.alibaba.com/css/lib/fdev-v4/reset/reset-min.css);
+@import url(http://style.china.alibaba.com/css/app/cbu/cms/module/html5-reset.css);
+@import url(http://style.china.alibaba.com/css/app/cbu/cms/module/layout.css);
+@import url(http://style.china.alibaba.com/css/app/cbu/cms/module/header.css);
+@import url(http://style.china.alibaba.com/css/app/cbu/cms/module/left-nav.css);
+@import url(http://style.china.alibaba.com/css/app/cbu/cms/module/footer.css);
+@import url(http://style.china.alibaba.com/css/app/cbu/cms/module/type.css);
+@import url(http://style.china.alibaba.com/css/app/cbu/cms/module/form.css);
+@import url(http://style.china.alibaba.com/css/app/cbu/cms/module/grid.css);
+@import url(http://style.china.alibaba.com/css/app/cbu/cms/module/dialog.css);
+@import url(http://style.china.alibaba.com/css/lib/fdev-v4/widget/ui/datepicker.css);

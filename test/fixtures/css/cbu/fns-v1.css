@@ -1,0 +1,27 @@
+/* locked by Edgar 100511 */
+.hide{display:none;}
+.locate{position:relative;}
+.clear{clear:left;}
+.last-col{margin-right:0 !important;padding-right:0 !important;}
+a.atom-img,a.atom-mix{display:inline-block;}
+.content{width:100%;}
+.content,.list-product,.list-tags,.cell-tags dd ul{display:inline-block;overflow:hidden;}
+a.atom-mix:hover,a.atom-mix:visited{text-decoration:none;}
+a.atom-mix .desc{display:block;line-height:18px;}
+.list,.cell-header,.atom-term{float:left;width:100%;}
+.float,.align,.align li,.align dt,.align dd,
+.sort li,.term dt,.term dd,.atom-term dt,.atom-term dd,
+.list li,.list-product li,.list-tags li,
+.cell-header .title,.cell-product-3rd dt{float:left;}
+.list li li,.list-tags li li{float:none;}
+.cell-tags dd li{float:left;}
+.cell-tags dt{_margin-right:-3px;}
+.cell-header .btn,.cell-header .term,.cell-header .sort{float:right;}
+.cell-list-text{line-height:20px;}
+.cell-product-3rd{clear:left;}
+.cell-product-1st dt,.cell-product-2nd dt,.cell-product-3rd dt{overflow:hidden;}
+.cell-product-1st dd,.cell-product-2nd dd,.cell-product-3rd dd,.cell-tags dd{overflow:hidden;line-height:1.5;}
+a.atom-mix img{_margin-bottom:-1px;}
+.cell-tags dd{word-break:keep-all;}
+.cny{font-family:Helvetica,Arial;}
+.price .value{font-weight:700;}

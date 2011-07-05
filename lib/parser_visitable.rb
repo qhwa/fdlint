@@ -1,5 +1,7 @@
 require 'observer'
 
+require_relative 'base_parser'
+
 module XRay
   
   VisitResult = Struct.new(:node, :message, :level)
@@ -85,6 +87,10 @@ module XRay
       }
     end
 
+  end
+
+  class BaseParser
+    include ParserVisitable
   end
 
 
