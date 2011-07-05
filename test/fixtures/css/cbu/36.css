@@ -1,0 +1,52 @@
+/**
+ * ÷˜Ã‚:∑€‘œ∑Á…–
+ * 
+ * @author qijun.weiqj
+ */
+
+/**
+ * company-name
+ */
+.skin-topbanner {
+	background: #fddde2 url(http://img.china.alibaba.com/images/app/winport/layout/diybackground/style/temp36/topbaner.jpg);
+}
+.wp-company-name .chinaname, .wp-company-name .chinaname:hover {
+	color: #990033;
+}
+.wp-company-name .enname, .wp-company-name .enname:hover {
+	color: #a23a5c;
+}
+
+/**
+ * top-nav
+ */
+.wp-top-nav {
+	border-top: 1px solid #fff;
+	border-bottom: 1px solid #fff;
+	background: #d51d5d url(http://img.china.alibaba.com/images/app/winport/layout/diybackground/style/temp36/header_menu.gif) repeat-x left top;
+}
+.wp-top-nav li a,
+.wp-top-nav li a:hover {
+	color: #fff;
+}
+.wp-top-nav li.selected a,
+.wp-top-nav li.selected a:hover {
+	background: url(http://img.china.alibaba.com/images/app/winport/layout/diybackground/style/temp36/header_menu_check.png) no-repeat left top;
+	_background: none;
+	_filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=http://img.china.alibaba.com/images/app/winport/layout/diybackground/style/temp36/header_menu_check.png,sizingMethod=scale);
+	color: #c20606;
+}
+
+
+/**
+ * mod
+ */
+.mod .m-body {
+	border: 1px solid #ffe4e4;
+}
+.mod .m-header {
+	background: #333 url(http://img.china.alibaba.com/images/app/winport/layout/diybackground/style/temp36/body_cont_title.gif) repeat-x left top;
+	color: #fff;
+}
+
+

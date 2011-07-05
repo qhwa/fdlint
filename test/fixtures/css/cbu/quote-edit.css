@@ -1,0 +1,18 @@
+/*
+*@建议中心编辑器扩展样式*
+*@add leijun
+*@date 20100915
+*/
+
+body, td, pre,table th,.mceContentBody p,.mceContentBody div{font-size:14px;}
+.link-box div,.mceContentBody .link-box{background-color:#f4f4f4;border:1px solid #ccc;margin:0 auto;padding:10px;zoom:1}
+.mceContentBody .link-box strong,.mceContentBody .link-box b{font-size:12px;font-weight:normal;color:#666}
+.mceContentBody .link-box em{font-style:italic;}
+.mceContentBody .link-box strong em,.mceContentBody .link-box b em{font-style:normal;}
+
+
+
+
+
+
+

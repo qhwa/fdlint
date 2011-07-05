@@ -1,0 +1,324 @@
+/*create by yoyo at 2007-08-29 */
+/* global */
+body {margin:0px;border:0px;font-size:12px;font-family:宋体;background-color:#fff;}
+form {margin:0px;padding:0px;}
+ul {list-style: none;margin: 0px;padding: 0px;}
+img {border:0px;}
+a:link{color: #003278;text-decoration: none;}
+a:visited{color: #003278;text-decoration: none;}
+a:hover{color: #FF6600;text-decoration: underline;}
+.s {font-size:12px;}
+.m {font-size:14px;font-weight:bold;}
+.c {font-size:14px;}
+.sm {font-size:12px;font-weight:bold;}
+.orange {color:#ff7300;}
+.orange a{color:#ff7300;}
+.orange a:link{color:#ff7300;}
+.orange a:visited{color:#ff7300;}
+.orange a:hover{color:#ff7300;}
+
+.redtext1 a {color:#cc0000;}
+.redtext1 a:link{color:#cc0000;}
+.redtext1 a:visited{color:#cc0000;}
+.redtext1 a:hover{color:#cc0000;}
+.gray{color:#666;}
+.writetext{color:#fff}
+.num_bg{color:#ff7300;}
+img.icon{position:absolute;}
+ul li a.new_ico{background:url(http://img.china.alibaba.com/images/cn/home/070709/china_hp_new_ico.gif) no-repeat;background-position:right;padding-right:18px;}
+ul li a.hot_ico{background:url(http://img.china.alibaba.com/images/cn/home/070709/china_hp_hot_ico.gif) no-repeat;background-position:right;padding-right:18px;}
+ul li a.vid_ico{background:url(http://img.china.alibaba.com/images/cn/home/070709/china_hp_vid_ico.gif) no-repeat;background-position:right;padding-right:18px;}
+ul li a.free_ico{background:url(http://img.china.alibaba.com/images/cn/home/070215/Icon_free01_12x.gif) no-repeat;background-position:right;padding-right:18px;}
+ul li a.pro_ico{background:url(http://img.china.alibaba.com/images/cn/common/icon/v2/icon_expert01_12x.gif) no-repeat;background-position:right;padding-right:18px;}
+ul li a.tp_ico{background:url(http://img.china.alibaba.com/images/cn/common/icon/v2/icon_trust01_12x.gif) no-repeat;background-position:right;padding-right:18px;}
+.left{float:left;}
+.right{float:right;}
+
+/*---------------------------------------尾开始--------------------------------------*/
+#footer {clear:both;width:99%;border-top:3px solid #ff7300;margin:10px auto;padding-top:7px;}
+#footer ul {clear:both;float:left;width:100%;text-align:center;margin:3px auto;}
+#footer li {display:inline;border-right:1px solid #666;padding:0px 8px;}
+#footer .no_border {border:0px;}
+#foot_corp {clear:both;width:470px;margin:10px auto;}
+#foot_corp span {float:left;margin:0px 5px;}
+#foot_corp span.img_pd {padding-top:15px;}
+/*---------------------------------------尾结束--------------------------------------*/
+
+.layout_box {width:100%;}
+.main_box {width:952px;margin:7px auto;margin:0px auto;}
+.mid_box {float:left !important;float:;margin-right:7px;margin-top:7px;}
+
+.title_bg {background-color:#e5e5e5;}
+.gray_box{border:1px solid #bbbbbb;}
+.do_line {border-bottom:1px dotted #c2c2c2;margin-bottom:6px;padding-bottom:4px;}
+.du_line {border-top:1px dotted #c2c2c2;margin-top:6px;padding-top:6px;}
+.d_ico {background:url(http://img.china.alibaba.com/images/cn/home/070215/d_ico.gif) 5px 8px no-repeat;padding-left:12px;}
+.db_ico {background:url(http://img.china.alibaba.com/images/cn/home/070215/db_ico.gif) 5px 8px no-repeat;padding-left:20px;}
+.bb_ico {background:url(http://img.china.alibaba.com/images/cn/home/070709/china_hp_bangb_ico.gif) 0px 3px no-repeat;padding-left:18px;}
+ul.h_list li {display:inline;margin:3px auto;text-align:center}
+.org_arrow {background:url(http://img.china.alibaba.com/images/cn/home/070215/right_org_arrow.gif) 3px 2px no-repeat;padding-left:22px;}
+.lh13{line-height:130%;}
+.lh15{line-height:150%;}
+.lh17{line-height:170%;}
+.lh20{line-height:200%;}
+.lh_pd{margin-top:-3px;}
+.img_border{border:1px solid #bbb;}
+.red_border{border:1px solid #F2641C;}
+.img_pd {padding-top:4px;}
+.pd{margin-top:7px;}
+.pd_r{padding-right:7px;}
+.pd2{margin-top:14px;}
+.pd_h{padding-left:7px;}
+.pd_2h{padding-left:14px;}
+.cent{text-align:center;}
+.vcent{vertical-align:middle;}
+.hand_cs{cursor:pointer;}
+.clr{clear:both;}
+
+#slidetexts{margin-left:5px;margin-top:3px;height:20px;line-height:150%;overflow:hidden;text-align:left;padding-left:5px;}
+#slidetexts li{clear:both}
+#slidetexts li div{width:175px;overflow:hidden}
+#slidetexts1{height:15px;line-height:15px;overflow:hidden;text-align:left;padding-left:5px;}
+#slidetexts1 li{clear:both}
+#slidetexts1 li div{width:175px;overflow:hidden}
+#slidetexts2{height:15px;line-height:15px;overflow:hidden;text-align:left;padding-left:5px;}
+#slidetexts2 li{clear:both}
+#slidetexts2 li div{width:175px;overflow:hidden}
+
+.alinotice{background-color:#FEF1E9;line-height:130%;margin-top:10px;margin-bottom:16px;padding:5px;height:35pxborder:1px solid #FA9150;width:932px;padding-left:10px;padding-right:10px;margin-bottom:7px;margin-top:7px}
+.alinotice .left{width:912px}
+.alinotice .right{width:20px;text-align:right}
+.alinotice .sign{text-align:right}
+
+/*运营用图标、及文字链提醒色使用规则及新阿里动态运营规范*/
+.pop_link_index{background:#FEE6BD;}
+.pop_link_index a{background:#FEE6BD;}
+.blue_link_index{color:#0C90DE}
+.blue_link_index a{color:#0C90DE}
+
+/*行业类目加红*/
+.col1 .orange a:link{color:#ff7300}
+.col1 .orange a:visited{color:#ff7300}
+.col1 .orange a:hover{color:#ff7300}
+
+.col2 .orange a:link{color:#ff7300}
+.col2 .orange a:visited{color:#ff7300}
+.col2 .orange a:hover{color:#ff7300}
+
+.col1 .clr,.col2 .clr{clear:none !important;clear:both}
+
+
+/*标题样式*/
+.title_01{background:url(http://img.china.alibaba.com/images/cn/home/070709/left_title_01.gif);width:295px;padding-left:21px;padding-top:7px;padding-right:14px; height: 19px}
+.title_02{background:url(http://img.china.alibaba.com/images/cn/home/070215/mid_sec_title_bg.gif) repeat-x 0px 12px;height:16px;margin-top:7px}
+.forpic{margin-top:7px;}
+.forpic ul{width:75px;text-align:center}
+.forpic ul img{border:1px solid #BDBAAB;width:64px;height:48px}
+/*表格样式*/
+.grid_01{margin:7px 0px 0px 11px;}
+.grid_01 li{float:left;border:1px #BFBAAC solid;margin-right:1px;margin-top:1px;width:150px;text-align:center;line-height:150%} 
+
+/*边框样式*/
+.bb{clear:both;width:327px;padding-bottom:5px; background-color:#FAF4EB; border:1px #BFBAAC solid;}
+.bb li.left {margin:5px 0px 0px 10px;float:left;font-size:14px;font-weight:bold;}
+.bb .content {clear:both;margin:0px 7px 0px 14px;height:auto;}
+.bb .content li.left{float:left;background-color:#FAF4EB;height:12px;font-weight:bold;color:#ff7300; font-size:12px;margin-left:0px; width:auto;}
+
+/* layout */
+#top_nav_hk1{width:100%;height:24px;margin:0px auto;}
+#top_nav_hk2{position: absolute;z-index:10;width:100%}
+#top_nav_bg {width:100%;height:24px;background-color:#f4f3f2;border-bottom:1px solid #cdcdcd;}
+#top_nav {clear:both;height:24px;padding-top:2px !important;padding-top:0px;vertical-align:middle;}
+#top_nav ul {margin:7px 0px 7px 0px;}
+#top_nav li {padding:0px 6px;border-left:1px solid #AFA69E;}
+#top_nav .first{padding:0px 7px 0px 0px;border-left:1px solid #AFA69E;}
+#top_nav .last{padding:0px 0px 0px 7px;border-left:1px solid #AFA69E;}
+#top_nav li a{text-decoration: none;}
+#top_nav .left {float:left;}
+#top_nav .right {float:right;}
+#top_nav .no_border {border:0px;}
+#top_nav .img_bt {margin:-5px -5px -3px -5px !important;margin:-4px -5px -3px -5px;}
+#top_search{width:952px;}
+
+#main_nav {clear:both;margin-top:7px;}
+#main_nav .bt_area {float:right;width:560px;}
+#main_nav li a{font-weight:normal;margin:2px 3px;}
+#main_nav li.wrods2 a{display:block;background:url(http://img.china.alibaba.com/images/cn/home/070827/release2a.gif) no-repeat 0px 0px;text-decoration: none;width:31px;height:19px;padding:3px 0px 0px 14px !important;padding:4px 0px 0px 14px;}
+#main_nav li.wrods2 a:link{display:block;background:url(http://img.china.alibaba.com/images/cn/home/070827/release2a.gif) no-repeat 0px 0px;text-decoration: none;width:31px;height:19px;padding:3px 0px 0px 14px !important;padding:4px 0px 0px 14px;}
+#main_nav li.wrods2 a:hover{display:block;background:url(http://img.china.alibaba.com/images/cn/home/070827/release2c.gif) no-repeat 0px 0px;text-decoration: none;width:31px;height:19px;padding:3px 0px 0px 14px !important;padding:4px 0px 0px 14px;}
+#main_nav li.wrods2 a:active{display:block;background:url(http://img.china.alibaba.com/images/cn/home/070827/release2b.gif) no-repeat 0px 0px;text-decoration: none;width:31px;height:19px;padding:3px 0px 0px 14px !important;padding:4px 0px 0px 14px;}
+#main_nav li.wrods4 a{display:block;background:url(http://img.china.alibaba.com/images/cn/home/070827/release4a.gif) no-repeat 0px 0px;text-decoration: none;width:57px;height:19px;padding:3px 0px 0px 14px !important;padding:4px 0px 0px 14px;}
+#main_nav li.wrods4 a:link{display:block;background:url(http://img.china.alibaba.com/images/cn/home/070827/release4a.gif) no-repeat 0px 0px;text-decoration: none;width:57px;height:19px;padding:3px 0px 0px 14px !important;padding:4px 0px 0px 14px;}
+#main_nav li.wrods4 a:hover{display:block;background:url(http://img.china.alibaba.com/images/cn/home/070827/release4c.gif) no-repeat 0px 0px;text-decoration: none;width:57px;height:19px;padding:3px 0px 0px 14px !important;padding:4px 0px 0px 14px;}
+#main_nav li.wrods4 a:active{display:block;background:url(http://img.china.alibaba.com/images/cn/home/070827/release4b.gif) no-repeat 0px 0px;text-decoration: none;width:57px;height:19px;padding:3px 0px 0px 14px !important;padding:4px 0px 0px 14px;}
+
+#main_nav li.wrods4a a{display:block;background:url(http://img.china.alibaba.com/images/cn/home/070827/release.gif) no-repeat 0px 0px;text-decoration: none;width:60px;height:19px;padding:3px 0px 0px 22px !important;padding:4px 0px 0px 22px;}
+#main_nav li.wrods4a a:link{display:block;background:url(http://img.china.alibaba.com/images/cn/home/070827/release.gif) no-repeat 0px 0px;text-decoration: none;width:60px;height:19px;padding:3px 0px 0px 22px !important;padding:4px 0px 0px 22px;}
+#main_nav li.wrods4a a:hover{display:block;background:url(http://img.china.alibaba.com/images/cn/home/070827/release.gif) no-repeat 0px 0px;text-decoration: none;width:60px;height:19px;padding:3px 0px 0px 22px !important;padding:4px 0px 0px 22px;}
+#main_nav li.wrods4a a:action{display:block;background:url(http://img.china.alibaba.com/images/cn/home/070827/release.gif) no-repeat 0px 0px;text-decoration: none;width:60px;height:19px;padding:3px 0px 0px 22px !important;padding:4px 0px 0px 22px;}
+
+#main_nav li.wrods6 a{display:block;background:url(http://img.china.alibaba.com/images/cn/home/070709/china_hp_top_bt3a.gif) no-repeat 0px 0px;text-decoration: none;width:76px;height:16px;padding:3px 0px 0px 14px !important;padding:4px 0px 0px 14px;}
+#main_nav li.wrods6 a:link{display:block;background:url(http://img.china.alibaba.com/images/cn/home/070709/china_hp_top_bt3a.gif) no-repeat 0px 0px;text-decoration: none;}
+#main_nav li.wrods6 a:hover{display:block;background:url(http://img.china.alibaba.com/images/cn/home/070709/china_hp_top_bt3c.gif) no-repeat 0px 0px;text-decoration: none;}
+#main_nav li.wrods6 a:active{display:block;background:url(http://img.china.alibaba.com/images/cn/home/070709/china_hp_top_bt3b.gif) no-repeat 0px 0px;text-decoration: none;}
+
+#c_fship{width:85px;margin-left:-3px;}
+#c_fship a{width:83px;padding:3px 0px 20px 4px;}
+#c_fship .alk{background:url(http://img.china.alibaba.com/images/cn/home/070215/c_index_nav_club_arrow_a.gif) no-repeat 67px 3px;padding-right:18px;}	
+#c_fship .ahv{>background:url(http://img.china.alibaba.com/images/cn/home/070215/c_index_nav_club_arrow_up.gif) no-repeat 0px 1px !important;background:url(http://img.china.alibaba.com/images/cn/home/070215/c_index_nav_club_arrow_up.gif) no-repeat 0px 0px;padding-right:20px;}	
+#float_menu ul.cship_list li{display:block;margin:0px;float:left;width:83px;}
+#float_menu ul.cship_list li.top_border{border-top:1px solid #C2BBB5;margin-top:0px;}
+#float_menu ul.cship_list li a{display:block;cursor:pointer;background-color:#fff;font-weight:normal;font-size:12px;padding:4px 20px 3px 10px;width:53px;}
+#float_menu ul.cship_list li a:hover{display:block;cursor:pointer;background-color:#FFEFD5;font-weight:normal;font-size:12px;}	
+
+#e_service{width:100px;margin-left:-3px;}
+#e_service a{width:98px;padding:3px 0px 20px 4px;}
+#e_service .alk{background:url(http://img.china.alibaba.com/images/cn/home/070215/c_index_nav_club_arrow_a.gif) no-repeat 82px 3px;padding-right:18px;}	
+#e_service .ahv{>background:url(http://img.china.alibaba.com/images/cn/home/070215/c_index_nav_club_arrow_up_5.gif) no-repeat 0px 1px !important;background:url(http://img.china.alibaba.com/images/cn/home/070215/c_index_nav_club_arrow_up_5.gif) no-repeat 0px 0px;padding-right:20px;}	
+#float_menu_es ul.e_service_list li{display:block;margin:0px;float:left;width:93px;}
+#float_menu_es ul.e_service_list li.top_border{border-top:1px solid #C2BBB5;margin-top:0px;}
+#float_menu_es ul.e_service_list li a{display:block;cursor:pointer;background-color:#fff;font-weight:normal;font-size:12px;padding:4px 0px 3px 10px;width:88px;}
+#float_menu_es ul.e_service_list li a:hover{display:block;cursor:pointer;background-color:#FFEFD5;font-weight:normal;font-size:12px;}	
+
+
+#c_fship1,#c_fship2{width:72px;}
+#c_fship1 a,#c_fship2 a{width:73px;padding:3px 0px 20px 4px;}
+#c_fship1 .alk,#c_fship2 .alk{background:url(http://img.china.alibaba.com/images/cn/home/070215/c_index_nav_club_arrow_a.gif) no-repeat 55px 3px;padding-right:20px;}	
+#c_fship1 .ahv,#c_fship2 .ahv{>background:url(http://img.china.alibaba.com/images/cn/home/070215/c_index_nav_club_arrow_up.gif) no-repeat -12px 0px !important;background:url(http://img.china.alibaba.com/images/cn/home/070215/c_index_nav_club_arrow_up.gif) no-repeat -12px 0px;padding-right:20px;}	
+#float_menu1  ul.cship_list li,#float_menu2  ul.cship_list li{padding:0px;border-left:0px;display:block;margin:0px;float:left;width:50px}
+
+#float_menu1 ul.cship_list li.top_border,#float_menu2 ul.cship_list li.top_border{border-top:1px solid #C2BBB5;>margin-top:5px !important;margin-top:0px}
+#float_menu1 ul.cship_list li a,#float_menu2 ul.cship_list li a{display:block;cursor:pointer;background-color:#fff;font-weight:normal;font-size:12px;padding:3px 5px 3px 7px;width:60px;}
+#float_menu1 ul.cship_list li a:hover,#float_menu2 ul.cship_list li a:hover{display:block;cursor:pointer;background-color:#FFEFD5;font-weight:normal;font-size:12px;}	
+
+
+#nav_title1 ul li.bg1{float:left;background:url(http://img.china.alibaba.com/images/cn/home/070709/china_hp_top_tp.gif) 0px 0px repeat-x;width:150px;height:27px;margin-top:7px;padding:8px 0px 0px 30px;}
+#nav_title1 ul li.bg1 a{color:#525252;font-weight:bold;}
+#nav_title1 ul li.bg2{float:left;height:27px;width:575px;margin-top:7px;margin-left:7px;}
+#nav_title1 ul li div.bg2b{float:right;border:dotted 1px #C2BBAD;border-left:0px;height:21px;width:516px;padding-top:4px;}
+#nav_title1 ul li.bg3{background:url(http://img.china.alibaba.com/images/cn/home/070709/china_hp_top_alipay.gif) 0px 0px repeat-x;width:150px;height:27px;margin-top:7px;float:right;padding:8px 0px 0px 30px;}
+#nav_title1 ul li.bg3 a{color:#525252;font-weight:bold;}
+.mtdg{position:absolute;margin-left:400px;margin-top:3px}
+
+/* search */
+/*---------------------------------------顶部搜索框开始--------------------------------------*/
+
+/* top_search begin */
+#top_search {position:relative;height:92px;text-align:center;margin:0px auto;margin-top:7px;}
+#top_search a, #top_search div, #top_search li {font-size:12px;} 
+#top_search a:link,#top_search a:visited{color:#000;}
+#top_search .topul_layer {width:950px;text-align:center;margin:0 auto;}
+#top_search #topul {position:relative;margin:0 auto;width:909px;height:28px;z-index:2;}
+#top_search #topul li {position:relative;cursor:default;color:#fff;font-weight:600;line-height:250%;text-align:center;font-size:14px;height:100%;}
+#top_search #topul li a {display:block;height:100%;line-height:250%;font-size:14px;font-weight:100;text-align:center;overflow:hidden;color:#00000}
+#top_search #topul li a:hover {text-decoration:none;}
+#top_search #topul li .sr_dot {position:absolute;top:-5px;right:10px;}
+
+#top_search #topul .lw_v_2w {font-weight:600;color:#fff;cursor:default;width:41px;padding-left:2px;background:url(http://img.china.alibaba.com/images/cn/home/070827/dangqian2.gif) no-repeat;}
+#top_search #topul .lw_v_3w {font-weight:600;color:#fff;cursor:default;width:57px;padding-left:2px;background:url(http://img.china.alibaba.com/images/cn/home/070827/dangqian.gif) no-repeat;}
+#top_search #topul .lw_v_4w {font-weight:600;color:#fff;cursor:default;width:69px;padding-left:1px;background:url(http://img.china.alibaba.com/images/cn/home/070827/dangqian4.gif) no-repeat;}
+#top_search #topul .lw_v_5w {font-weight:600;color:#fff;cursor:default;width:79px;padding-left:2px;background:url(http://img.china.alibaba.com/images/cn/home/070709/tstt_v_5w.gif) no-repeat;}
+#top_search #topul .lw_v_5hw {font-weight:600;color:#fff;cursor:default;width:87px;padding-left:2px;background:url(http://img.china.alibaba.com/images/cn/home/070709/tstt_v_5hw.gif) no-repeat;}
+
+#top_search .lw_2w {width:40px;padding-left:2px;background:url(http://img.china.alibaba.com/images/cn/home/070827/nor2.gif) no-repeat;}
+#top_search .lw_3w {width:53px;padding-left:2px;background:url(http://img.china.alibaba.com/images/cn/home/070827/nor.gif) no-repeat;}
+#top_search .lw_4w {width:68px;padding-left:2px;background:url(http://img.china.alibaba.com/images/cn/home/070827/nor4.gif) no-repeat;}
+#top_search .lw_5w {width:79px;padding-left:2px;background:url(http://img.china.alibaba.com/images/cn/home/070709/tstt_n_5w.gif) no-repeat;}
+#top_search .lw_5hw {width:87px;padding-left:2px;background:url(http://img.china.alibaba.com/images/cn/home/070709/tstt_n_5hw.gif) no-repeat;}
+
+#top_search .lw_2w:link {background:url(http://img.china.alibaba.com/images/cn/home/070827/nor2.gif) no-repeat;}
+#top_search .lw_2w:hover {background:url(http://img.china.alibaba.com/images/cn/home/070827/hov2.gif) no-repeat;}
+#top_search .lw_3w:link {background:url(http://img.china.alibaba.com/images/cn/home/070827/nor.gif) no-repeat;}
+#top_search .lw_3w:hover {background:url(http://img.china.alibaba.com/images/cn/home/070827/hov.gif) no-repeat;}
+#top_search .lw_4w:link {background:url(http://img.china.alibaba.com/images/cn/home/070827/nor4.gif) no-repeat;}
+#top_search .lw_4w:hover {background:url(http://img.china.alibaba.com/images/cn/home/070827/hov4.gif) no-repeat;}
+#top_search .lw_5w:link {background:url(http://img.china.alibaba.com/images/cn/home/070709/tstt_n_5w.gif) no-repeat;}
+#top_search .lw_5w:hover {background:url(http://img.china.alibaba.com/images/cn/home/070709/tstt_h_5w.gif) no-repeat;}
+#top_search .lw_5hw:link {background:url(http://img.china.alibaba.com/images/cn/home/070709/tstt_n_5hw.gif) no-repeat;}
+#top_search .lw_5hw:hover {background:url(http://img.china.alibaba.com/images/cn/home/070709/tstt_h_5hw.gif) no-repeat;}
+#top_search .lw_rb {width:1px;overflow:hidden;background:url(http://img.china.alibaba.com/images/cn/home/070827/border.gif);}
+
+#top_search .sr_box {position:relative;width:100% !important;text-align:center;margin:0 auto;top:0px;height:67px;background:url(http://img.china.alibaba.com/images/cn/home/070827/search_bg.gif) repeat-x;z-index:1;border-left:1px #ff7300 solid;border-right:1px #ff7300 solid;}
+#top_search #sr_sw_m {position:relative;width:950px;height:64px;text-align:left;text-align:left;margin:0 auto;}
+#top_search .sr_in {position:relative;text-align:left;top:13px;padding-left:28px;width:422px;z-index:14;}
+#top_search .src_keyw {color:#AAB7C7;font-size:14px;padding:0px 0px 0px 5px;line-height:22px;height:20px;width:515px;border:1px solid #CDCDCD;}
+#top_search .src_subm {position:absolute;left:562px;top:13px;+top:13px;height:24px;width:75px;font-size:14px;font-weight:600;cursor:pointer;}
+#top_search .akc_subm {position:absolute;left:660px;top:13px;+top:13px;height:24px;width:75px;font-size:14px;font-weight:600;cursor:pointer;}
+#top_search .sr_ra {position:absolute;left:23px;top:42px;height:24px;overflow:hidden;}
+
+#top_search .sr_w1 {position:absolute;width:60px;left:160px;top:15px;font-size:14px;font-weight:600;}
+#top_search .sr_w2 {position:absolute;left:750px;top:20px;+top:20px;z-index:5;}
+#top_search .sr_w2 li{float:left;padding-right:10px;color:#ffffff;}
+#top_search .sr_w2 li a{color:#ffffff;}
+#top_search .sr_w2 li a:link{color:#ffffff;}
+#top_search .sr_w2 li a:visited{color:#ffffff;}
+#top_search .sr_w2 li a:hover{color:#ffffff;}
+#top_search .sr_w2 a:hover {text-decoration:none;}
+#top_search .sr_w2a {position:absolute;left:730px;top:20px;+top:20px;z-index:5;}
+#top_search .sr_w2a li{float:left;padding-right:10px;color:#ffffff;}
+#top_search .sr_w2a li a{color:#ffffff;}
+#top_search .sr_w2a li a:link{color:#ffffff;}
+#top_search .sr_w2a li a:visited{color:#ffffff;}
+#top_search .sr_w2a li a:hover{color:#ffffff;}
+#top_search .sr_w2a a:hover {text-decoration:none;}
+.dw_ico {background:url(http://img.china.alibaba.com/images/cn/home/070827/dianw.gif) 0px 4px no-repeat;padding-left:10px;}
+#top_search .sr_w3 {position:absolute;right:42px;top:72px;z-index:5;}
+#top_search .sr_w3 a {color:#CC0000;}
+#top_search .sr_h_1 {position:absolute;top:47px;left:445px;height:14px;overflow:hidden;z-index:10;}
+#top_search .sr_w4 {position:absolute;left:20px;top:35px;z-index:5;}
+#top_search .sr_w5 {position:absolute;top:20px;left:790px;height:14px;overflow:hidden;z-index:10;}
+#top_search .sr_w5 li{float:left;padding-right:10px;color:#ffffff;}
+#top_search .sr_w5 li a{color:#ffffff;}
+#top_search .sr_w5 li a:link{color:#ffffff;}
+#top_search .sr_w5 li a:visited{color:#ffffff;}
+#top_search .sr_w5 li a:hover{color:#ffffff;}
+
+#top_search #sr_small .sr_box {width:776px;}
+#top_search #sr_small #sr_sw_m {width:776px;} 
+#top_search #sr_small .topul_layer {width:778px;}
+#top_search #sr_small #topul {width:778px;height:30px;}
+#top_search #sr_small #topul li {font-size:12px;line-height:249%;}
+#top_search #sr_small #topul li a {line-height:249%;font-size:12px;}
+
+#top_search #sr_small .lw_v_2w {width:35px;background:url(http://img.china.alibaba.com/images/cn/home/070709/sml/tstt_v_2w.gif) no-repeat;}
+#top_search #sr_small .lw_v_3w {width:46px;background:url(http://img.china.alibaba.com/images/cn/home/070709/sml/tstt_v_3w.gif) no-repeat;}
+#top_search #sr_small .lw_v_4w {width:59px;background:url(http://img.china.alibaba.com/images/cn/home/070709/sml/tstt_v_4w.gif) no-repeat;}
+#top_search #sr_small .lw_v_5w {width:69px;background:url(http://img.china.alibaba.com/images/cn/home/070709/sml/tstt_v_5w.gif) no-repeat;}
+#top_search #sr_small .lw_v_5hw {width:80px;background:url(http://img.china.alibaba.com/images/cn/home/070709/sml/tstt_v_5hw.gif) no-repeat;}
+
+#top_search #sr_small .lw_2w {width:35px;background:url(http://img.china.alibaba.com/images/cn/home/070709/sml/tstt_n_2w.gif) no-repeat;}
+#top_search #sr_small .lw_3w {width:46px;background:url(http://img.china.alibaba.com/images/cn/home/070709/sml/tstt_n_3w.gif) no-repeat;}
+#top_search #sr_small .lw_4w {width:59px;background:url(http://img.china.alibaba.com/images/cn/home/070709/sml/tstt_n_4w.gif) no-repeat;}
+#top_search #sr_small .lw_5w {width:69px;background:url(http://img.china.alibaba.com/images/cn/home/070709/sml/tstt_n_5w.gif) no-repeat;}
+#top_search #sr_small .lw_5hw {width:80px;background:url(http://img.china.alibaba.com/images/cn/home/070709/sml/tstt_n_5hw.gif) no-repeat;}
+
+#top_search #sr_small .lw_2w:link {background:url(http://img.china.alibaba.com/images/cn/home/070709/sml/tstt_n_2w.gif) no-repeat;}
+#top_search #sr_small .lw_2w:hover {background:url(http://img.china.alibaba.com/images/cn/home/070709/sml/tstt_h_2w.gif) no-repeat;}
+#top_search #sr_small .lw_3w:link {background:url(http://img.china.alibaba.com/images/cn/home/070709/sml/tstt_n_3w.gif) no-repeat;}
+#top_search #sr_small .lw_3w:hover {background:url(http://img.china.alibaba.com/images/cn/home/070709/sml/tstt_h_3w.gif) no-repeat;}
+#top_search #sr_small .lw_4w:link {background:url(http://img.china.alibaba.com/images/cn/home/070709/sml/tstt_n_4w.gif) no-repeat;}
+#top_search #sr_small .lw_4w:hover {background:url(http://img.china.alibaba.com/images/cn/home/070709/sml/tstt_h_4w.gif) no-repeat;}
+#top_search #sr_small .lw_5w:link {background:url(http://img.china.alibaba.com/images/cn/home/070709/sml/tstt_n_5w.gif) no-repeat;}
+#top_search #sr_small .lw_5w:hover {background:url(http://img.china.alibaba.com/images/cn/home/070709/sml/tstt_h_5w.gif) no-repeat;}
+#top_search #sr_small .lw_5hw:link {background:url(http://img.china.alibaba.com/images/cn/home/070709/sml/tstt_n_5hw.gif) no-repeat;}
+#top_search #sr_small .lw_5hw:hover {background:url(http://img.china.alibaba.com/images/cn/home/070709/sml/tstt_h_5hw.gif) no-repeat;}
+#top_search #sr_small .lw_lb {background:url(http://img.china.alibaba.com/images/cn/home/070709/sml/tstt_lb.gif);}
+#top_search #sr_small .lw_rb {background:url(http://img.china.alibaba.com/images/cn/home/070709/sml/tstt_rb.gif);}
+
+#top_search #sr_small .sr_in {left:148px;}
+#top_search #sr_small .src_subm {left:578px;}
+#top_search #sr_small .akc_subm {left:656px;}
+#top_search #sr_small .sr_ra {left:148px;}
+
+#top_search #sr_small .sr_w1 {left:88px;}
+#top_search #sr_small .sr_w2 {left:578px;}
+#top_search #sr_small .sr_w3 {right:22px;}
+#top_search #sr_small .sr_h_1 {left:32px;}
+/* top_search end */
+/*---------------------------------------顶部搜索框结束----------*/
+
+/*搜索框和菜单*/
+.MB_Menu {BORDER: #7B9CBC 1px solid;POSITION: absolute; DISPLAY: none;Z-INDEX: 9900; TEXT-ALIGN: left; width:285px;font-size:14px;BACKGROUND-COLOR: #ffffff;overflow:auto;}
+.MB_Menu DIV {margin:0px;padding-top:2px;padding-left:2px;OVERFLOW: hidden; CURSOR: pointer; HEIGHT: 18px; COLOR: #000;font-size:14px;border:1px solid #ffffff;BACKGROUND-COLOR: #ffffff;}
+.MB_Menu .MB_MenuSelectedItem {margin:0px;padding-top:2px;padding-left:2px;BACKGROUND-COLOR: #FFBB9D;color:#000;font-size:14px;}
+.MB_Menu1 {BORDER: #ffffff 1px solid;POSITION: absolute; Z-INDEX: 100; TEXT-ALIGN: left; width:467px;display:none;height:205px;font-size: 12px;BACKGROUND-COLOR: #ff0000;overflow:auto;margin:1px 1px;}

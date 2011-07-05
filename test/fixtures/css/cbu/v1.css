@@ -1,0 +1,9 @@
+/**
+ * smart global css v1
+ * by Edgar
+ * May 13, 2010
+ */
+@import url(http://style.china.alibaba.com/css/fdevlib2/reset/reset-min.css);
+@import url(http://style.china.alibaba.com/css/fdevlib2/grid/grid-min.css);
+@import url(http://style.china.alibaba.com/css/operation/global/fns-v1.css);
+@import url(http://style.china.alibaba.com/css/operation/smart/v1/type.css);
