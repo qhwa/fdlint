@@ -29,7 +29,7 @@ module XRay
 
     def success?
       @results.each do |r|
-        if %w(fatal warn).include? r.level.to_s
+        if %w(fatal error warn).include? r.level.to_s
           return false
         end
       end

@@ -115,8 +115,7 @@ module XRay
           results.each do |r|
             pos = r.node.position
             puts lines[pos.line]
-            puts ' ' * pos.column << '^'
-            puts ' ' * pos.column << color_text(r)
+            puts ' ' * pos.column << '^ ' << color_text(r)
             puts "\n"
           end
         end
@@ -127,6 +126,8 @@ module XRay
                 t.yellow
             elsif result.fatal?
                 t.red
+            elsif result.error?
+                t.purple
             else
                 t
             end
