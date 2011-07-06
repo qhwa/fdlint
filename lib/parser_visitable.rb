@@ -9,6 +9,18 @@ module XRay
     def to_s
       "[#{level.to_s.upcase}] #{node.position} #{message}"
     end
+
+    def warn?
+        level == :warn
+    end
+
+    def fatal?
+        level == :fatal
+    end
+
+    def info?
+        level == :info
+    end
   end
 
 

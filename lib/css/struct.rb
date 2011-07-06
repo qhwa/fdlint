@@ -12,7 +12,7 @@ module XRay
       end
 
       def text
-        rulessets.collect(&:text).join("\n")
+        rulesets.collect(&:text).join("\n")
       end
 
       def position
