@@ -52,7 +52,7 @@ module XRay
 
     def check_css(css)
       @text = css
-      success = false
+      success = true
       parser = CSS::Parser.new(css, @logger)
       visitor = CSS::Rule::CheckListRule.new
 
