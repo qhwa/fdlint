@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'optparse'
 require 'logger'
+require_relative 'helper/colored'
 
 require_relative 'runner'
 
@@ -131,16 +132,6 @@ module XRay
             end
         end
 
-    end
-end
-
-class String
-    def red
-        "\e[31m" << self << "\e[0m"
-    end
-
-    def yellow
-        "\e[33m" << self << "\e[0m"
     end
 end
 
