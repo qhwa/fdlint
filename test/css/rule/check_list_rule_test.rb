@@ -103,6 +103,38 @@ module XRayTest
           puts message
         end
 
+        def test_check_redefine_a_hover_color
+          selector = Node.new 'a:hover'
+          
+          prop = Node.new 'color'
+          expr = Node.new '#f00'
+          dec = Declaration.new(prop, expr)
+
+          ruleset = RuleSet.new(selector, [dec])
+
+          message, level = @rule.check_ruleset_redefine_a_hover_color ruleset
+          assert_equal :error, level
+          puts message
+        end
+
+        def test_check_redefine_lib_css
+          selector = Node.new '.fd-hide'
+          message, level = @rule.check_selector_redefine_lib_css selector
+          assert_equal :error, level
+          puts message
+
+          rule = CheckListRule.new :scope => 'lib'
+          ret = rule.check_selector_redefine_lib_css selector
+          assert_nil ret 
+        end
+        
+        def test_check_css_expression
+          expr = Node.new 'expression(onfocus=this.blur())'
+          message, level = @rule.check_expression_use_css_expression expr
+          assert_equal :error, level
+          puts message
+        end
+
       end
 
     end
