@@ -1,15 +1,19 @@
 class String
-    def red
-        "\e[31m" << self << "\e[0m"
-    end
 
-    def purple
-        "\e[35m" << self << "\e[0m"
-    end
+  def red
+    color 1
+  end
 
-    def yellow
-        "\e[33m" << self << "\e[0m"
-    end
+  def purple
+    color 5
+  end
+
+  def yellow
+    color 3
+  end
+
+  def color( fore, bg=nil )
+    "\e[3#{fore}m" << self << "\e[0m"
+  end
+
 end
-
-

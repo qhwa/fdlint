@@ -1,13 +1,14 @@
 require 'observer'
 
 require_relative 'base_parser'
+require_relative 'helper/colored'
 
 module XRay
   
   VisitResult = Struct.new(:node, :message, :level)
   class VisitResult
     def to_s
-      "[#{level.to_s.upcase}] #{node.position} #{message}"
+      "[#{level.to_s.upcase}] #{node.nil? ? '' : node.position} #{message}"
     end
 
     def error?
@@ -24,6 +25,19 @@ module XRay
 
     def info?
         level == :info
+    end
+
+    def to_color_s
+      t = "[#{level}] #{message}"
+      if warn?
+        t.yellow
+      elsif fatal?
+        t.red
+      elsif error?
+        t.purple
+      else
+        t
+      end
     end
   end
 
