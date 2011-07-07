@@ -30,11 +30,11 @@ module XRay
     def to_color_s
       t = "[#{level}] #{message}"
       if warn?
-        t.yellow
+        t.yellow_bg
       elsif fatal?
-        t.red
+        t.red_bg
       elsif error?
-        t.purple
+        t.red
       else
         t
       end
