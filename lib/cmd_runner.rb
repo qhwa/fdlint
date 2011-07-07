@@ -85,7 +85,6 @@ module XRay
 
 end
 
-
 if $0 == __FILE__
   XRay::CMDRunner.run
 end
