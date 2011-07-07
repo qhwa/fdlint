@@ -17,7 +17,8 @@ module XRay
             :check_selector_with_id,
             :check_selector_with_global_tag,
             :check_selector_level,
-            :check_selector_with_star
+            :check_selector_with_star,
+            :check_selector_redefine_lib_css
           ], selector) 
         end
         
@@ -48,6 +49,13 @@ module XRay
           end
         end
 
+        def check_selector_redefine_lib_css(selector)
+          if @options[:scope] != 'lib' &&
+              selector =~ /^\.fd-/
+            ['禁止修改或重载type中的样式', :error]
+          end
+        end
+
 
         # declaration
         def visit_declaration(dec)
@@ -67,6 +75,35 @@ module XRay
           if dec.property =~ /^font/ && 
               dec.expression =~ /[\u4e00-\u9fa5]/
             ['字体名称中的中文必须用ascii字符表示', :error]
+          end
+        end
+
+        # ruleset
+        
+        def visit_ruleset(ruleset)
+          check([
+            :check_ruleset_redefine_a_hover_color
+          ], ruleset);
+        end
+
+        def check_ruleset_redefine_a_hover_color(ruleset)
+          if ruleset.selector.text == 'a:hover' &&
+              ruleset.declarations.find { |dec| dec.property.text == 'color' }
+            ['禁止重写reset中定义的a标签的hover色（现为#ff7300）', :error]
+          end
+        end
+
+        # expression
+
+        def visit_expression(expr)
+          check([
+            :check_expression_use_css_expression
+          ], expr);
+        end
+
+        def check_expression_use_css_expression(expr)
+          if expr =~ /^expression\(/
+            ['禁止使用CSS表达式', :error]
           end
         end
 

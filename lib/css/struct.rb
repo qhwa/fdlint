@@ -5,10 +5,10 @@ module XRay
     Node = XRay::Node
     
     class StyleSheet < Node
-      attr_reader :rulesets
+      attr_reader :rulesets, :directives
       
-      def initialize(rulesets)
-        @rulesets = rulesets
+      def initialize(rulesets, directives = [])
+        @rulesets, @directives = rulesets, directives
       end
 
       def text
@@ -16,7 +16,32 @@ module XRay
       end
 
       def position
-        rulesets.length ? rulesets[0].position : nil
+        rulesets.empty? ? nil : rulesets[0].position
+      end
+    end
+
+    class Directive < Node
+      attr_reader :keyword, :expression, :block
+
+      def initialize(keyword, expression, block = nil)
+        @keyword, @expression, @block = keyword, expression, block 
+      end
+
+      def text
+        t = "@#{keyword}"
+        if expression
+          t += "#{expression}"
+        end
+        if block
+          t += "{\n#{block}\n}\n"
+        else
+          t += ';'
+        end
+        t
+      end
+
+      def position
+        keyword.position
       end
     end
 
@@ -29,10 +54,10 @@ module XRay
 
       def text
         decs_text = declarations.collect { |dec|
-          ' ' * 4 + dec.text
+          "#{' ' * 4}#{dec};"
         }.join("\n")
         
-        "#{selector} {\n #{decs_text} \n}"
+        "#{selector} {\n#{decs_text}\n}"
       end
 
       def position
@@ -52,7 +77,7 @@ module XRay
       end
 
       def position
-        simple_selectors.length ? simple_selectors[0] : nil
+        simple_selectors.empty? ? nil : simple_selectors[0].position
       end
     end
 

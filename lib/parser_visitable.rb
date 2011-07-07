@@ -46,7 +46,7 @@ module XRay
     
     include Observable
 
-    attr_reader :parse_results
+    attr_reader :results
 
     def self.included(klass)
       klass.public_instance_methods(false).each do |method|
@@ -74,7 +74,7 @@ module XRay
 
         define_method(method) do |*args, &block|
           node = self.send(old_method, *args, &block)
-          visit(method, node)
+          node && visit(method, node)
           node
         end
       end
@@ -82,7 +82,7 @@ module XRay
 
     def initialize
       @visitors = []
-      @parse_results = []
+      @results = []
     end
 
     def add_visitor(visitor)
@@ -111,7 +111,7 @@ module XRay
       results.each { |ret|
         message, level = ret
         result = VisitResult.new(node, message, level || :info)
-        @parse_results << result
+        @results << result
         self.changed
         notify_observers(result, self)
       }

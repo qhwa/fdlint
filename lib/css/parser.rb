@@ -5,30 +5,71 @@ module XRay
   module CSS
     
     class Parser < XRay::BaseParser
-      
+
+      TERM = '[^;{}]'
+      QUOT_EXPR = "#{TERM}*'[^']*'#{TERM}*"
+      DQUOT_EXPR = %Q(#{TERM}*"[^"]*"#{TERM}*)
+      R_EXPR = %r"(?:#{QUOT_EXPR})|(?:#{DQUOT_EXPR})|(?:#{TERM}+)"
+
+
       def parse_stylesheet
         log 'parse stylesheet'
         
-        StyleSheet.new parse_rulesets
+        stats = batch(:parse_statement) do 
+          skip_empty
+          eos = @scanner.eos?
+          log 'end of string, parse complete' if eos
+          !eos
+        end
+        
+        rulesets = stats.select { |elm| elm.class == RuleSet }
+        directives = stats.select { |elm| elm.class == Directive }
+
+        StyleSheet.new(rulesets, directives)
       end
-      
-      def parse_rulesets
-        batch :parse_ruleset
+
+      # ruleset or directive
+      def parse_statement
+        log 'parse statement'
+
+        if @scanner.check /@/
+          parse_directive
+        else
+          parse_ruleset
+        end
+      end
+
+      def parse_directive
+        log 'parse directive'
+
+        skip /@/
+        keyword = scan /\w+/
+        skip_empty
+
+        expr = nil
+        block = nil
+        if @scanner.check /\{/
+          skip /\{/
+          block = parse_stylesheet
+          skip /}/
+        else
+         expr = scan R_EXPR
+         skip /;/ 
+        end
+
+        log "keyword: #{keyword} #{keyword.position}"
+        log("expression: #{expr} #{expr.position}") if expr
+        log("block: #{block} #{block.position}") if block
+        Directive.new(keyword, expr, block)
       end
       
       def parse_ruleset
         log 'parse ruleset'
-        
-        skip_empty
-        if @scanner.eos?
-          log 'end of string, return nil'
-          return nil
-        end
-        
+
         selector = parse_selector
-        pass /\{/
+        skip /\{/
         declarations = parse_declarations
-        pass /}/
+        skip /}/
         
         log "ruleset parsed\n"
         RuleSet.new(selector, declarations)
@@ -44,7 +85,7 @@ module XRay
         log '   parse simple selector'
         selector = scan /[^,\{]+/
 
-        @scanner.check(/,/) && pass(/,/)
+        @scanner.check(/,/) && skip(/,/)
 
         log " [#{selector}] #{selector.position}"
         selector
@@ -58,12 +99,12 @@ module XRay
         log '   parse declaration'
         
         property = parse_property
-        pass /:/
+        skip /:/
         expression = parse_expression
         
         # 可选的分号
         semicolon = @scanner.check(/\s*}\s*/) ? /;?/ : /;/
-        pass semicolon
+        skip semicolon
         
         Declaration.new(property, expression)
       end
@@ -77,11 +118,8 @@ module XRay
       
       def parse_expression
         log '     parse expression'
-        quot_expr = "[^;}]*'[^']*'[^;}]*"
-        dquot_expr = '[^;}]*"[^"]*"[^;}]*'
-        term = '[^;}]+'
-        
-        expr = scan %r"(?:#{quot_expr})|(?:#{dquot_expr})|(?:#{term})"
+
+        expr = scan R_EXPR
         log "     [#{expr}] #{expr.position}"
         expr
       end

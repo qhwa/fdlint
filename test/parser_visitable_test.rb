@@ -92,7 +92,7 @@ module XRayTest
 
       parser.parse_node
 
-      results = parser.parse_results
+      results = parser.results
       assert_equal 5, results.length
       assert_equal 5, observer.times
     end
