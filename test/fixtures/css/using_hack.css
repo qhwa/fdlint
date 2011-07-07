@@ -11,3 +11,6 @@
 html*.test {
     display:none;
 }
+
+html>/**/body hr{margin:7px 0 0 0;}
+
