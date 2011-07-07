@@ -61,7 +61,15 @@ module XRay
       true
     end
 
+    def check_js_file(file)
+      true
+    end
+
     def check_html(text)
+      true
+    end
+
+    def check_html_file(file)
       true
     end
 
@@ -69,17 +77,21 @@ module XRay
       send :"check_#{get_file_type file}_file", file
     end
 
-    def print_results
-      @results.each { |r| puts r }
+    def print_results( opt={} )
+      prf = opt[:prefix] || ''
+      suf = opt[:suffix] || ''
+      @results.each { |r| puts prf + r.to_s + suf }
     end
 
-    def print_results_with_source
+    def print_results_with_source( opt )
       if @source
         lines = @source.split("\n")
+        prf = opt[:prefix] || ''
+        suf = opt[:suffix] || ''
         @results.each do |r|
           pos = r.node.position
-          puts lines[pos.line]
-          puts ' ' * pos.column << '^ ' << r.to_color_s
+          puts prf + lines[pos.line]
+          puts prf + ' ' * pos.column << '^ ' << r.to_color_s
           puts "\n"
         end
       else

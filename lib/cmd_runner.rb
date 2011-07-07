@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 require 'optparse'
+require 'pathname'
 require_relative 'runner'
 
 Version = "0.1"
@@ -69,15 +70,30 @@ module XRay
     end
 
     private
-    def check_file( file, type=:html, opt)
+    def check_file( file, type=nil, opt)
+      if File.directory? file
+        Pathname.new( file ).each_child do |f|
+          check_file f, opt
+        end
+        return
+      end
+
       runner = XRay::Runner.new(opt)
-      good, results = runner.check_file file
+      method = type ? :"check_#{type}_file" : :check_file
+      
+      f = file.to_s
+      good, results = runner.send(method, file.to_s)
+
       if good
-        puts "Successful! This file is well written."
+        print "[OK]".green_bg << " #{f}" << "\n"
       elsif opt[:list]
-        runner.print_results
+        puts "[EE]".red_bg << " #{f}"
+        runner.print_results :prefix => ' ' * 5
       else
-        runner.print_results_with_source
+        puts ""
+        puts "[EE] #{f}".purple_bg
+        runner.print_results_with_source :prefix => '    > '
+        puts ""
       end
     end
 

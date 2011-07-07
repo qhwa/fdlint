@@ -28,7 +28,7 @@ module XRay
     end
 
     def to_color_s
-      t = "[#{level}] #{message}"
+      t = "[#{level.to_s.upcase}] #{message}"
       if warn?
         t.yellow_bg
       elsif fatal?
