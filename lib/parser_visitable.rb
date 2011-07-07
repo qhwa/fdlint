@@ -10,6 +10,10 @@ module XRay
       "[#{level.to_s.upcase}] #{node.position} #{message}"
     end
 
+    def error?
+        level == :error
+    end
+
     def warn?
         level == :warn
     end
