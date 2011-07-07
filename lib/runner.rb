@@ -7,21 +7,6 @@ require_relative 'css/rule/check_list_rule'
 
 module XRay
 
-  class SimpleObserver
-
-    attr_reader :results
-
-    def initialize
-      @results = []
-    end
-
-    def update(result, parser)
-      @results << result
-    end
-
-  end
-
-
   class Runner
 
     CSS = XRay::CSS
@@ -34,7 +19,6 @@ module XRay
 
       @logger = Logger.new(STDOUT)
       @logger.level = @opt[:debug] ? Logger::INFO : Logger::WARN
-      @observer = SimpleObserver.new
       @results = []
     end
 
@@ -45,16 +29,16 @@ module XRay
       visitor = CSS::Rule::CheckListRule.new
 
       parser.add_visitor visitor
-      parser.add_observer @observer
 
       begin
         parser.parse_stylesheet
       rescue ParseError => e
         no_error = false
         puts "#{e.message}#{e.position}"
+      ensure
+        @results = parser.results
       end
 
-      @results = @observer.results
       [no_error && success? , @results]
     end
 
