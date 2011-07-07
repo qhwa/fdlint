@@ -23,10 +23,10 @@ module XRay
       @scanner.skip /\s*/
     end
       
-    def pass(pattern)
+    def skip(pattern)
       skip_empty
       unless @scanner.skip pattern
-        parse_error "pass fail: #{pattern}"
+        parse_error "skip fail: #{pattern}"
       end
     end
       

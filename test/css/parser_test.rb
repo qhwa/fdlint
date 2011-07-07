@@ -200,6 +200,42 @@ module XRayTest
           puts "#{e.message}#{e.position}"
         end
       end
+
+      def test_directive_with_expression
+        css = %q[
+            @import url(http://style.china.alibaba.com/css/fdevlib2/reset/reset-min.css);
+            @import url(http://style.china.alibaba.com/css/fdevlib2/grid/grid-min.css);
+          ]
+
+        parser = create_parser css
+        sheet = parser.parse_stylesheet
+
+        directives = sheet.directives
+        assert_equal 2, directives.length
+
+        direct = directives[0]
+        assert_equal 'import', direct.keyword.text
+        assert_equal 'url(http://style.china.alibaba.com/css/fdevlib2/reset/reset-min.css)', direct.expression.text
+      end
+
+      def test_directive_with_block
+        css = %q[
+            @import "subs.css";
+            @media print {
+              @import "print-main.css";
+              body { font-size: 10pt }
+            }
+            h1 { color: blue }
+          ]
+
+        parser = create_parser css
+        sheet = parser.parse_stylesheet
+        directives = sheet.directives
+        assert_equal 2, directives.length
+
+        rulesets = sheet.rulesets
+        assert_equal 1, rulesets.length
+      end
       
       def create_parser(css)
         Parser.new(css, Logger.new(STDOUT))

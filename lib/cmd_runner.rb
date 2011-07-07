@@ -107,7 +107,7 @@ module XRay
         end
 
         def print_results( results )
-            results.print
+            results.each { |r| puts r }
         end
 
         def print_results_with_source( results, source )

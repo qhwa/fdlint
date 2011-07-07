@@ -98,7 +98,7 @@ module XRay
         def visit_expression(expr)
           check([
             :check_expression_use_css_expression
-          ], ruleset);
+          ], expr);
         end
 
         def check_expression_use_css_expression(expr)
