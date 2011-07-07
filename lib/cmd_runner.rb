@@ -9,21 +9,23 @@ Version = "0.1"
 module XRay
 
   class CMDOptions
+    
     def self.parse( args )
-      css_files, js_files, html_files, common_files = [], [], [], []
+      css, js, html, common = [], [], [], []  
       options = {
         :encoding   => :gb2312,
-        :css_files  => css_files,
-        :js_files   => js_files,
-        :html_files => html_files,
-        :common_files => common_files
+        :css_files  => css,
+        :js_files   => js,
+        :html_files => html,
+        :common_files => common
       }
+
 
       opts = OptionParser.new do |opts|
         opts.banner = "Usage: xray"
         %w(css js html).each do |type|
           opts.on("--#{type} files", Array, "check #{type} files") do |files|
-            eval("#{type}_files").concat files if files
+            options[:"#{type}_files"].concat files if files
           end
           opts.on("--charset set", "-c", "file charset") do |enc|
             options[:encoding] = enc
@@ -31,16 +33,16 @@ module XRay
           opts.on("--debug", "-d", "print debug info") do |dbg|
             options[:debug] = true
           end
-          opts.on("--verbose", "-V", "print detail info") do |vbs|
-            options[:verbose] = true
+          opts.on("--list", "-l", "list results without source") do |l|
+            options[:list] = true
           end
         end
       end
 
       begin
         rest = opts.parse! args
-        common_files.concat rest
-        raise ArgumentError.new("") if (css_files + js_files + html_files + common_files).empty?
+        common.concat rest
+        raise ArgumentError.new("") if (css + js + html + common).empty?
       rescue => e
         puts e.message.capitalize + "\n\n"
         puts opts
@@ -85,10 +87,10 @@ module XRay
         good, results = runner.send :"check_#{type}", content
         if good
             puts "Successful! This file is well written."
-        elsif opt[:verbose]
-            print_results_with_source results, content
-        else
+        elsif opt[:list]
             print_results results
+        else
+            print_results_with_source results, content
         end
     end
 
