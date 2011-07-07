@@ -9,7 +9,7 @@ Version = "0.1"
 module XRay
 
   class CMDOptions
-    
+
     def self.parse( args )
       css, js, html, common = [], [], [], []  
       options = {
@@ -59,53 +59,52 @@ module XRay
     end
 
     def run
-        options = XRay::CMDOptions.parse ARGV
-        enc     = options[:encoding]
-        %w(css js html).each do |type|
-            files = options[:"#{type}_files"]
-            files.each { |file| check_file file, type, options } if files
-        end
+      options = XRay::CMDOptions.parse ARGV
+      enc     = options[:encoding]
+      %w(css js html).each do |type|
+        files = options[:"#{type}_files"]
+        files.each { |file| check_file file, type, options } if files
+      end
 
-        options[:common_files].each do |file|
-            check_file file, get_file_type(file), options
-        end
+      options[:common_files].each do |file|
+        check_file file, get_file_type(file), options
+      end
     end
 
     private
     def check_file( file, type=:html, opt)
-        begin
-            content = IO.read(file, :encoding=>opt[:encoding].to_s)
-        rescue => e
-            puts "[ERROR] #{e.to_s}"
-            return
-        end
+      begin
+        content = IO.read(file, :encoding=>opt[:encoding].to_s)
+      rescue => e
+        puts "[ERROR] #{e.to_s}"
+        return
+      end
+      content.encode! 'utf-8'
 
-        content.encode! 'utf-8'
+      runner = XRay::Runner.new(opt)
 
-        runner = XRay::Runner.new(opt)
-
-        good, results = runner.send :"check_#{type}", content
-        if good
-            puts "Successful! This file is well written."
-        elsif opt[:list]
-            print_results results
-        else
-            print_results_with_source results, content
-        end
+      good, results = runner.send :"check_#{type}", content
+      if good
+        puts "Successful! This file is well written."
+      elsif opt[:list]
+        print_results results
+      else
+        print_results_with_source results, content
+      end
     end
 
     def get_file_type( name )
-        if name =~ /\.css$/i
-            :css
-        elsif name =~ /\.js/i
-            :js
-        else
-            :html
-        end
+      if name =~ /\.css$/i
+        :css
+      elsif name =~ /\.js/i
+        :js
+      else
+        :html
+      end
     end
 
     def print_results( results )
-        results.print
+      results.print
     end
 
     def print_results_with_source( results, source )
@@ -121,13 +120,13 @@ module XRay
     def color_text( result )
       t = "[#{result.level}] #{result.message}"
       if result.warn?
-          t.yellow
+        t.yellow
       elsif result.fatal?
-          t.red
+        t.red
       elsif result.error?
-          t.purple
+        t.purple
       else
-          t
+        t
       end
     end
 
