@@ -1,0 +1,8 @@
+.myDiv {
+position: absolute;
+width: 100px;
+height: 100px;
+left: expression(document.body.offsetWidth - 110 + "px");
+top: expression(document.body.offsetHeight - 110 + "px");
+background: red;
+}

@@ -1,0 +1,13 @@
+/*
+ * css hack ref:
+ * http://centricle.com/ref/css/filters/?highlight_columns=true
+ */
+.test {
+    _display:none;
+    *line-height:1.5;
+    d\isplay:none;
+}
+
+html*.test {
+    display:none;
+}
