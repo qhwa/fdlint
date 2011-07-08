@@ -2,3 +2,13 @@
  * 中文 (gb2312)
  */
 .clr { clear: left; }
+/*清除浮动*/
+.clr {
+	zoom:1;
+}
+.clr:after {
+	content:"\0020";
+	display:block;
+	height:0;
+	clear:both;
+}

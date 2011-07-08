@@ -89,10 +89,10 @@ module XRay
       end
     end
 
-    def print_results_with_source( opt )
+    def print_results_with_source( opt={} )
       opt = @opt.merge opt
       if @source
-        lines = @source.split("\n")
+        lines = @source.gsub(/\r\n/, "\n").gsub(/\r/, "\n").split("\n")
         prf = opt[:prefix] || ''
         suf = opt[:suffix] || ''
         @results.each do |r|

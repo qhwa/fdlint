@@ -77,7 +77,7 @@ module XRay
     private
 
     def prepare_text(text)
-      text.gsub(/\r\n/, "\n").gsub(/\r/, '\n')
+      text.gsub(/\r\n/, "\n").gsub(/\r/, "\n")
     end
 
   end

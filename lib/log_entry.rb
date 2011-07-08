@@ -3,6 +3,7 @@ require_relative 'helper/colored'
 module XRay
 
   LogEntry = Struct.new :row, :column, :message, :level 
+
   class LogEntry
 
     def initialize(row=0, column=0, message, level)
