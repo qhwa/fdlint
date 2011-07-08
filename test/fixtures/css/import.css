@@ -1,0 +1,18 @@
+@import url("http://style.china.alibaba.com/css/lib/fdev-v3/fdev.css");
+@import url("http://style.china.alibaba.com/css/fdevlib/widget/al-calender.css");
+@import url("http://style.china.alibaba.com/css/app/hood/baike/module/editarea.css");
+/*
+*	old
+*
+*/
+/*Çå³ý¸¡¶¯*/
+.clr {
+	zoom:1;
+}
+.clr:after {
+	content:"\0020";
+	display:block;
+	height:0;
+	clear:both;
+}
+
