@@ -78,21 +78,9 @@ module XRayTest
           puts message
         end
 
+
         # declaration
         
-        def test_check_declaration_hack
-          decs = ['_background: none', '+font-size: 12px', '*color: #ff0000', 
-              'font-size: 12px\9', 'font-weight:' 'bold\0']
-
-          decs.each do |dec|
-            puts dec
-
-            dec = Node.new dec
-            message, level = @rule.check_declaration_hack dec
-            assert_equal :warn, level
-          end
-        end
-
         def test_check_declaration_font
           sel = Node.new 'font'
           expr = Node.new '宋体'
@@ -128,11 +116,29 @@ module XRayTest
           assert_nil ret 
         end
         
+        def test_check_property_hack
+          props = %w(_background +font-size *color)
+          props.each do |prop|
+            prop = Node.new prop
+            message, level = @rule.check_property_hack prop
+            assert_equal :warn, level
+          end
+        end
+
         def test_check_css_expression
           expr = Node.new 'expression(onfocus=this.blur())'
           message, level = @rule.check_expression_use_css_expression expr
           assert_equal :error, level
           puts message
+        end
+
+        def test_check_css_expression_hack
+          exprs = %w(9px\0 #000\9)
+          exprs.each do |expr|
+            expr = Node.new expr
+            message, level = @rule.check_expression_hack expr
+            assert_equal :warn, level
+          end
         end
 
       end
