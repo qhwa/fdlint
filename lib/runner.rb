@@ -95,7 +95,6 @@ module XRay
         lines = @source.gsub(/\r\n/, "\n").gsub(/\r/, "\n").split("\n")
         prf = opt[:prefix] || ''
         suf = opt[:suffix] || ''
-        puts @results.inspect
         @results.each do |r|
           col = r.column
           row = r.row
