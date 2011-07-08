@@ -205,17 +205,22 @@ module XRayTest
         css = %q[
             @import url(http://style.china.alibaba.com/css/fdevlib2/reset/reset-min.css);
             @import url(http://style.china.alibaba.com/css/fdevlib2/grid/grid-min.css);
+            @import url("http://style.china.alibaba.com/css/lib/fdev-v3/fdev.css");
           ]
 
         parser = create_parser css
         sheet = parser.parse_stylesheet
 
         directives = sheet.directives
-        assert_equal 2, directives.length
+        assert_equal 3, directives.length
 
         directive = directives[0]
         assert_equal 'import', directive.keyword.text
         assert_equal 'url(http://style.china.alibaba.com/css/fdevlib2/reset/reset-min.css)', directive.expression.text
+
+        directive = directives[2]
+        assert_equal 'import', directive.keyword.text
+        assert_equal 'url("http://style.china.alibaba.com/css/lib/fdev-v3/fdev.css")', directive.expression.text
       end
 
       def test_directive_with_expression_2

@@ -89,16 +89,20 @@ module XRay
       end
     end
 
-    def print_results_with_source( opt )
+    def print_results_with_source( opt={} )
       opt = @opt.merge opt
       if @source
-        lines = @source.split("\n")
+        lines = @source.gsub(/\r\n/, "\n").gsub(/\r/, "\n").split("\n")
         prf = opt[:prefix] || ''
         suf = opt[:suffix] || ''
         @results.each do |r|
           col = r.column
           row = r.row
+<<<<<<< HEAD
           line_t = lines[row]
+=======
+          line_t = lines[r.row]
+>>>>>>> 9001ea6420e0e4a807cfcfe01a1e7fa9012a2106
           left = col - 50
           right = col + 50
           left = 0 if left < 0
