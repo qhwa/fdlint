@@ -95,10 +95,11 @@ module XRay
         lines = @source.gsub(/\r\n/, "\n").gsub(/\r/, "\n").split("\n")
         prf = opt[:prefix] || ''
         suf = opt[:suffix] || ''
+        puts @results.inspect
         @results.each do |r|
           col = r.column
           row = r.row
-          line_t = lines[r.row]
+          line_t = lines[row]
           left = col - 50
           right = col + 50
           left = 0 if left < 0
