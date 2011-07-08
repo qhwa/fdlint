@@ -7,13 +7,29 @@ module XRay
   
   class VisitResult < LogEntry
   
-    attr_reader :node
+    attr :message, :level, :node
 
     def initialize(node, message, level)
-      @node = node
-      pos = node.position
-      super(pos.row, pos.column, message, level)
+      @node, @message, @level = node, message, level
+      update_pos( node )
     end
+
+    def update_pos( node )
+      if node
+        self.column = node.position.column
+        self.row = node.position.row
+      end
+    end
+
+    def node=(n)
+      update_pos n
+      @node = n
+    end
+
+    def to_s
+      "[#{level.to_s.upcase}] #{node.nil? ? '' : node.position} #{message}"
+    end
+
   end
 
 

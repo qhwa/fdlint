@@ -1,9 +1,10 @@
 module XRay
 
-  Position = Struct.new(:pos, :row, :column)
+  Position = Struct.new(:pos, :line, :column)
   class Position
+    alias_method :row, :line
     def to_s
-        "[#{row + 1},#{column + 1}]"
+        "[#{line + 1},#{column + 1}]"
     end
   end
 
@@ -15,17 +16,17 @@ module XRay
     end
 
     def locate(pos)
-      row = 0
+      line = 0
       col = pos
-      now = @lines_info[row]
+      now = @lines_info[line]
       
       while now && col > now
         col -= (now + 1)
-        row += 1
-        now = @lines_info[row]
+        line += 1
+        now = @lines_info[line]
       end
 
-      now ? Position.new(pos, row, col) : nil
+      now ? Position.new(pos, line, col) : nil
     end
 
   end
