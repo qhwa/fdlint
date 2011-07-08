@@ -98,8 +98,7 @@ module XRay
         @results.each do |r|
           col = r.column
           row = r.row
-          puts r.inspect
-          line_t = lines[r.row]
+          line_t = lines[row]
           left = col - 50
           right = col + 50
           left = 0 if left < 0

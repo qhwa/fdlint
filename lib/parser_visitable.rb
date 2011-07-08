@@ -12,7 +12,7 @@ module XRay
     def initialize(node, message, level)
       @node = node
       pos = node.position
-      super(pos.row, pos.column, message, level)
+      super(message, level, pos.row, pos.column)
     end
   end
 
