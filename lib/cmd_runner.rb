@@ -10,46 +10,45 @@ module XRay
   class CMDOptions
 
     def self.parse( args )
-      css, js, html, common = [], [], [], []  
+      files = []
       options = {
         :encoding   => :gb2312,
-        :css_files  => css,
-        :js_files   => js,
-        :html_files => html,
-        :common_files => common,
-        :colorful   => true
+        :colorful   => true,
+        :type       => nil
       }
 
       opts = OptionParser.new do |opts|
         opts.banner = "Usage: xray"
         %w(css js html).each do |type|
-          opts.on("--#{type} files", Array, "check #{type} files") do |files|
-            options[:"#{type}_files"].concat files if files
+          opts.on("--#{type}", "check #{type} files only") do
+            options[:type] = type
           end
-          opts.on("--charset set", "-c", "file charset") do |enc|
-            options[:encoding] = enc
-          end
-          opts.on("--debug", "-d", "print debug info") do
-            options[:debug] = true
-          end
-          opts.on("--list", "-l", "list results without source") do
-            options[:list] = true
-            options[:colorful] = false
-          end
+        end
+        opts.on("--charset set", "-c", "file charset") do |enc|
+          options[:encoding] = enc
+        end
+        opts.on("--debug", "-d", "print debug info") do
+          options[:debug] = true
+        end
+        opts.on("--list", "-l", "list results without source") do
+          options[:list] = true
+          options[:colorful] = false
         end
       end
 
       begin
         rest = opts.parse! args
-        common.concat rest
-        raise ArgumentError.new("") if (css + js + html + common).empty?
+        files.concat rest
+        raise ArgumentError.new("") if files.empty?
       rescue => e
         puts e.message.capitalize + "\n\n"
         puts opts
         exit 1
       end
-      options
+      [options, files]
+
     end
+
   end
 
   class CMDRunner
@@ -59,19 +58,15 @@ module XRay
     end
 
     def run
-      options = XRay::CMDOptions.parse ARGV
-      %w(css js html).each do |type|
-        files = options[:"#{type}_files"]
-        files.each { |file| check_file file, type, options } if files
-      end
-
-      options[:common_files].each do |file|
+      options, files = XRay::CMDOptions.parse ARGV
+      @core_runner = XRay::Runner.new(options)
+      files.each do |file|
         check_file file, options
       end
     end
 
     private
-    def check_file( file, type=nil, opt)
+    def check_file( file, opt)
 
       if File.directory? file
         Pathname.new( file ).each_child do |f|
@@ -80,20 +75,19 @@ module XRay
         return
       end
 
-      if XRay::Runner.style_file? file
-        runner = XRay::Runner.new(opt)
+      if @core_runner.valid_file? file
         f = file.to_s
-        good, results = runner.check_file( f )
+        good, results = @core_runner.check_file( f )
 
         if good
           print "[OK]".green_bg << " #{f}" << "\n"
         elsif opt[:list]
           puts "[EE]".red_bg << " #{f}"
-          runner.print_results :prefix => ' ' * 5
+          @core_runner.print_results :prefix => ' ' * 5
         else
           puts ""
           puts "[EE] #{f}".purple_bg
-          runner.print_results_with_source :prefix => '    > '
+          @core_runner.print_results_with_source :prefix => '    > '
           puts ""
         end
       end
