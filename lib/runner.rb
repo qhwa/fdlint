@@ -51,10 +51,10 @@ module XRay
           :scope => file =~ /[\\\/]lib[\\\/]/ ? 'lib' : 'page'
         })
       rescue Encoding::UndefinedConversionError => e
-        @results = [LogEntry.new( 0, 0, "File can't be read as #{@opt[:encoding]} charset", :fatal)]
+        @results = [LogEntry.new( "File can't be read as #{@opt[:encoding]} charset", :fatal)]
         return [false, @results]
       rescue => e
-        @results = [LogEntry.new( 0, 0, e.to_s, :fatal )]
+        @results = [LogEntry.new( e.to_s, :fatal )]
         return [false, @results]
       end
     end

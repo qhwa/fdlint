@@ -5,6 +5,10 @@ module XRay
   LogEntry = Struct.new :row, :column, :message, :level 
   class LogEntry
 
+    def initialize(row=0, column=0, message, level)
+      @row, @column, @message, @level = row, column, message, level 
+    end
+
     def to_s
       "[#{level.to_s.upcase}] [#{row},#{column}] #{message}"
     end
