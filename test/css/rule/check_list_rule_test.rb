@@ -78,21 +78,17 @@ module XRayTest
           puts message
         end
 
-        # declaration
-        
-        def test_check_declaration_hack
-          decs = ['_background: none', '+font-size: 12px', '*color: #ff0000', 
-              'font-size: 12px\9', 'font-weight:' 'bold\0']
-
-          decs.each do |dec|
-            puts dec
-
-            dec = Node.new dec
-            message, level = @rule.check_declaration_hack dec
+        def test_check_selector_hack
+          selectors = %w(_background +font-size *color)
+          selectors.each do |selector|
+            selector = Node.new selector
+            message, level = @rule.check_selector_hack selector
             assert_equal :warn, level
           end
         end
 
+        # declaration
+        
         def test_check_declaration_font
           sel = Node.new 'font'
           expr = Node.new '宋体'
@@ -133,6 +129,15 @@ module XRayTest
           message, level = @rule.check_expression_use_css_expression expr
           assert_equal :error, level
           puts message
+        end
+
+        def test_check_css_expression_hack
+          exprs = %w(9px\0 #000\9)
+          exprs.each do |expr|
+            expr = Node.new expr
+            message, level = @rule.check_expression_hack expr
+            assert_equal :warn, level
+          end
         end
 
       end

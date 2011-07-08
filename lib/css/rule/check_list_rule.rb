@@ -18,7 +18,8 @@ module XRay
             :check_selector_with_global_tag,
             :check_selector_level,
             :check_selector_with_star,
-            :check_selector_redefine_lib_css
+            :check_selector_redefine_lib_css,
+            :check_selector_hack
           ], selector) 
         end
         
@@ -51,8 +52,14 @@ module XRay
 
         def check_selector_redefine_lib_css(selector)
           if @options[:scope] != 'lib' &&
-              selector =~ /^\.fd-/
+              selector =~ /^\.fd-\w+$/
             ['禁止修改或重载type中的样式', :error]
+          end
+        end
+
+        def check_selector_hack(selector)
+          if selector =~ /[^-a-z]/
+            ['合理使用hack', :warn]
           end
         end
 
@@ -60,15 +67,8 @@ module XRay
         # declaration
         def visit_declaration(dec)
           check([
-            :check_declaration_hack,
             :check_declaration_font
           ], dec)
-        end
-
-        def check_declaration_hack(dec)
-          if dec.property =~ /[_\W]/ || dec.expression =~ /\\\d$/
-            ['合理使用hack', :warn]
-          end
         end
 
         def check_declaration_font(dec)
@@ -97,13 +97,20 @@ module XRay
 
         def visit_expression(expr)
           check([
-            :check_expression_use_css_expression
+            :check_expression_use_css_expression,
+            :check_expression_hack
           ], expr);
         end
 
         def check_expression_use_css_expression(expr)
           if expr =~ /^expression\(/
             ['禁止使用CSS表达式', :error]
+          end
+        end
+
+        def check_expression_hack(expr)
+          if expr =~ /\\\d$/
+            ['合理使用hack', :warn]
           end
         end
 
