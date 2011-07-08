@@ -2,6 +2,7 @@ module XRay
 
   Position = Struct.new(:pos, :line, :column)
   class Position
+    alias_method :row, :line
     def to_s
         "[#{line + 1},#{column + 1}]"
     end

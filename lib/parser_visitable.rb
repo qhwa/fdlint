@@ -1,44 +1,35 @@
 require 'observer'
 
+require_relative 'log_entry'
 require_relative 'base_parser'
-require_relative 'helper/colored'
 
 module XRay
   
-  VisitResult = Struct.new(:node, :message, :level)
-  class VisitResult
+  class VisitResult < LogEntry
+  
+    attr :message, :level, :node
+
+    def initialize(node, message, level)
+      @node, @message, @level = node, message, level
+      update_pos( node )
+    end
+
+    def update_pos( node )
+      if node
+        self.column = node.position.column
+        self.row = node.position.row
+      end
+    end
+
+    def node=(n)
+      update_pos n
+      @node = n
+    end
+
     def to_s
       "[#{level.to_s.upcase}] #{node.nil? ? '' : node.position} #{message}"
     end
 
-    def error?
-        level == :error
-    end
-
-    def warn?
-        level == :warn
-    end
-
-    def fatal?
-        level == :fatal
-    end
-
-    def info?
-        level == :info
-    end
-
-    def to_color_s
-      t = self.to_s
-      if warn?
-        t.yellow_bg
-      elsif fatal?
-        t.red_bg
-      elsif error?
-        t.red
-      else
-        t
-      end
-    end
   end
 
 

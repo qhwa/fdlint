@@ -16,9 +16,9 @@ module XRay
         :css_files  => css,
         :js_files   => js,
         :html_files => html,
-        :common_files => common
+        :common_files => common,
+        :colorful   => true
       }
-
 
       opts = OptionParser.new do |opts|
         opts.banner = "Usage: xray"
@@ -29,11 +29,12 @@ module XRay
           opts.on("--charset set", "-c", "file charset") do |enc|
             options[:encoding] = enc
           end
-          opts.on("--debug", "-d", "print debug info") do |dbg|
+          opts.on("--debug", "-d", "print debug info") do
             options[:debug] = true
           end
-          opts.on("--list", "-l", "list results without source") do |l|
+          opts.on("--list", "-l", "list results without source") do
             options[:list] = true
+            options[:colorful] = false
           end
         end
       end

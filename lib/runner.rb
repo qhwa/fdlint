@@ -51,10 +51,10 @@ module XRay
           :scope => file =~ /[\\\/]lib[\\\/]/ ? 'lib' : 'page'
         })
       rescue Encoding::UndefinedConversionError => e
-        @results = [VisitResult.new( nil, "File can't be read as #{@opt[:encoding]} charset", :fatal)]
+        @results = [LogEntry.new( 0, 0, "File can't be read as #{@opt[:encoding]} charset", :fatal)]
         return [false, @results]
       rescue => e
-        @results = [VisitResult.new( nil, e.to_s, :fatal )]
+        @results = [LogEntry.new( 0, 0, e.to_s, :fatal )]
         return [false, @results]
       end
     end
@@ -80,24 +80,32 @@ module XRay
     end
 
     def print_results( opt={} )
+      opt = @opt.merge opt
       prf = opt[:prefix] || ''
       suf = opt[:suffix] || ''
-      @results.each { |r| puts prf + r.to_s + suf }
+      @results.each do |r|
+        t = r.send( opt[:colorful] ? :to_color_s : :to_s )
+        puts prf + t + suf
+      end
     end
 
     def print_results_with_source( opt )
+      opt = @opt.merge opt
       if @source
         lines = @source.split("\n")
         prf = opt[:prefix] || ''
         suf = opt[:suffix] || ''
         @results.each do |r|
-          pos = r.node.position
-          line_t = lines[pos.line]
-          left = pos.column - 50
-          right = pos.column + 50
+          col = r.column
+          row = r.row
+          puts r.inspect
+          line_t = lines[r.row]
+          left = col - 50
+          right = col + 50
           left = 0 if left < 0
-          puts prf + lines[pos.line][left..right]
-          puts prf + ' ' * (pos.column - left) << '^ ' << r.to_color_s
+          t = r.send( opt[:colorful] ? :to_color_s : :to_s )
+          puts prf + lines[row][left..right]
+          puts prf + ' ' * (col - left) << '^ ' << t
           puts "\n"
         end
       else
