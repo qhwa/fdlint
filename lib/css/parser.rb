@@ -22,10 +22,7 @@ module XRay
           !eos
         end
         
-        rulesets = stats.select { |elm| elm.class == RuleSet }
-        directives = stats.select { |elm| elm.class == Directive }
-
-        StyleSheet.new(rulesets, directives)
+        StyleSheet.new(stats)
       end
 
       # ruleset or directive

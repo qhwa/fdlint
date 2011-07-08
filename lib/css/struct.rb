@@ -5,10 +5,10 @@ module XRay
     Node = XRay::Node
     
     class StyleSheet < Node
-      attr_reader :rulesets, :directives
+      attr_reader :statements
       
-      def initialize(rulesets, directives = [])
-        @rulesets, @directives = rulesets, directives
+      def initialize(statements)
+        @statements = statements
       end
 
       def text
@@ -17,6 +17,14 @@ module XRay
 
       def position
         rulesets.empty? ? nil : rulesets[0].position
+      end
+
+      def directives
+        statements.select { |elm| elm.class == Directive }
+      end
+
+      def rulesets
+        statements.select { |elm| elm.class == RuleSet }
       end
     end
 
