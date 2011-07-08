@@ -78,14 +78,6 @@ module XRayTest
           puts message
         end
 
-        def test_check_selector_hack
-          selectors = %w(_background +font-size *color)
-          selectors.each do |selector|
-            selector = Node.new selector
-            message, level = @rule.check_selector_hack selector
-            assert_equal :warn, level
-          end
-        end
 
         # declaration
         
@@ -124,6 +116,15 @@ module XRayTest
           assert_nil ret 
         end
         
+        def test_check_property_hack
+          props = %w(_background +font-size *color)
+          props.each do |prop|
+            prop = Node.new prop
+            message, level = @rule.check_property_hack prop
+            assert_equal :warn, level
+          end
+        end
+
         def test_check_css_expression
           expr = Node.new 'expression(onfocus=this.blur())'
           message, level = @rule.check_expression_use_css_expression expr

@@ -18,8 +18,7 @@ module XRay
             :check_selector_with_global_tag,
             :check_selector_level,
             :check_selector_with_star,
-            :check_selector_redefine_lib_css,
-            :check_selector_hack
+            :check_selector_redefine_lib_css
           ], selector) 
         end
         
@@ -57,13 +56,6 @@ module XRay
           end
         end
 
-        def check_selector_hack(selector)
-          if selector =~ /[^-a-z]/
-            ['合理使用hack', :warn]
-          end
-        end
-
-
         # declaration
         def visit_declaration(dec)
           check([
@@ -90,6 +82,19 @@ module XRay
           if ruleset.selector.text == 'a:hover' &&
               ruleset.declarations.find { |dec| dec.property.text == 'color' }
             ['禁止重写reset中定义的a标签的hover色（现为#ff7300）', :error]
+          end
+        end
+
+        # property
+        def visit_property(property)
+          check([
+            :check_property_hack
+          ], property)
+        end
+
+        def check_property_hack(property)
+          if property =~ /[^-a-z]/
+            ['合理使用hack', :warn]
           end
         end
 
