@@ -71,29 +71,30 @@ module XRay
 
     private
     def check_file( file, type=nil, opt)
+
       if File.directory? file
         Pathname.new( file ).each_child do |f|
-          check_file f, opt
+          check_file( f, opt )
         end
         return
       end
 
-      runner = XRay::Runner.new(opt)
-      method = type ? :"check_#{type}_file" : :check_file
-      
-      f = file.to_s
-      good, results = runner.send(method, file.to_s)
+      if XRay::Runner.style_file? file
+        runner = XRay::Runner.new(opt)
+        f = file.to_s
+        good, results = runner.check_file( f )
 
-      if good
-        print "[OK]".green_bg << " #{f}" << "\n"
-      elsif opt[:list]
-        puts "[EE]".red_bg << " #{f}"
-        runner.print_results :prefix => ' ' * 5
-      else
-        puts ""
-        puts "[EE] #{f}".purple_bg
-        runner.print_results_with_source :prefix => '    > '
-        puts ""
+        if good
+          print "[OK]".green_bg << " #{f}" << "\n"
+        elsif opt[:list]
+          puts "[EE]".red_bg << " #{f}"
+          runner.print_results :prefix => ' ' * 5
+        else
+          puts ""
+          puts "[EE] #{f}".purple_bg
+          runner.print_results_with_source :prefix => '    > '
+          puts ""
+        end
       end
     end
 

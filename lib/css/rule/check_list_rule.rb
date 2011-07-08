@@ -66,7 +66,7 @@ module XRay
         end
 
         def check_declaration_hack(dec)
-          if dec =~ /^[_*+]|[\\9\\0]$/
+          if dec.property =~ /[_\W]/ || dec.expression =~ /\\\d$/
             ['合理使用hack', :warn]
           end
         end

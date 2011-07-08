@@ -9,7 +9,7 @@ module XRay
     end
 
     def =~(other)
-      @text =~ other
+      text =~ other
     end
 
     def to_s
