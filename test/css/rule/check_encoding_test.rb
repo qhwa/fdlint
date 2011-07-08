@@ -20,7 +20,7 @@ module XRayTest
           file = "#{FIXTURE_PATH}/css/utf8_good.css"
           good, results = @runner.check_css_file file
 
-          expect_err = XRay::VisitResult.new( nil, "File can't be read as gb2312 charset", :fatal) 
+          expect_err = XRay::LogEntry.new("File can't be read as gb2312 charset", :fatal) 
           assert_equal false, good, "utf8 file will not pass"
           assert_equal [expect_err], results, "check should stop on encoding fatal"
         end
@@ -29,7 +29,7 @@ module XRayTest
           file = "#{FIXTURE_PATH}/css/utf8_using_star.css"
           good, results = @runner.check_css_file file
 
-          expect_err = XRay::VisitResult.new( nil, "File can't be read as gb2312 charset", :fatal) 
+          expect_err = XRay::LogEntry.new("File can't be read as gb2312 charset", :fatal) 
           assert_equal false, good, "utf8 file will not pass"
           assert_equal [expect_err], results, "check should stop on encoding fatal"
         end

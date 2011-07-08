@@ -3,10 +3,14 @@
  * http://centricle.com/ref/css/filters/?highlight_columns=true
  */
 .test {
+
+    /** hacks **/
     _display:none;
     *line-height:1.5;
     d\isplay:none;
-    font-size: 11pt\0;
+    font-size: 11pt\0; 
+
+    font-size: 11pt !important; /* this should be OK */
 }
 
 html*.test {

@@ -1,10 +1,47 @@
+require_relative 'helper/colored'
+
 module XRay
 
-    ScanLogEntry = Struct.new :file_name, :row, :col, :level, :code, :msg
-    class ScanLogEntry
-        def to_s
-            "[#{level.to_s.upcase}] [#{row},#{col}] #{code.to_s.upcase} #{msg}"
-        end
+  LogEntry = Struct.new :row, :column, :message, :level 
+  class LogEntry
+
+    def initialize(row=0, column=0, message, level)
+      @row, @column, @message, @level = row, column, message, level 
     end
+
+    def to_s
+      "[#{level.to_s.upcase}] [#{row},#{column}] #{message}"
+    end
+
+    def to_color_s
+      t = self.to_s
+      if warn?
+        t.yellow_bg
+      elsif fatal?
+        t.red_bg
+      elsif error?
+        t.red
+      else
+        t
+      end
+    end
+
+    def error?
+      level == :error
+    end
+
+    def warn?
+      level == :warn
+    end
+
+    def fatal?
+      level == :fatal
+    end
+
+    def info?
+      level == :info
+    end
+
+  end
 
 end
