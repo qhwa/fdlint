@@ -1,5 +1,8 @@
 stylesheet :
-	ruleset*
+	statement*
+
+statement ::=
+	ruleset | directive
 
 ruleset :
 	selector '{' declaration* '}'

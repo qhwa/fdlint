@@ -6,20 +6,20 @@ module XRay
     
     class Parser < XRay::BaseParser
 
-      TERM = '[^;{}]'
+      TERM = %q([^;{}'"])
       QUOT_EXPR = "#{TERM}*'[^']*'#{TERM}*"
       DQUOT_EXPR = %Q(#{TERM}*"[^"]*"#{TERM}*)
       R_EXPR = %r"(?:#{QUOT_EXPR})|(?:#{DQUOT_EXPR})|(?:#{TERM}+)"
 
 
-      def parse_stylesheet
+      def parse_stylesheet(inner = false)
         log 'parse stylesheet'
         
         stats = batch(:parse_statement) do 
           skip_empty
-          eos = @scanner.eos?
-          log 'end of string, parse complete' if eos
-          !eos
+          stop = inner ? @scanner.check(/\s*}/) : @scanner.eos?
+          log 'parse complete' if stop 
+          !stop
         end
         
         StyleSheet.new(stats)
@@ -29,7 +29,7 @@ module XRay
       def parse_statement
         log 'parse statement'
 
-        if @scanner.check /@/
+        if @scanner.check /\s*@/
           parse_directive
         else
           parse_ruleset
@@ -43,16 +43,20 @@ module XRay
         keyword = scan /\w+/
         skip_empty
 
-        expr = nil
+        expr = @scanner.check(R_EXPR) ? scan(R_EXPR) : nil
+
         block = nil
-        if @scanner.check /\{/
+        if @scanner.check /\s*\{/
           skip /\{/
-          block = parse_stylesheet
+          block = parse_stylesheet true
           skip /}/
-        else
-         expr = scan R_EXPR
-         skip /;/ 
         end
+
+        unless block
+          skip /;/ 
+        end
+
+        skip_more_semicolon
 
         log "keyword: #{keyword} #{keyword.position}"
         log("expression: #{expr} #{expr.position}") if expr
@@ -74,7 +78,7 @@ module XRay
       
       def parse_selector
         log ' parse selector'
-        simple_selectors = batch(:parse_simple_selector) { !@scanner.check(/\s*\{\s*/) }
+        simple_selectors = batch(:parse_simple_selector) { !@scanner.check(/\s*\{/) }
         Selector.new simple_selectors
       end
 
@@ -82,14 +86,14 @@ module XRay
         log '   parse simple selector'
         selector = scan /[^,\{]+/
 
-        @scanner.check(/,/) && skip(/,/)
+        @scanner.check(/\s*,/) && skip(/,/)
 
         log " [#{selector}] #{selector.position}"
         selector
       end
       
       def parse_declarations
-        batch(:parse_declaration) { !@scanner.check(/\s*}\s*/) }
+        batch(:parse_declaration) { !@scanner.check(/\s*}/) }
       end
       
       def parse_declaration
@@ -100,9 +104,11 @@ module XRay
         expression = parse_expression
         
         # 可选的分号
-        semicolon = @scanner.check(/\s*}\s*/) ? /;?/ : /;/
+        semicolon = @scanner.check(/\s*}/) ? /;?/ : /;/
         skip semicolon
-        
+
+        skip_more_semicolon
+
         Declaration.new(property, expression)
       end
       
@@ -138,6 +144,13 @@ module XRay
         css.gsub(re_comment) do |m| 
           log "ignore comments: \n#{m}"
           m.gsub /\S/, ' '
+        end
+      end
+
+      def skip_more_semicolon
+        if @scanner.check /\s*;/
+          skip /\s*;/
+          parse_warn 'more than one semicolon'
         end
       end
 

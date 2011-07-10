@@ -18,7 +18,6 @@ module XRayTest
         assert_equal 0, sheet.rulesets.size, 'test empty css text'
       end
       
-      # 解析样式表
       def test_parse_simple
           css = '
             body {
@@ -256,6 +255,24 @@ module XRayTest
 
         rulesets = sheet.rulesets
         assert_equal 1, rulesets.length
+      end
+
+      def test_expression_with_more_semicolon
+        css = %q[
+            body {
+              font-size: 12px;;
+            }
+            @import "subs.css";;
+            @import print {
+              body {
+                font-size: 14px;
+              }
+            };
+          ]
+
+        parser = create_parser css
+        sheet = parser.parse_stylesheet
+        assert_equal 3, sheet.statements.length
       end
       
       def create_parser(css)

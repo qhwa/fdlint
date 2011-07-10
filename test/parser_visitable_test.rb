@@ -41,7 +41,7 @@ module XRayTest
         puts 'parse node c'
         Node.new 'node c'
       end
-
+      
     end
 
     class SimpleVisitor

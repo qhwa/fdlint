@@ -34,7 +34,7 @@ module XRay
       skip_empty
       pos = @pos_info.locate(@scanner.pos)
       text = @scanner.scan pattern
-      text ? create_node(text, pos) : parse_error("scan fail: #{pattern}")
+      text ? Node.new(text, pos) : parse_error("scan fail: #{pattern}")
     end
       
     def batch(name, &block)
@@ -58,10 +58,14 @@ module XRay
     def filter_text(text)
       text
     end
+    
+    def parse_warn(message)
+      pos = scanner_pos
+      log "#{message}#{pos}", :warn
+    end
 
     def parse_error(message)
-      pos = @scanner.pos
-      pos = @pos_info.locate(@scanner.eos? ? pos - 1 : pos)
+      pos = scanner_pos
       log "#{message}#{pos}", :error
       raise ParseError.new(message, pos)
     end
@@ -70,14 +74,15 @@ module XRay
       @log && @log.send(level, self.to_s + ': ' + message)
     end
 
-    def create_node(text, pos)
-      Node.new(text.strip, pos)
-    end
-
     private
 
     def prepare_text(text)
       text.gsub(/\r\n/, "\n").gsub(/\r/, "\n")
+    end
+
+    def scanner_pos
+      pos = @scanner.pos
+      @pos_info.locate(@scanner.eos? ? pos -1 : pos)
     end
 
   end

@@ -5,7 +5,7 @@ module XRay
     attr_reader :text, :position
 
     def initialize(text = '', position = nil)
-      @text, @position = text, position
+      @text, @position = text.strip, position
     end
 
     def =~(other)
