@@ -76,7 +76,7 @@ module XRay
     end
 
     def check_file( file )
-      send( :"check_#{Runner.get_file_type file}_file", file ) if Runner.style_file? file
+      send( :"check_#{Runner.file_type file}_file", file ) if Runner.style_file? file
     end
 
     def print_results( opt={} )
@@ -99,7 +99,6 @@ module XRay
           col = r.column
           row = r.row
           line_t = lines[row]
-
           left = col - 50
           right = col + 50
           left = 0 if left < 0
@@ -113,6 +112,12 @@ module XRay
       end
     end
 
+    def valid_file? file
+      is_style = Runner.style_file?(file)
+      type_match = Runner.file_type(file) == @opt[:type] || !@opt[:type]
+      is_style and type_match
+    end
+
     def success?
       @results.each do |r|
         if %w(fatal error warn).include? r.level.to_s
@@ -122,14 +127,14 @@ module XRay
       true
     end
 
-    def self.get_file_type( name )
+    def self.file_type( name )
       f = File.extname( name )
       if f =~ /\.css$/i
-        :css
+        'css'
       elsif f =~ /\.js/i
-        :js
+        'js'
       else
-        :html
+        'html'
       end
     end
 
