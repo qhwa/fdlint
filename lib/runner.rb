@@ -1,8 +1,11 @@
 require 'logger'
 require_relative 'parser_visitable'
+require_relative 'file_validator'
 require_relative 'log_entry'
+require_relative 'css/reader'
 require_relative 'css/parser'
 require_relative 'css/rule/check_list_rule'
+require_relative 'css/rule/check_file_name_rule'
 
 
 module XRay
@@ -24,7 +27,6 @@ module XRay
 
     def check_css(css, opt={})
       @text = css
-      no_error = true
       parser = CSS::Parser.new(css, @logger)
       visitor = CSS::Rule::CheckListRule.new( opt )
 
@@ -33,30 +35,33 @@ module XRay
       begin
         parser.parse_stylesheet
       rescue ParseError => e
-        no_error = false
         puts "#{e.message}#{e.position}"
       ensure
         @results = parser.results
       end
 
-      [no_error && success? , @results]
+      [!e && success? , @results]
     end
 
     def check_css_file( file, opt={} )
+      file_results, syntax_results, other_results = [],[],[]
       begin
-        text = IO.read(file, :encoding => @opt[:encoding].to_s)
-        text.encode! 'utf-8'
-        @source = text
-        check_css text, opt.merge({
+        file_val = FileValidator.new @opt.merge(opt)
+        file_val.add_validator CSS::Rule::FileNameChecker.new( @opt.merge opt )
+        file_good, file_results = file_val.validate file
+        @source = CSS::Reader.read( file, @opt )
+        syntax_good, syntax_results = check_css @source, opt.merge({
           :scope => file =~ /[\\\/]lib[\\\/]/ ? 'lib' : 'page'
         })
-      rescue Encoding::UndefinedConversionError => e
-        @results = [LogEntry.new( "File can't be read as #{@opt[:encoding]} charset", :fatal)]
-        return [false, @results]
+        [file_good && syntax_good, file_results + syntax_results]
+      rescue  EncodingError => e
+        other_results = [LogEntry.new( "File can't be read as #{@opt[:encoding]} charset", :fatal)]
       rescue => e
-        @results = [LogEntry.new( e.to_s, :fatal )]
-        return [false, @results]
+        other_results = [LogEntry.new( e.to_s, :fatal )]
+      ensure
+        @results = file_results + syntax_results + other_results
       end
+      [@results.empty?, @results]
     end
 
     def check_js(text)
@@ -98,14 +103,18 @@ module XRay
         @results.each do |r|
           col = r.column
           row = r.row
-          line_t = lines[row]
-          left = col - 50
-          right = col + 50
-          left = 0 if left < 0
           t = r.send( opt[:colorful] ? :to_color_s : :to_s )
-          puts prf + lines[row][left..right]
-          puts prf + ' ' * (col - left) << '^ ' << t
-          puts "\n"
+          if row
+            line_t = lines[row]
+            left = col - 50
+            right = col + 50
+            left = 0 if left < 0
+            puts prf + lines[row][left..right]
+            puts prf + ' ' * (col - left) << '^ ' << t
+            puts "\n"
+          else
+            puts t + suf + "\n"
+          end
         end
       else
         print_results

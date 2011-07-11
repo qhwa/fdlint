@@ -12,7 +12,7 @@ module XRay
     def self.parse( args )
       files = []
       options = {
-        :encoding   => :gb2312,
+        :encoding   => 'gb2312',
         :colorful   => true,
         :type       => nil
       }

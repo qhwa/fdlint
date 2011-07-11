@@ -9,6 +9,7 @@ require_relative 'css/parser_test'
 require_relative 'css/mac_line_end_support_test'
 require_relative 'css/rule/check_list_rule_test'
 require_relative 'css/rule/check_encoding_test'
+require_relative 'css/rule/file_name_test'
 
 module XRayTest
 
@@ -22,6 +23,7 @@ module XRayTest
       tests << CSS::MacLineEndSupportTest.suite
       tests << CSS::Rule::CheckListRuleTest.suite
       tests << CSS::Rule::CheckEncodingTest.suite
+      tests << CSS::Rule::CheckFileNameTest.suite
       tests
     end
   end

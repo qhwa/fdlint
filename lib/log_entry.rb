@@ -6,12 +6,13 @@ module XRay
   
   class LogEntry
 
-    def initialize(message, level, row = 0, colmn = 0)
+    def initialize(message, level, row = nil, colmn = 0)
       super
     end
 
     def to_s
-      "[#{level.to_s.upcase}] [#{row},#{column}] #{message}"
+      pos = row.nil? ? "" : "[#{row},#{column}]"
+      "[#{level.to_s.upcase}] #{pos} #{message}"
     end
 
     def to_color_s
