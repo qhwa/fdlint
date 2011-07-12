@@ -21,7 +21,7 @@ module XRayTest
         good, results = @runner.check_css_file file
 
         puts results
-        assert_equal true, good, "Mac style line seperator (\\r) should be supported "
+        assert good, "Mac style line seperator (\\r) should be supported "
         assert_equal [], results, "Mac style line end should be supported"
       end
 
@@ -29,7 +29,7 @@ module XRayTest
         file = "#{FIXTURE_PATH}/css/mac-line-sep-err.css"
         good, results = @runner.check_css_file file
 
-        assert_equal false, good, "Mac style line end should be supported"
+        assert !good, "Mac style line end should be supported"
         assert_equal 1, results.size, "check as usual"
       end
 

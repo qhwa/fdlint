@@ -20,7 +20,7 @@ module XRayTest
           good, results = @validator.check file
 
           expect_err = XRay::LogEntry.new("路径和文件名中不应该出现ad", :warn) 
-          assert_equal false, good, "文件名中不应出现ad"
+          assert !good, "文件名中不应出现ad"
           assert_equal [expect_err], results
         end
 
@@ -29,7 +29,7 @@ module XRayTest
           good, results = @validator.check file
 
           expect_err = XRay::LogEntry.new("路径和文件名中不应该出现ad", :warn) 
-          assert_equal false, good, "文件路径中不应出现ad"
+          assert !good, "文件路径中不应出现ad"
           assert_equal [expect_err], results, "文件路径中不应出现ad"
         end
 
@@ -37,7 +37,7 @@ module XRayTest
           file = 'not-exsiting-file.css'
           good, results = @validator.check file
 
-          assert_equal true, good, "文件名中不应出现ad,包括路径"
+          assert good, "文件名中不应出现ad,包括路径"
         end
 
         def test_file_name_with_underscore
@@ -45,7 +45,7 @@ module XRayTest
           good, results = @validator.check file
 
           expect_err = XRay::LogEntry.new("文件名中单词的分隔符应该使用中横线“-”", :warn) 
-          assert_equal false, good, "文件名中单词的分隔符应该使用中横线“-”"
+          assert !good, "文件名中单词的分隔符应该使用中横线“-”"
           assert_equal [expect_err], results
         end
 
@@ -54,7 +54,7 @@ module XRayTest
           good, results = @validator.check file
 
           expect_err = XRay::LogEntry.new("文件夹只有需要版本区分时才可用中横线分隔，如fdev-v3", :warn) 
-          assert_equal false, good, "文件夹只有需要版本区分时才可用中横线分隔"
+          assert !good, "文件夹只有需要版本区分时才可用中横线分隔"
           assert_equal [expect_err], results
         end
 
@@ -62,7 +62,7 @@ module XRayTest
           file = 'test-2/main.css'
           good, results = @validator.check file
 
-          assert_equal true, good, "目录名字中带有版本号时可以用中横线"
+          assert good, "目录名字中带有版本号时可以用中横线"
         end
 
       end
