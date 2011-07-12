@@ -80,13 +80,13 @@ module XRay
         good, results = @core_runner.check_file( f )
 
         if good
-          print "[OK]".green_bg << " #{f}" << "\n"
+          print "[OK]".white.green_bg << " #{f}" << "\n"
         elsif opt[:list]
-          puts "[EE]".red_bg << " #{f}"
+          puts "[EE]".white.red_bg << " #{f}"
           @core_runner.print_results :prefix => ' ' * 5
         else
           puts ""
-          puts "[EE] #{f}".purple_bg
+          puts "[EE] #{f}".white.magenta_bg
           @core_runner.print_results_with_source :prefix => '    > '
           puts ""
         end

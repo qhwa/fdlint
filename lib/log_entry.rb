@@ -1,4 +1,4 @@
-require_relative 'helper/colored'
+require_relative 'helper/color_string'
 
 module XRay
 
@@ -20,9 +20,9 @@ module XRay
       if warn?
         t.yellow_bg
       elsif fatal?
-        t.red_bg
+        t.white.red_bg
       elsif error?
-        t.red
+        t.red.to_s
       else
         t
       end
