@@ -49,6 +49,15 @@ module XRayTest
           assert_equal [expect_err], results
         end
 
+        def test_file_name_with_upcase
+          file = 'someFile.css'
+          good, results = @validator.check file
+
+          expect_err = XRay::LogEntry.new("文件夹和文件命名必须用小写字母", :warn) 
+          assert !good, "文件夹和文件命名必须用小写字母"
+          assert_equal [expect_err], results
+        end
+
         def test_dir_name_with_minus
           file = 'test-post-offer/main.css'
           good, results = @validator.check file

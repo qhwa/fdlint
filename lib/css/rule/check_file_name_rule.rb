@@ -15,7 +15,8 @@ module XRay
           check_items([
             :ad,
             :underscore,
-            :seperator
+            :seperator,
+            :letters
           ], name)
         end
 
