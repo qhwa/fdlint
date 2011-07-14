@@ -20,7 +20,6 @@ module XRayTest
         file = "#{FIXTURE_PATH}/css/mac-line-sep-good.css"
         good, results = @runner.check_css_file file
 
-        puts results
         assert good, "Mac style line seperator (\\r) should be supported "
         assert_equal [], results, "Mac style line end should be supported"
       end

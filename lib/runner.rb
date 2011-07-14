@@ -6,6 +6,7 @@ require_relative 'css/reader'
 require_relative 'css/parser'
 require_relative 'css/rule/check_list_rule'
 require_relative 'css/rule/check_file_name_rule'
+require_relative 'css/rule/check_compression_rule'
 
 
 module XRay
@@ -48,6 +49,7 @@ module XRay
       begin
         file_val = FileValidator.new @opt.merge(opt)
         file_val.add_validator CSS::Rule::FileNameChecker.new( @opt.merge opt )
+        file_val.add_validator CSS::Rule::CompressionChecker.new( @opt.merge opt )
         file_good, file_results = file_val.validate file
         @source = CSS::Reader.read( file, @opt )
         syntax_good, syntax_results = check_css @source, opt.merge({
