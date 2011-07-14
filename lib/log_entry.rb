@@ -18,7 +18,7 @@ module XRay
     def to_color_s
       t = self.to_s
       if warn?
-        t.yellow_bg
+        t.yellow
       elsif fatal?
         t.white.red_bg
       elsif error?
