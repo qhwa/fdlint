@@ -18,34 +18,19 @@ class ColorString
 
   String.public_instance_methods.each do |m|
     unless self.respond_to? m
-      define_method(m) do |*arg|
-        to_s.send( m, *arg )
-      end
+      define_method(m) { |*arg| to_s.send( m, *arg ) }
     end
   end
 
   %w(BLACK RED GREEN YELLOW BLUE MAGENTA CYAN WHITE).each_with_index do |color, i|
-    const_set(color, i)
     String.class_eval do
-      define_method(color.downcase) do 
-        ColorString.new(self, i)
-      end
-
-      define_method(color.downcase << '_bg') do
-        ColorString.new(self, nil, i)
-      end
+      define_method(color.downcase) { ColorString.new(self, i) }
+      define_method(color.downcase << '_bg') { ColorString.new(self, nil, i) }
     end
 
     ColorString.class_eval do
-      define_method(color.downcase) do 
-        @color = i
-        self
-      end
-
-      define_method(color.downcase << '_bg') do
-        @bg = i
-        self
-      end
+      define_method(color.downcase) { @color = i; self }
+      define_method(color.downcase << '_bg') { @bg = i; self }
     end
 
   end
