@@ -5,6 +5,8 @@ module XRay
   module CSS
     module Rule
 
+      ADVERTISMENT = /[^a-z0-9%_-]ad(?:[sv][^a-z\r=\?]+|banner|click|ver|name|x|log|[^a-z\r_-]*[\.\/]|bot|c_|client|council|gifs|graph|images|img|fshow|pic|vert|view|info|click|sponsor)/
+
       class FileNameChecker
         
         def initialize( opt={} )
@@ -21,7 +23,7 @@ module XRay
         end
 
         def check_ad( name )
-          [LogEntry.new('路径和文件名中不应该出现ad', :warn)] if name =~ /ad/
+          [LogEntry.new('路径和文件名中不应该出现ad', :warn)] if name =~ ADVERTISMENT
         end
 
         def check_underscore( name )
