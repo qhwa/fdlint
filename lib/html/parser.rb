@@ -13,7 +13,7 @@ module XRay; module HTML
     end
 
     TEXT = /[^<]+/
-    PROP = /(\w+)\s*=\s*(?:"|')?(\w+)(?:"|')?/
+    PROP = /(\w+)\s*=\s*("?|'?)(\w+)\2/
     TAG_NAME = /[\w\/][^>\s]*/
     TAG = %r(<(#{TAG_NAME})(\s+#{PROP})*\s*>)
     SELF_CLOSE_TAG = %r(<#{TAG_NAME}(\s+#{PROP})*\s+\/>)
