@@ -16,7 +16,7 @@ module XRayTest
         end
 
         def test_file_name_with_ad
-          file = 'aadd.css'
+          file = 'css/ad.css'
           good, results = @validator.check file
 
           expect_err = XRay::LogEntry.new("路径和文件名中不应该出现ad", :warn) 
@@ -25,7 +25,7 @@ module XRayTest
         end
 
         def test_path_name_with_ad
-          file = "/css/admin/test.css"
+          file = "/css/adver/test.css"
           good, results = @validator.check file
 
           expect_err = XRay::LogEntry.new("路径和文件名中不应该出现ad", :warn) 
