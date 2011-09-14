@@ -11,6 +11,7 @@ require_relative 'css/rule/check_list_rule_test'
 require_relative 'css/rule/check_encoding_test'
 require_relative 'css/rule/file_name_test'
 require_relative 'css/rule/compression_test'
+require_relative 'html/parser_test'
 
 module XRayTest
 
@@ -26,6 +27,7 @@ module XRayTest
       tests << CSS::Rule::CheckEncodingTest.suite
       tests << CSS::Rule::CheckFileNameTest.suite
       tests << CSS::Rule::CompressionTest.suite
+      tests << HTML::ParserTest.suite
       tests
     end
   end

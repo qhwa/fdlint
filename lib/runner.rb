@@ -7,6 +7,7 @@ require_relative 'css/parser'
 require_relative 'css/rule/check_list_rule'
 require_relative 'css/rule/check_file_name_rule'
 require_relative 'css/rule/check_compression_rule'
+require_relative 'html/parser'
 
 
 module XRay

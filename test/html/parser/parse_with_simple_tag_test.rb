@@ -16,7 +16,7 @@ module XRayTest
 
         def test_is_a_div_element
           assert @element.is_a?(Element)
-          assert_equal @element.tag, 'div'
+          assert_equal @element.tag_name, 'div'
         end
 
         def test_have_one_child

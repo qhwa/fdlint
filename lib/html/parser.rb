@@ -5,29 +5,28 @@ module XRay; module HTML
 
   class Parser < BaseParser
 
-    R_TEXT = /[^<]+/
-    PROP_REG = /(\w+)\s*=\s*"(\w+)"/
-    R_TAG = /<[\w\/].*>/
+    TEXT = /[^<]+/
+    PROP = /(\w+)\s*=\s*"(\w+)"/
+    TAG_NAME = /[\w\/][^>\s]*/
+    TAG = %r(<(#{TAG_NAME})(\s+#{PROP})*\s*>)
+    SELF_CLOSE_TAG = %r(<#{TAG_NAME}(\s+#{PROP})*\s+\/>)
 
     def parse
       nodes = batch(:parse_element)
-      nodes[0]
+      case nodes.size
+        when 0 then nil
+        when 1 then nodes[0]
+        else nodes
+      end
     end
 
     def parse_element
-      if @scanner.check(R_TAG)
-        children = []
-        skip /</
-        tag = @scanner.scan(/\w+/)
-        prop = parse_properties
-        @scanner.skip_until />/
-        inner = @scanner.check /[^<]+/
-        children << parse_element if inner
-        @scanner.skip_until />/
-        Element.new(tag, prop, children)
+      if @scanner.check(TAG)
+        parse_normal_tag
+      elsif @scanner.check(SELF_CLOSE_TAG)
+        parse_self_closing_tag
       else
-        text = @scanner.scan(R_TEXT)
-        TextElement.new(text)
+        parse_text
       end
     end
 
@@ -47,10 +46,34 @@ module XRay; module HTML
     end
 
     def parse_property
-      if @scanner.check PROP_REG
-        @scanner.scan(PROP_REG) 
+      if @scanner.check PROP
+        scan(PROP) 
+        #TODO: return with Node
         { :"#{@scanner[1]}" => @scanner[2] }
       end
+    end
+
+    protected
+    def parse_normal_tag
+      skip /</
+      tag, prop = scan(TAG_NAME), parse_properties
+      skip />/
+      children = parse_element
+      skip %r(<\/#{tag.text}>) 
+      Element.new(tag, prop, children)
+    end
+
+    def parse_self_closing_tag
+      skip /</
+      tag = scan(TAG_NAME)
+      prop = parse_properties
+      skip /\/>/
+      Element.new(tag, prop)
+    end
+
+    def parse_text
+      text = @scanner.scan(TEXT)
+      TextElement.new(text)
     end
 
   end
@@ -59,7 +82,8 @@ module XRay; module HTML
   def self.parse(src, &block)
     parser = Parser.new(src)
     doc = parser.parse
-    yield doc if block 
+    yield doc if block_given? 
+    doc
   end
 
 end; end

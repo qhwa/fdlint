@@ -10,13 +10,17 @@ module XRay
       attr_reader :tag, :props, :children
 
       def initialize(tag, props={}, children=[])
-        @tag, @prop, @children = tag, props || {}, children || []
+        @tag, @prop, @children = tag, props || {}, Array.[](children).flatten || []
       end
 
       def text
         children.inject("") do |s,child|
           s + child.text
         end
+      end
+
+      def tag_name
+        @tag.is_a?(Node) ? @tag.text : @tag.to_s
       end
 
       def inner_html
@@ -37,7 +41,7 @@ module XRay
       end
 
       def ==(other)
-        @tag == other.tag && @props == other.props && inner_html == other.inner_html
+        tag_name == tag_name.to_s && @props == other.props && inner_html == other.inner_html
       end
 
       protected
@@ -63,10 +67,15 @@ module XRay
       end
 
       def text; @text; end
+      def tag_name; nil; end
 
       alias_method :inner_text, :text
       alias_method :inner_html, :text
       alias_method :outer_html, :text
+
+      def ==(other)
+        text == other.text
+      end
 
     end
 
@@ -80,6 +89,9 @@ module XRay
 
     class Property < Node
       
+    end
+
+    class TagNameNode < Node
     end
 
 

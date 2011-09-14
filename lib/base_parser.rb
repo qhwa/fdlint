@@ -40,7 +40,7 @@ module XRay
       
     def batch(name, &block)
       result = []
-      while (block ? block.call : true) && item = send(name)
+      while !@scanner.eos? && (block ? block.call : true) && item = send(name)
         result << item
       end
       result

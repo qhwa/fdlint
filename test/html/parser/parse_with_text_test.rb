@@ -24,7 +24,6 @@ module XRayTest
 
         def test_has_text
           assert_equal 'information', @element.inner_text
-          assert_equal 'information', @element.outer_text
         end
 
         def test_has_html_text
