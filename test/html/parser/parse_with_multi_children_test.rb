@@ -5,9 +5,8 @@ module XRayTest
     module Parser
 
       class ParseWithMultiChildrenTest < Test::Unit::TestCase
-        ParseError = XRay::ParseError
-        Element = XRay::HTML::Element
-        TextElement = XRay::HTML::TextElement
+        
+        include XRay::HTML
         
         def setup
           @parser = XRay::HTML::Parser.new('<em>important</em> information!! Attention please!')

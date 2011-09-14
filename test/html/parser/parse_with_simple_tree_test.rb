@@ -5,13 +5,11 @@ module XRayTest
     module Parser
 
       class ParseWithSimpleTreeTest < Test::Unit::TestCase
-        ParseError = XRay::ParseError
-        Element = XRay::HTML::Element
-        TextElement = XRay::HTML::TextElement
+
+        include XRay::HTML
         
         def setup
-          @parser = XRay::HTML::Parser.new('<div><em>important</em> information!! Attention please!</div>')
-          @element = @parser.parse
+          @element = XRay::HTML::Parser.parse('<div><em>important</em> information!! Attention please!</div>')
         end
 
         def test_type_is_element

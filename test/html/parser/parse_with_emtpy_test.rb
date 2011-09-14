@@ -5,8 +5,6 @@ module XRayTest
     module Parser
 
       class ParseWithEmptyTest < Test::Unit::TestCase
-        ParseError = XRay::ParseError
-        Element = XRay::HTML::Element
         
         def setup
           @parser = XRay::HTML::Parser.new('')

@@ -5,8 +5,15 @@ module XRay; module HTML
 
   class Parser < BaseParser
 
+    def self.parse(src, &block)
+      parser = self.new(src)
+      doc = parser.parse
+      yield doc if block_given? 
+      doc
+    end
+
     TEXT = /[^<]+/
-    PROP = /(\w+)\s*=\s*"(\w+)"/
+    PROP = /(\w+)\s*=\s*(?:"|')?(\w+)(?:"|')?/
     TAG_NAME = /[\w\/][^>\s]*/
     TAG = %r(<(#{TAG_NAME})(\s+#{PROP})*\s*>)
     SELF_CLOSE_TAG = %r(<#{TAG_NAME}(\s+#{PROP})*\s+\/>)
@@ -58,8 +65,13 @@ module XRay; module HTML
       skip /</
       tag, prop = scan(TAG_NAME), parse_properties
       skip />/
-      children = parse_element
-      skip %r(<\/#{tag.text}>) 
+
+      end_tag = %r(<\/#{tag.text}>)
+      children = []
+      until @scanner.check(end_tag) do
+        children << parse_element
+      end
+      skip end_tag
       Element.new(tag, prop, children)
     end
 
@@ -78,12 +90,5 @@ module XRay; module HTML
 
   end
 
-
-  def self.parse(src, &block)
-    parser = Parser.new(src)
-    doc = parser.parse
-    yield doc if block_given? 
-    doc
-  end
 
 end; end
