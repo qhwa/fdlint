@@ -8,19 +8,29 @@ module XRayTest
 
         include XRay::HTML
         
-        def setup
-          @element = XRay::HTML::Parser.parse('<div><em>important</em> information!! Attention please!</div>')
+        def test_simple_tree
+          parse('<div><em>important</em> information!! Attention please!</div>') do |element|
+            assert_equal Element.new('div', nil, [
+              Element.new('em', nil, [TextElement.new('important')]),
+              TextElement.new(' information!! Attention please!')
+            ]), element, 'must contain two children'
+          end
         end
 
-        def test_type_is_element
-          assert @element.is_a?(Element), 'must be an element'
+        def test_more_deeper
+          parse('<div class="info"><span style="color:red"><em>important</em> information!! Attention please!</span></div>') do |element|
+            assert_equal Element.new('div', {:class => 'info'}, [
+              Element.new('span', {:style => 'color:red'}, [
+                Element.new('em', nil, [TextElement.new('important')]),
+                TextElement.new(' information!! Attention please!')
+              ])
+            ]), element, 'must contain two children'
+          end
         end
 
-        def test_content_must_be_right
-          assert_equal Element.new('div', nil, [
-            Element.new('em', nil, [TextElement.new('important')]),
-            TextElement.new(' information!! Attention please!')
-          ]),@element, 'must contain two children'
+        protected
+        def parse(src, &block)
+          XRay::HTML::Parser.parse(src, &block)
         end
 
       end

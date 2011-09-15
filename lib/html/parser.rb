@@ -15,7 +15,9 @@ module XRay; module HTML
     end
 
     TEXT = /([^<]|(<[^\w\/]))+/
-    PROP = /(?<name>\w+)\s*(?:=\s*(?<sep>['"]?)(?<value>\w+)\k<sep>)?/ #require Ruby 1.9
+    PROP_NAME = %r(\w+)
+    PROP_VALUE = %r('([^']*)'|"([^"]*)"|(\w+))
+    PROP = %r(#{PROP_NAME}\s*(?:=\s*#{PROP_VALUE})?)
     TAG_NAME = /[\w\/][^>\s]*/
     TAG = %r(<(#{TAG_NAME})(\s+#{PROP})*\s*>)
     SELF_CLOSE_TAG = %r(<#{TAG_NAME}(\s+#{PROP})*\s+\/>)
@@ -55,9 +57,23 @@ module XRay; module HTML
     end
 
     def parse_property
-      scan(PROP) 
+      name = parse_prop_name
+      if @scanner.check( /\s*=/ )
+        skip /[=]/
+        value = parse_prop_value
+      end
       #TODO: return Node
-      { :"#{@scanner[1]}" => @scanner[3] }
+      { :"#{name.text}" => value }
+    end
+
+    def parse_prop_name
+      scan PROP_NAME
+    end
+
+    def parse_prop_value
+      #scan PROP_VALUE
+      @scanner.scan PROP_VALUE
+      "#{@scanner[1]}#{@scanner[2]}#{@scanner[3]}"
     end
 
     protected
