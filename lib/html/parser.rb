@@ -3,6 +3,8 @@ require_relative 'struct'
 
 module XRay; module HTML
 
+  AUTO_CLOSE_TAGS = %w(area base basefont br col frame hr img input link meta param)
+
   class Parser < BaseParser
 
     def self.parse(src, &block)
@@ -12,8 +14,8 @@ module XRay; module HTML
       doc
     end
 
-    TEXT = /[^<]+/
-    PROP = /(\w+)\s*=\s*("?|'?)(\w+)\2/
+    TEXT = /([^<]|(<[^\w\/]))+/
+    PROP = /(?<name>\w+)\s*(?:=\s*(?<sep>['"]?)(?<value>\w+)\k<sep>)?/ #require Ruby 1.9
     TAG_NAME = /[\w\/][^>\s]*/
     TAG = %r(<(#{TAG_NAME})(\s+#{PROP})*\s*>)
     SELF_CLOSE_TAG = %r(<#{TAG_NAME}(\s+#{PROP})*\s+\/>)
@@ -53,11 +55,9 @@ module XRay; module HTML
     end
 
     def parse_property
-      if @scanner.check PROP
-        scan(PROP) 
-        #TODO: return with Node
-        { :"#{@scanner[1]}" => @scanner[2] }
-      end
+      scan(PROP) 
+      #TODO: return Node
+      { :"#{@scanner[1]}" => @scanner[3] }
     end
 
     protected
@@ -66,12 +66,16 @@ module XRay; module HTML
       tag, prop = scan(TAG_NAME), parse_properties
       skip />/
 
-      end_tag = %r(<\/#{tag.text}>)
       children = []
-      until @scanner.check(end_tag) do
-        children << parse_element
+      if auto_close?(tag.text)
+        #TODO: give a warning for this
+      else
+        end_tag = %r(<\/#{tag.text}>)
+        until @scanner.check(end_tag) or @scanner.eos? do
+          children << parse_element
+        end
+        skip end_tag
       end
-      skip end_tag
       Element.new(tag, prop, children)
     end
 
@@ -88,7 +92,16 @@ module XRay; module HTML
       TextElement.new(text)
     end
 
+    def auto_close?(tag)
+      XRay::HTML::AUTO_CLOSE_TAGS.include?(tag.to_s)
+    end
+
   end
 
 
 end; end
+
+if __FILE__ == $0
+  XRay::HTML::Parser.parse(%q(<div class="info" checked>information</div>)) { |e| puts e.outer_html }
+  XRay::HTML::Parser.parse(%q(<img width="100" height="150" > text)) { |e| puts e.first.outer_html }
+end

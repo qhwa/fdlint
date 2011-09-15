@@ -30,6 +30,14 @@ module XRayTest
           assert_equal  'information', @element.outer_html
         end
 
+        def test_with_lt_mark
+          assert_equal TextElement.new('1 < 3 > 2'), XRay::HTML::Parser.parse('1 < 3 > 2')
+        end
+
+        def test_with_and_mark
+          assert_equal TextElement.new('1 &lt; 3 &gt; 2'), XRay::HTML::Parser.parse('1 &lt; 3 &gt; 2')
+        end
+
       end
 
     end

@@ -63,7 +63,7 @@ module XRay
 
       def initialize(text="")
         super(nil)
-        @text = text
+        @text = text.to_s
       end
 
       def text; @text; end
