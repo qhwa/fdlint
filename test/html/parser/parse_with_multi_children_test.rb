@@ -13,10 +13,6 @@ module XRayTest
           @element = @parser.parse
         end
 
-        def test_type_is_Array
-          assert @element.is_a?(Array), 'must be an array'
-        end
-
         def test_content_must_be_right
           assert_equal [
             Element.new('em', nil, [TextElement.new('important')]),
