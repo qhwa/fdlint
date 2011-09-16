@@ -14,11 +14,13 @@ module XRayTest
         end
 
         def test_check_normal
-          assert_equal [], @rule.check_prop_name(XRay::Node.new('href'))
+          prop = XRay::HTML::Property.new('href', '#nogo')
+          assert_equal [], @rule.check_prop(prop)
         end
 
         def test_check_tag_with_style_prop
-          assert_equal [["不能定义内嵌样式style", :warn]], @rule.check_prop_name(XRay::Node.new('style'))
+          prop = XRay::HTML::Property.new('style', 'nogo')
+          assert_equal [["不能定义内嵌样式style", :warn]], @rule.check_prop(prop)
         end
 
       end
