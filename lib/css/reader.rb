@@ -6,29 +6,19 @@ module XRay
     class Reader
 
       def self.read( file, opt = {} )
-        options = {
-          :encoding => 'utf-8'
-        }.merge opt
+        options = { :encoding => 'utf-8' }.merge opt
         begin
-          encoding = get_encoding_declaration(file)
-          encoding ||= options[:encoding].to_s
-          text = IO.read(file, :encoding => encoding)
-          text.encode! 'utf-8'
-        rescue Encoding::UndefinedConversionError, Encoding::InvalidByteSequenceError => e
+          encoding = get_encoding_declaration(file) || options[:encoding].to_s
+          File.read(file, :encoding => encoding).encode! 'utf-8'
+        rescue Encoding::UndefinedConversionError, Encoding::InvalidByteSequenceError
           raise EncodingError.new
         end
       end
 
       def self.get_encoding_declaration( file )
-        charset = nil
         begin
-          File.open(file, 'r' ) do |f|
-            line = f.readlines[0]
-            charset = line[/(?<=@charset\s('|")).*(?=('|"))/]
-          end
+          File.open(file, &:readline)[/@charset\s+(['"])(.*?)\1/, 2]
         rescue
-        ensure
-          charset
         end
       end
     end

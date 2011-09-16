@@ -55,9 +55,7 @@ module XRayTest
         end
 
         def has_encoding_error?( results )
-          results.any? do |r|
-            r == @expect_err
-          end
+          results.include? @expect_err
         end
 
 
