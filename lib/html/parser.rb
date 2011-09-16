@@ -14,13 +14,13 @@ module XRay; module HTML
       doc
     end
 
-    TEXT = /([^<]|(<[^\w\/]))+/
-    PROP_NAME = %r(\w+)
-    PROP_VALUE = %r('([^']*)'|"([^"]*)"|(\w+))
-    PROP = %r(#{PROP_NAME}\s*(?:=\s*#{PROP_VALUE})?)
-    TAG_NAME = /[\w\/][^>\s]*/
-    TAG = %r(<(#{TAG_NAME})(\s+#{PROP})*\s*>)
-    SELF_CLOSE_TAG = %r(<#{TAG_NAME}(\s+#{PROP})*\s+\/>)
+    TEXT = /([^<]|(<[^\w\/]))+/m
+    PROP_NAME = %r/\w+/m
+    PROP_VALUE = %r/'([^']*)'|"([^"]*)"|(\w+)/m
+    PROP = %r/#{PROP_NAME}\s*(?:=\s*#{PROP_VALUE})?/m
+    TAG_NAME = /[\w\/][^>\s]*/m
+    TAG = %r/<(#{TAG_NAME})(\s+#{PROP})*\s*>/m
+    SELF_CLOSE_TAG = %r/<#{TAG_NAME}(\s+#{PROP})*\s+\/>/m
 
     def parse
       nodes = batch(:parse_element)
