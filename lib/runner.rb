@@ -76,7 +76,20 @@ module XRay
     end
 
     def check_html(text)
-      true
+      @text = text
+      parser = HTML::Parser.new(text, @logger)
+      #visitor = HTML::Rule::CheckListRule.new( opt )
+      #parser.add_visitor visitor
+
+      begin
+        parser.parse_html
+      rescue ParseError => e
+        puts "#{e.message}#{e.position}"
+      ensure
+        @results = parser.results
+      end
+
+      [!e && success? , @results]
     end
 
     def check_html_file(file)

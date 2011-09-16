@@ -22,7 +22,7 @@ module XRay; module HTML
     TAG = %r/<(#{TAG_NAME})(\s+#{PROP})*\s*>/m
     SELF_CLOSE_TAG = %r/<#{TAG_NAME}(\s+#{PROP})*\s+\/>/m
 
-    def parse
+    def parse_html
       nodes = batch(:parse_element)
       case nodes.size
         when 0 then nil
@@ -30,6 +30,8 @@ module XRay; module HTML
         else nodes
       end
     end
+
+    alias_method :parse, :parse_html
 
     def parse_element
       if @scanner.check(TAG)
