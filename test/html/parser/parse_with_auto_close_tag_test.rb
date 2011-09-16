@@ -13,7 +13,7 @@ module XRayTest
             assert_equal [
               Element.new(tag, {:name => 'test'}),
               TextElement.new(' text' )
-            ], XRay::HTML::Parser.parse("<#{tag} name='test'> text"),
+            ], XRay::HTML::Parser.parse("<#{tag} name=\"test\"> text"),
             "TAG: #{tag} will auto close and have no children"
           end
         end

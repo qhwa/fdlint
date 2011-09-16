@@ -9,8 +9,8 @@ module XRay
 
       attr_reader :tag, :props, :children
 
-      def initialize(tag, props={}, children=[])
-        @tag, @prop, @children = tag, props || {}, Array.[](children).flatten || []
+      def initialize(tag, props=[], children=[])
+        @tag, @prop, @children = tag, props||[], Array.[](children).flatten || []
       end
 
       def text
@@ -28,11 +28,10 @@ module XRay
       end
 
       def outer_html
-        props = to_param_string(@prop)
         if children.empty?
-          "<#{@tag}#{props} />"
+          "<#{@tag}#{prop_text} />"
         else
-          "<#{@tag}#{props}>#{inner_html}</#{@tag}>"
+          "<#{@tag}#{prop_text}>#{inner_html}</#{@tag}>"
         end
       end
 
@@ -40,8 +39,16 @@ module XRay
         @children.inject('') { |s,c| s + c.inner_text }
       end
 
+      def prop_text
+        to_param_string(@prop)
+      end
+
       def ==(other)
-        tag_name == tag_name.to_s && @props == other.props && inner_html == other.inner_html
+        tag_name == tag_name.to_s && prop_text == other.prop_text && inner_html == other.inner_html
+      end
+
+      def to_s
+        "< \##{outer_html}>"
       end
 
       protected
@@ -50,9 +57,12 @@ module XRay
       end
 
       private
-      def to_param_string( hash )
-        hash.inject('') do |s, p|
-          s + " #{p.join('="')}\""
+      def to_param_string( props )
+        case props
+          when Array
+            props.inject('') { |s, p| s << " " << p.to_s }
+          when Hash
+            props.inject('') { |s, p| s + %Q( #{p[0]}="#{p[1]}") }
         end
       end
 
@@ -88,7 +98,21 @@ module XRay
 
 
     class Property < Node
-      
+
+      attr_reader :name, :value, :sep
+
+      def initialize(name, value, sep='"')
+        @name, @value, @sep = name, value, sep
+      end
+
+      def position
+        name.position
+      end
+
+      def to_s
+        "#{name}=#{sep}#{value}#{sep}"
+      end
+
     end
 
     class TagNameNode < Node
@@ -101,7 +125,9 @@ end
 if $0 == __FILE__
   Element = XRay::HTML::Element
   TextElement = XRay::HTML::TextElement
-  puts TextElement.new('hello').inner_text
+  Property = XRay::HTML::Property
   puts TextElement.new('hello').inner_text
   puts Element.new('div', {:class => 'info'}).outer_html
+  puts Element.new('div', [Property.new('class', 'info')]).outer_html
+  puts Element.new('div', {:class => 'info', :id => 'sample'}) == Element.new('div', [Property.new('class', 'info'), Property.new('id', 'sample')])
 end

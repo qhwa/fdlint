@@ -19,8 +19,9 @@ module XRay; module HTML
     PROP_VALUE = %r/'([^']*)'|"([^"]*)"|(\w+)/m
     PROP = %r/#{PROP_NAME}\s*(?:=\s*#{PROP_VALUE})?/m
     TAG_NAME = /[\w\/][^>\s]*/m
-    TAG = %r/<(#{TAG_NAME})(\s+#{PROP})*\s*>/m
-    SELF_CLOSE_TAG = %r/<#{TAG_NAME}(\s+#{PROP})*\s+\/>/m
+    TAG_START = %r/<(#{TAG_NAME})/
+    TAG = %r/#{TAG_START}(\s+#{PROP})*\s*>/m
+    SELF_CLOSE_TAG = %r/#{TAG_START}(\s+#{PROP})*\s+\/>/m
 
     def parse_html
       nodes = batch(:parse_element)
@@ -34,38 +35,44 @@ module XRay; module HTML
     alias_method :parse, :parse_html
 
     def parse_element
-      if @scanner.check(TAG)
-        parse_normal_tag
-      elsif @scanner.check(SELF_CLOSE_TAG)
-        parse_self_closing_tag
+      if @scanner.check(TAG_START)
+        parse_tag
       else
         parse_text
       end
     end
 
+    def parse_text
+      TextElement.new @scanner.scan(TEXT)
+    end
+
+    def parse_tag
+      if @scanner.check TAG
+        parse_normal_tag
+      elsif @scanner.check SELF_CLOSE_TAG
+        parse_self_closing_tag
+      end
+    end
+
     def parse_properties
       skip_empty
-      props = {}
+      props = []
       until prop_search_done? do
         prop = parse_property
-        props.merge! prop if prop
+        props << prop if prop
         skip_empty
       end
       props
-    end
-
-    def prop_search_done?
-      @scanner.check(/\/>|>/) or @scanner.eos?
     end
 
     def parse_property
       name = parse_prop_name
       if @scanner.check( /\s*=/ )
         skip /[=]/
+        sep = @scanner.check(/['"]/)
         value = parse_prop_value
       end
-      #TODO: return Node
-      { :"#{name.text}" => value }
+      Property.new name, value, sep
     end
 
     def parse_prop_name
@@ -73,12 +80,15 @@ module XRay; module HTML
     end
 
     def parse_prop_value
-      #scan PROP_VALUE
-      @scanner.scan PROP_VALUE
-      "#{@scanner[1]}#{@scanner[2]}#{@scanner[3]}"
+      scan PROP_VALUE
+      Node.new("#{@scanner[1]}#{@scanner[2]}#{@scanner[3]}")
     end
 
     protected
+    def prop_search_done?
+      @scanner.check(/\/>|>/) or @scanner.eos?
+    end
+
     def parse_normal_tag
       skip /</
       tag, prop = scan(TAG_NAME), parse_properties
@@ -105,10 +115,6 @@ module XRay; module HTML
       Element.new(tag, prop)
     end
 
-    def parse_text
-      text = @scanner.scan(TEXT)
-      TextElement.new(text)
-    end
 
     def auto_close?(tag)
       XRay::HTML::AUTO_CLOSE_TAGS.include?(tag.to_s)
@@ -121,5 +127,5 @@ end; end
 
 if __FILE__ == $0
   XRay::HTML::Parser.parse(%q(<div class="info" checked>information</div>)) { |e| puts e.outer_html }
-  XRay::HTML::Parser.parse(%q(<img width="100" height="150" > text)) { |e| puts e.first.outer_html }
+  XRay::HTML::Parser.parse(%q(<img width="100" height='150' id=img > text)) { |e| puts e.first.outer_html }
 end
