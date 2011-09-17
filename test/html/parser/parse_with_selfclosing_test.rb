@@ -8,27 +8,21 @@ module XRayTest
         
         include XRay::HTML
         
-        def setup
-          @parser = XRay::HTML::Parser.new('<div class="info" />')
-          @element = @parser.parse
+        def test_self_close
+          XRay::HTML::Parser.new('<div class="info" />') do |e|
+            assert_equal Element.new('div', {:class=>"info"}), e
+          end
         end
 
-        def test_is_a_div_element
-          assert @element.is_a?(Element)
-          assert @element.tag_name, 'div'
+        def test_close_outside
+          XRay::HTML::Parser.new('<div class="info" ></div>') do |e|
+            assert_equal Element.new('div', {:class=>"info"}), e
+          end
         end
-
-        def test_have_one_child
-          assert @element.children.empty?
-        end
-
-        def test_has_text
-          assert_equal '', @element.inner_text
-        end
-
-        def test_has_html_text
-          assert_equal '', @element.inner_html
-          assert_equal '<div class="info" />', @element.outer_html
+        def test_center_tag
+          XRay::HTML::Parser.new('<center></center>') do |e|
+            assert_equal Element.new('center'), e
+          end
         end
 
       end

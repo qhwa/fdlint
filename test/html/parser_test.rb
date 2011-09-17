@@ -11,6 +11,8 @@ require_relative 'parser/parse_with_simple_tag_test'
 require_relative 'parser/parse_with_simple_tree_test'
 require_relative 'parser/parse_with_selfclosing_test'
 require_relative 'parser/parse_with_text_test'
+require_relative 'parser/parse_with_script_tag_test'
+require_relative 'parser/parse_with_style_tag_test'
 
 module XRayTest
   
@@ -28,6 +30,8 @@ module XRayTest
         tests << Parser::ParseWithSimpleTagTest.suite
         tests << Parser::ParseWithSimpleTreeTest.suite
         tests << Parser::ParseWithTextTest.suite
+        tests << Parser::ParseWithScriptTagTest.suite
+        tests << Parser::ParseWithStyleTagTest.suite
         tests
       end
     end

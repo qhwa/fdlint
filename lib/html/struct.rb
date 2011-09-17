@@ -48,7 +48,7 @@ module XRay
       end
 
       def to_s
-        "< \##{outer_html}>"
+        "[HTML: #{outer_html}]"
       end
 
       protected
@@ -85,6 +85,10 @@ module XRay
 
       def ==(other)
         text == other.text
+      end
+
+      def to_s
+        "[TEXT: #{text}]"
       end
 
     end

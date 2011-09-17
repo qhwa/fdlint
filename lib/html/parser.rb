@@ -14,14 +14,16 @@ module XRay; module HTML
       doc
     end
 
-    TEXT = /([^<]|(<[^\w\/]))+/m
-    PROP_NAME = %r/\w[\w-]*/m
-    PROP_VALUE = %r/'([^']*)'|"([^"]*)"|(\w+)/m
-    PROP = %r/#{PROP_NAME}\s*(?:=\s*#{PROP_VALUE})?/m
-    TAG_NAME = /[\w\/][^>\s]*/m
-    TAG_START = %r/<(#{TAG_NAME})/
-    TAG = %r/#{TAG_START}(\s+#{PROP})*\s*>/m
-    SELF_CLOSE_TAG = %r/#{TAG_START}(\s+#{PROP})*\s+\/>/m
+    TEXT            = /[^<]+/m
+    PROP_NAME       = %r/\w[-\w]*/m
+    PROP_VALUE      = %r/'([^']*)'|"([^"]*)"|([^\s>]+)/m
+    PROP            = %r/#{PROP_NAME}\s*(?:=\s*#{PROP_VALUE})?/m
+    TAG_NAME        = /\w[^>\s]*/ 
+    TAG_START       = %r/<(#{TAG_NAME})/m
+    TAG_END         = %r/<\/#{TAG_NAME}\s*>/m
+    TAG             = %r/#{TAG_START}(\s+#{PROP})*\s*>/m
+    SELF_CLOSE_TAG  = %r/#{TAG_START}(\s+#{PROP})*\s+\/>/m
+    DTD             = /<!doctype\s+(.*?)>/im
 
     def parse_html
       nodes = batch(:parse_element)
@@ -43,14 +45,22 @@ module XRay; module HTML
     end
 
     def parse_text
-      TextElement.new @scanner.scan(TEXT)
+      text = ''
+      until @scanner.check(TAG) or @scanner.check(SELF_CLOSE_TAG) or @scanner.check(TAG_END) or @scanner.eos?
+        text << '<' if @scanner.skip(/</)
+        text << @scanner.scan(TEXT)
+      end
+
+      TextElement.new text
     end
 
     def parse_tag
-      if @scanner.check TAG
-        parse_normal_tag
+      if @scanner.check DTD
+        parse_dtd_tag
       elsif @scanner.check SELF_CLOSE_TAG
         parse_self_closing_tag
+      elsif @scanner.check TAG
+        parse_normal_tag
       end
     end
 
@@ -98,13 +108,24 @@ module XRay; module HTML
       if auto_close?(tag.text)
         #TODO: give a warning for this
       else
-        end_tag = %r(<\/#{tag.text}>)
-        until @scanner.check(end_tag) or @scanner.eos? do
-          children << parse_element
+        end_tag = %r(<#{tag.text.sub(/^(?!=\/)/, '\/')}>)
+        until @scanner.check(TAG_END) or @scanner.eos? do
+          child = parse_element
+          children << child if child
         end
-        skip end_tag
+        begin
+          skip end_tag
+        rescue => e
+          #TODO: html not validated
+          puts "---"
+          raise e
+        end
       end
       Element.new(tag, prop, children)
+    end
+
+    def parse_dtd_tag
+      scan DTD
     end
 
     def parse_self_closing_tag
@@ -127,5 +148,7 @@ end; end
 
 if __FILE__ == $0
   XRay::HTML::Parser.parse(%q(<div class="info" checked>information</div>)) { |e| puts e.outer_html }
-  XRay::HTML::Parser.parse(%q(<img width="100" height='150' id=img > text)) { |e| puts e.first.outer_html }
+  XRay::HTML::Parser.parse(%q(<img width="100" height='150' id=img > <center>text</center>)) { |e| puts e.first.outer_html }
+  XRay::HTML::Parser.parse(%q(<center><div><div><center>text</center></div></div></center>)) { |e| puts e.outer_html }
+  XRay::HTML::Parser.parse(%q(<center><div></center></div>)) { |e| puts e.outer_html }
 end
