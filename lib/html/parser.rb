@@ -15,7 +15,7 @@ module XRay; module HTML
     end
 
     TEXT = /([^<]|(<[^\w\/]))+/m
-    PROP_NAME = %r/\w+/m
+    PROP_NAME = %r/\w[\w-]*/m
     PROP_VALUE = %r/'([^']*)'|"([^"]*)"|(\w+)/m
     PROP = %r/#{PROP_NAME}\s*(?:=\s*#{PROP_VALUE})?/m
     TAG_NAME = /[\w\/][^>\s]*/m
