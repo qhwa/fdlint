@@ -3,6 +3,7 @@ require 'test/unit'
 require 'test/unit/testsuite'
 require 'test/unit/ui/console/testrunner'
 
+require_relative 'parser/parse_comment_test'
 require_relative 'parser/parse_with_auto_close_tag_test'
 require_relative 'parser/parse_with_emtpy_test'
 require_relative 'parser/parse_with_multi_children_test'
@@ -22,6 +23,7 @@ module XRayTest
 
       def self.suite
         tests = Test::Unit::TestSuite.new
+        tests << Parser::ParseCommentTest.suite
         tests << Parser::ParseWithAutoCloseTagTest.suite
         tests << Parser::ParseWithEmptyTest.suite
         tests << Parser::ParseWithMultiChildrenTest.suite

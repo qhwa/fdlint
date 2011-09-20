@@ -95,9 +95,30 @@ module XRay
 
 
     class CommentElement < Element
-      def children
-        nil
+      def initialize(text)
+        super(nil)
+        @text = text.to_s
       end
+
+      def content; @text; end
+      def tag_name; nil; end
+
+      alias_method :inner_text, :text
+      alias_method :inner_html, :text
+      
+      def outer_html
+        "<!--#{text}-->"
+      end
+
+      def ==(other)
+        text == other.text
+      end
+
+      def to_s
+        "[Comment: #{text}]"
+      end
+
+
     end
 
 
@@ -109,9 +130,7 @@ module XRay
         @name, @value, @sep = name, value, sep
       end
 
-      def position
-        name.position
-      end
+      def position; name.position; end
 
       def to_s
         "#{name}=#{sep}#{value}#{sep}"

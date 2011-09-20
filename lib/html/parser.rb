@@ -24,6 +24,7 @@ module XRay; module HTML
     TAG             = %r/#{TAG_START}(\s+#{PROP})*\s*>/m
     SELF_CLOSE_TAG  = %r/#{TAG_START}(\s+#{PROP})*\s+\/>/m
     DTD             = /<!doctype\s+(.*?)>/im
+    COMMENT         = /<!--(.*?)-->/m
 
     def parse_html
       nodes = batch(:parse_element)
@@ -37,16 +38,23 @@ module XRay; module HTML
     alias_method :parse, :parse_html
 
     def parse_element
-      if @scanner.check(TAG_START)
+      if @scanner.check(COMMENT)
+        parse_comment
+      elsif @scanner.check(TAG_START)
         parse_tag
       else
         parse_text
       end
     end
 
+    def parse_comment
+      scan COMMENT
+      CommentElement.new(@scanner[1])
+    end
+
     def parse_text
       text = ''
-      until @scanner.check(TAG) or @scanner.check(SELF_CLOSE_TAG) or @scanner.check(TAG_END) or @scanner.eos?
+      until @scanner.check(TAG) or @scanner.check(SELF_CLOSE_TAG) or @scanner.check(TAG_END) or @scanner.check(COMMENT) or @scanner.eos?
         text << '<' if @scanner.skip(/</)
         text << @scanner.scan(TEXT)
       end
@@ -150,5 +158,5 @@ if __FILE__ == $0
   XRay::HTML::Parser.parse(%q(<div class="info" checked>information</div>)) { |e| puts e.outer_html }
   XRay::HTML::Parser.parse(%q(<img width="100" height='150' id=img > <center>text</center>)) { |e| puts e.first.outer_html }
   XRay::HTML::Parser.parse(%q(<center><div><div><center>text</center></div></div></center>)) { |e| puts e.outer_html }
-  XRay::HTML::Parser.parse(%q(<center><div></center></div>)) { |e| puts e.outer_html }
+  begin; XRay::HTML::Parser.parse(%q(<center><div></center></div>)) { |e| puts e.outer_html }; rescue; end
 end
