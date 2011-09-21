@@ -79,25 +79,25 @@ h3. --html
 
 1. 能分析出html的结构
 1. 能分析出html不符合的问题
-    * 不能定义内嵌样式style
+    * [warn] 不能定义内嵌样式style
+    * [warn] 避免重复引用*同一*或相同功能文件	**如何判断相同功能文件**
+    * [warn] img标签加上alt属性	
+    * [warn] 标签全部小写，包含属性	
+    * [warn] a标签加上title属性，除非作为功能点的a标签	
+    * [info] 功能a必须加target="\_self"，除非preventDefault过	**如何判断功能a** href !~ http
+
     * 页面必须引用fdev css	
-    * 避免重复引用*同一*或相同功能文件	**如何判断相同功能文件**
-    * 功能a必须加target="\_self"，除非preventDefault过	**如何判断功能a** href !~ http
     * 新页面按库中的HTML基本结构模板书写基本页面结构	
-    * 必须存在文档类型声明，新页面统一使用HTML 5 DTD	
     * head部份格式正确，包含字符集meta和title	
     * 外链CSS置于head里，例外：应用里的footer样式	
     * 不通过@import在页面上引入CSS	
     * 外链产品线级js置于head，页面级js置于页底	
-    * 标签全部小写，包含属性	
     * id、class名称全部小写，单词分隔使用中横线	
     * 属性值使用双引号，且不能仅有属性名	
     * 标签必须闭合，嵌套正确	**是否包括meta、img等浏览器能辨认的标签？HTML5 DTD是否也要求如此？** yes!
     * 一个节点上定义的class个数最多不超过3个(不含lib中的class)	
     * 行内标签不得包含块级标签	
     * h类标签按层次递减， h1唯一（detail页h1放在detail title上）	
-    * a标签加上title属性，除非作为功能点的a标签	
-    * img标签加上alt属性	
     * text、radio、checkbox、textarea、select必须加name属性	
     * 所有按钮必须用button（button/submit/reset）	
 

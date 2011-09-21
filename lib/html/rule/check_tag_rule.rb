@@ -27,7 +27,8 @@ module XRay
             :check_unique_script_import,
             :check_unique_style_import,
             :check_img_must_have_alt,
-            :check_hyperlink_with_target
+            :check_hyperlink_with_target,
+            :check_hyperlink_with_title
           ], tag
         end
 
@@ -46,9 +47,15 @@ module XRay
         end
 
         def check_hyperlink_with_target(tag)
-          if tag.tag_name_equal? 'a'
-            if tag.prop_value(:href)[0] == '#' and tag.prop_value(:target) != '_self'
-              ['功能a必须加target="_self"，除非preventDefault过', :info]
+          if tag.tag_name_equal? 'a' and tag.prop_value(:href)[0] == '#' and tag.prop_value(:target) != '_self'
+            ['功能a必须加target="_self"，除非preventDefault过', :info]
+          end
+        end
+
+        def check_hyperlink_with_title(tag)
+          if tag.tag_name_equal? 'a' and tag.prop_value(:href)[0] != '#' 
+            unless (prop = tag.prop_value(:title)) and !prop.empty?
+              ['非功能能点的a标签必须加上title属性', :warn]
             end
           end
         end
