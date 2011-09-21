@@ -10,7 +10,7 @@ module XRay
       attr_reader :tag, :props, :children
 
       def initialize(tag, props=[], children=[])
-        @tag, @prop, @children = tag, props||[], Array.[](children).flatten || []
+        @tag, @props, @children = tag, to_props(props), Array.[](children).flatten || []
       end
 
       def text
@@ -40,11 +40,19 @@ module XRay
       end
 
       def prop_text
-        to_param_string(@prop)
+        props.inject('') { |s, p| s << " " << p.to_s }
       end
 
       def ==(other)
         tag_name == tag_name.to_s && prop_text == other.prop_text && inner_html == other.inner_html
+      end
+      
+      def prop(name, value=nil)
+        if value
+          @props.find { |p| p.value = value if str_mtc(p.name, name) }
+        else
+          prop = @props.find { |p| return p.value if str_mtc(p.name, name) }
+        end
       end
 
       def to_s
@@ -57,13 +65,22 @@ module XRay
       end
 
       private
-      def to_param_string( props )
-        case props
+
+      def to_props(src)
+        case src
           when Array
-            props.inject('') { |s, p| s << " " << p.to_s }
+            src
           when Hash
-            props.inject('') { |s, p| s + %Q( #{p[0]}="#{p[1]}") }
-        end
+            src.map do |n, v|
+              Property.new(n, v)
+            end
+          else
+            []
+          end
+      end
+
+      def str_mtc(a, b)
+        a.to_s.downcase == b.to_s.downcase
       end
 
     end
@@ -124,7 +141,8 @@ module XRay
 
     class Property < Node
 
-      attr_reader :name, :value, :sep
+      attr_reader :name, :sep
+      attr_accessor :value
 
       def initialize(name, value, sep='"')
         @name, @value, @sep = name, value, sep
