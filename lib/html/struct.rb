@@ -11,6 +11,7 @@ module XRay
 
       def initialize(tag, props=[], children=[])
         @tag, @props, @children = tag, to_props(props), Array.[](children).flatten || []
+        @position = @tag.position.dup if tag.is_a? Node
       end
 
       def text

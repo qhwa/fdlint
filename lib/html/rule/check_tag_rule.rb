@@ -9,8 +9,16 @@ module XRay
 
         attr_reader :imported_scripts, :imported_css
 
-        def initialize
+        def initialize(opt=nil)
           @imported_scripts, @imported_css = [], []
+        end
+
+        def visit_tag(tag)
+          check_tag(tag)
+        end
+
+        def visit_property(prop)
+          check_prop(prop)
         end
 
         def check_tag(tag)
@@ -29,8 +37,8 @@ module XRay
 
         def check_unique_script_import(tag)
           if tag.tag_name.downcase == 'script'
-            src = tag.prop(:src)
-            if @imported_scripts.any? { |s| s == src }
+            src = tag.prop(:src).to_s
+            if @imported_scripts.include? src
               ["避免重复引用同一或相同功能文件", :warn]
             else
               @imported_scripts << src
@@ -41,8 +49,8 @@ module XRay
 
         def check_unique_style_import(tag)
           if tag.tag_name.downcase == 'link' and tag.prop(:rel) =~ /stylesheet/i
-            src = tag.prop(:href)
-            if @imported_css.any? { |s| s == src }
+            src = tag.prop(:href).to_s
+            if @imported_css.include? src
               ["避免重复引用同一或相同功能文件", :warn]
             else
               @imported_css << src

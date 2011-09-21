@@ -8,6 +8,7 @@ require_relative 'css/rule/check_list_rule'
 require_relative 'css/rule/check_file_name_rule'
 require_relative 'css/rule/check_compression_rule'
 require_relative 'html/parser'
+require_relative 'html/rule/check_tag_rule'
 
 
 module XRay
@@ -52,8 +53,8 @@ module XRay
         file_val.add_validator CSS::Rule::FileNameChecker.new( @opt.merge opt )
         file_val.add_validator CSS::Rule::CompressionChecker.new( @opt.merge opt )
         file_good, file_results = file_val.validate file
-        @source = CSS::Reader.read( file, @opt )
-        syntax_good, syntax_results = check_css @source, opt.merge({
+        source = CSS::Reader.read( file, @opt )
+        syntax_good, syntax_results = check_css source, opt.merge({
           :scope => file =~ /[\\\/]lib[\\\/]/ ? 'lib' : 'page'
         })
         [file_good && syntax_good, file_results + syntax_results]
@@ -75,11 +76,11 @@ module XRay
       true
     end
 
-    def check_html(text)
+    def check_html(text, opt=nil)
       @text = text
       parser = HTML::Parser.new(text, @logger)
-      #visitor = HTML::Rule::CheckListRule.new( opt )
-      #parser.add_visitor visitor
+      visitor = HTML::Rule::CheckTagRule.new( opt )
+      parser.add_visitor visitor
 
       begin
         parser.parse_html
@@ -112,8 +113,8 @@ module XRay
 
     def print_results_with_source( opt={} )
       opt = @opt.merge opt
-      if @source
-        lines = @source.gsub(/\r\n/, "\n").gsub(/\r/, "\n").split("\n")
+      if @text
+        lines = @text.gsub(/\r\n/, "\n").gsub(/\r/, "\n").split("\n")
         prf = opt[:prefix] || ''
         suf = opt[:suffix] || ''
         @results.each do |r|
