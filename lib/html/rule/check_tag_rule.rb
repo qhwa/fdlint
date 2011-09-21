@@ -37,7 +37,7 @@ module XRay
 
         def check_unique_script_import(tag)
           if tag.tag_name.downcase == 'script'
-            src = tag.prop(:src).to_s
+            src = tag.prop_value(:src).to_s
             if @imported_scripts.include? src
               ["避免重复引用同一或相同功能文件", :warn]
             else
@@ -48,8 +48,8 @@ module XRay
         end
 
         def check_unique_style_import(tag)
-          if tag.tag_name.downcase == 'link' and tag.prop(:rel) =~ /stylesheet/i
-            src = tag.prop(:href).to_s
+          if tag.tag_name.downcase == 'link' and tag.prop_value(:rel) =~ /stylesheet/i
+            src = tag.prop_value(:href).to_s
             if @imported_css.include? src
               ["避免重复引用同一或相同功能文件", :warn]
             else

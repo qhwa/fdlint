@@ -48,11 +48,21 @@ module XRay
         tag_name == tag_name.to_s && prop_text == other.prop_text && inner_html == other.inner_html
       end
       
-      def prop(name, value=nil)
+      def has_prop?(name)
+        @props.any? { |p| p.name_is? name }
+      end
+
+      def prop(name)
+        @props.find { |p| p.name_is? name }
+      end
+
+      def prop_value(name, value=nil)
         if value
-          @props.find { |p| p.value = value if str_mtc(p.name, name) }
+          unless @props.find { |p| p.value = value if p.name_is? name }
+            @props << Property.new(name, value) 
+          end
         else
-          prop = @props.find { |p| return p.value if str_mtc(p.name, name) }
+          prop(name).value
         end
       end
 
@@ -78,10 +88,6 @@ module XRay
           else
             []
           end
-      end
-
-      def str_mtc(a, b)
-        a.to_s.downcase == b.to_s.downcase
       end
 
     end
@@ -150,6 +156,10 @@ module XRay
       end
 
       def position; name.position; end
+
+      def name_is?(text)
+        @name.to_s.downcase == text.to_s.downcase
+      end
 
       def to_s
         "#{name}=#{sep}#{value}#{sep}"
