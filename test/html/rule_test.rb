@@ -6,6 +6,8 @@ require 'test/unit/ui/console/testrunner'
 require_relative 'rule/check_style_prop_test'
 require_relative 'rule/check_unique_import_test'
 require_relative 'rule/check_tag_downcase_test'
+require_relative 'rule/check_img_with_alt_prop_test'
+require_relative 'rule/check_hyperlink_with_target_test'
 
 module XRayTest
   
@@ -18,6 +20,8 @@ module XRayTest
         tests << Rule::CheckStylePropTest.suite
         tests << Rule::CheckUniqueImportTest.suite
         tests << Rule::CheckTagDowncaseTest.suite
+        tests << Rule::CheckImgWithAltPropTest.suite
+        tests << Rule::CheckHyperlinkWithTargetTest.suite
         tests
       end
     end

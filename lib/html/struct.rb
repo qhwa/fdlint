@@ -24,6 +24,10 @@ module XRay
         @tag.is_a?(Node) ? @tag.text : @tag.to_s
       end
 
+      def tag_name_equal?(name)
+        tag_name.downcase == name.downcase
+      end
+
       def inner_html
         @children.inject('') { |s,c| s + c.outer_html }
       end
@@ -49,20 +53,21 @@ module XRay
       end
       
       def has_prop?(name)
-        @props.any? { |p| p.name_is? name }
+        @props.any? { |p| p.name_equal? name }
       end
 
       def prop(name)
-        @props.find { |p| p.name_is? name }
+        @props.find { |p| p.name_equal? name }
       end
 
       def prop_value(name, value=nil)
         if value
-          unless @props.find { |p| p.value = value if p.name_is? name }
+          unless @props.find { |p| p.value = value if p.name_equal? name }
             @props << Property.new(name, value) 
           end
         else
-          prop(name).value
+          p = prop(name)
+          p.value if p
         end
       end
 
@@ -157,7 +162,7 @@ module XRay
 
       def position; name.position; end
 
-      def name_is?(text)
+      def name_equal?(text)
         @name.to_s.downcase == text.to_s.downcase
       end
 

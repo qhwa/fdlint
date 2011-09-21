@@ -25,7 +25,9 @@ module XRay
           check [
             :check_tag_name_downcase,
             :check_unique_script_import,
-            :check_unique_style_import
+            :check_unique_style_import,
+            :check_img_must_have_alt,
+            :check_hyperlink_with_target
           ], tag
         end
 
@@ -35,8 +37,24 @@ module XRay
           end
         end
 
+        def check_img_must_have_alt(tag)
+          if tag.tag_name_equal? 'img'
+            unless tag.has_prop?(:alt)
+              ["img标签必须加上alt属性", :warn]
+            end
+          end
+        end
+
+        def check_hyperlink_with_target(tag)
+          if tag.tag_name_equal? 'a'
+            if tag.prop_value(:href)[0] == '#' and tag.prop_value(:target) != '_self'
+              ['功能a必须加target="_self"，除非preventDefault过', :info]
+            end
+          end
+        end
+
         def check_unique_script_import(tag)
-          if tag.tag_name.downcase == 'script'
+          if tag.tag_name_equal? 'script'
             src = tag.prop_value(:src).to_s
             if @imported_scripts.include? src
               ["避免重复引用同一或相同功能文件", :warn]
@@ -48,7 +66,7 @@ module XRay
         end
 
         def check_unique_style_import(tag)
-          if tag.tag_name.downcase == 'link' and tag.prop_value(:rel) =~ /stylesheet/i
+          if tag.tag_name_equal? 'link' and tag.prop_value(:rel) =~ /stylesheet/i
             src = tag.prop_value(:href).to_s
             if @imported_css.include? src
               ["避免重复引用同一或相同功能文件", :warn]

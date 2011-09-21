@@ -170,3 +170,16 @@ module XRay
 
   end
 end
+
+if __FILE__ == $0
+  text = <<END
+    <a href="#" style="">
+      <img src="http://g.cn/icon.png">test
+    </a>
+    <link rel="stylesheet" href="test.css" />
+    <Link Rel="stylesheet" href="test.css" />
+END
+  runner = XRay::Runner.new
+  runner.check_html text
+  runner.print_results_with_source
+end
