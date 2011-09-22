@@ -22,7 +22,7 @@ module XRay; module HTML
     TAG_START       = %r/<(#{TAG_NAME})/m
     TAG_END         = %r/<\/#{TAG_NAME}\s*>/m
     TAG             = %r/#{TAG_START}(\s+#{PROP})*\s*>/m
-    SELF_CLOSE_TAG  = %r/#{TAG_START}(\s+#{PROP})*\s+\/>/m
+    SELF_CLOSE_TAG  = %r/#{TAG_START}(\s+#{PROP})*\s*\/>/m
     DTD             = /\s*<!(doctype)\s+(.*?)>/im
     COMMENT         = /<!--(.*?)-->/m
 
@@ -112,8 +112,8 @@ module XRay; module HTML
     end
 
     def parse_prop_value
-      scan PROP_VALUE
-      Node.new("#{@scanner[1]}#{@scanner[2]}#{@scanner[3]}")
+      node = scan PROP_VALUE
+      Node.new("#{@scanner[1]}#{@scanner[2]}#{@scanner[3]}", node.position)
     end
 
     protected

@@ -11,6 +11,9 @@ require_relative 'rule/check_hyperlink_with_target_test'
 require_relative 'rule/check_hyperlink_with_title_test'
 require_relative 'rule/check_dtd_test'
 require_relative 'rule/check_id_n_class_downcase_test'
+require_relative 'rule/check_no_import_css_test'
+require_relative 'rule/check_prop_seperator_test'
+require_relative 'rule/check_prop_have_value_test'
 
 module XRayTest
   
@@ -28,6 +31,9 @@ module XRayTest
         tests << Rule::CheckHyperlinkWithTitleTest.suite
         tests << Rule::CheckDTDTest.suite
         tests << Rule::CheckIDAndClassPropCaseTest.suite
+        tests << Rule::CheckNoCSSImportTest.suite
+        tests << Rule::CheckPropSeperatorTest.suite
+        tests << Rule::CheckPropHaveValueTest.suite
         tests
       end
     end

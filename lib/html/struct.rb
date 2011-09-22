@@ -49,7 +49,7 @@ module XRay
       end
 
       def ==(other)
-        tag_name == tag_name.to_s && prop_text == other.prop_text && inner_html == other.inner_html
+        other.is_a?(Element) and tag_name == tag_name.to_s && prop_text == other.prop_text && inner_html == other.inner_html
       end
       
       def has_prop?(name)
@@ -187,7 +187,11 @@ module XRay
       end
 
       def to_s
-        "#{name}=#{sep}#{value}#{sep}"
+        if value.nil?
+          name.to_s
+        else
+          "#{name}=#{sep}#{value}#{sep}"
+        end
       end
 
     end

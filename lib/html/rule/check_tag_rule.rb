@@ -49,7 +49,8 @@ module XRay
             :check_unique_style_import,
             :check_img_must_have_alt,
             :check_hyperlink_with_target,
-            :check_hyperlink_with_title
+            :check_hyperlink_with_title,
+            :check_no_import_in_style_tag
           ], tag
         end
 
@@ -105,6 +106,12 @@ module XRay
           end
         end
 
+        def check_no_import_in_style_tag(tag)
+          if tag.tag_name_equal? 'style' and tag.inner_text =~ /@import\s/m
+            ["不通过@import在页面上引入CSS", :warn]
+          end
+        end
+
         # PROPERTY
 
         def check_prop(prop)
@@ -112,7 +119,9 @@ module XRay
             :check_inline_style_prop,
             :check_prop_name_downcase,
             :check_id_prop_value_downcase,
-            :check_class_prop_value_downcase
+            :check_class_prop_value_downcase,
+            :check_prop_value_sep,
+            :check_prop_value_exsit
           ], prop
         end
 
@@ -137,6 +146,18 @@ module XRay
         def check_class_prop_value_downcase(prop)
           if prop.name_equal? 'class' and prop.value =~ /[A-Z]/
             ["class名称全部小写，单词分隔使用中横线", :warn]
+          end
+        end
+
+        def check_prop_value_sep(prop)
+          if prop.value and prop.sep != '"'
+            ["属性值必须使用双引号", :warn]
+          end
+        end
+
+        def check_prop_value_exsit(prop)
+          if prop.value.nil?
+            ["不能仅有属性名", :warn]
           end
         end
 

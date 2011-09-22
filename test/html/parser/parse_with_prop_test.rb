@@ -4,7 +4,7 @@ module XRayTest
   module HTML
     module Parser
 
-      class ParseWithSimpleTagTest < Test::Unit::TestCase
+      class ParsePropertyTest < Test::Unit::TestCase
         
         include XRay::HTML
         
@@ -18,7 +18,35 @@ module XRayTest
 
         def test_more_prop
           parse(%q(<body bgcolor=#ffffff text=#000000 link=#0000cc vlink=#551a8b alink=#ff0000 onload="try{!google.j.b&&document.f.q.focus()}catch(e){};if(document.images)new Image().src='/images/experiments/nav_logo78.png'" ></body>)) do |e|
-            assert e
+            props = [
+              Property.new('bgcolor', '#ffffff', ''),
+              Property.new('text', '#000000', ''),
+              Property.new('link', '#0000cc', ''),
+              Property.new('vlink', '#551a8b', ''),
+              Property.new('alink', '#ff0000', ''),
+              Property.new('onload', %q(try{!google.j.b&&document.f.q.focus()}catch(e){};if(document.images)new Image().src='/images/experiments/nav_logo78.png'), '"')
+            ]
+            assert_equal Element.new('body', props), e
+          end
+        end
+
+        def test_prop_without_value
+          parse('<input type="checkbox" name="agreement" checked />') do |e|
+            assert_equal Element.new('input', {
+              :type => 'checkbox',
+              :name => 'agreement',
+              :checked => nil
+            }), e
+          end
+        end
+
+        def test_prop_without_value_2
+          parse('<input type="checkbox" name="agreement" checked/>') do |e|
+            assert_equal Element.new('input', {
+              :type => 'checkbox',
+              :name => 'agreement',
+              :checked => nil
+            }), e
           end
         end
 

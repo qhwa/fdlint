@@ -174,11 +174,14 @@ end
 if __FILE__ == $0
   text = <<END
     <!doctype xhtml>
+    <style>
+      @import test.css
+    </style>
     <a href="#" style="">
       <img src="http://g.cn/icon.png">test
     </a>
     <link rel="stylesheet" href="test.css" />
-    <Link Rel="stylesheet" href="test.css" />
+    <Link Rel="stylesheet" href="test.css" checked />
 END
   runner = XRay::Runner.new
   runner.check_html text
