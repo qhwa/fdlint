@@ -26,7 +26,7 @@ module XRayTest
           assert_equal @element.inner_text, 'information'
         end
 
-        def _test_has_html_text
+        def test_has_html_text
           assert_equal @element.inner_html, 'information'
           assert_equal @element.outer_html, '<div class="info">information</div>'
         end

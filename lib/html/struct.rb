@@ -60,11 +60,13 @@ module XRay
         @props.find { |p| p.name_equal? name }
       end
 
-      def prop_value(name, value=nil)
-        if value
+      def prop_value(*arg)
+        name, value = *arg
+        if arg.size > 1
           unless @props.find { |p| p.value = value if p.name_equal? name }
             @props << Property.new(name, value) 
           end
+          nil
         else
           p = prop(name)
           p.value if p
@@ -147,9 +149,27 @@ module XRay
         "[Comment: #{text}]"
       end
 
-
     end
 
+    class DTDElement < Element
+
+      attr_accessor :type
+
+      def initialize(type, pre="DOCTYPE", pos=nil)
+        @type, @pre, @position = type, pre, pos || Position.new(0,0,0)
+      end
+
+      def to_s
+        "<!#{@pre} #{type}>"
+      end
+
+      alias_method :outer_html, :to_s
+
+      def ==(other)
+        other.is_a?(DTDElement) and other.type == type
+      end
+
+    end
 
     class Property < Node
 
@@ -172,19 +192,6 @@ module XRay
 
     end
 
-    class TagNameNode < Node
-    end
-
 
   end
-end
-
-if $0 == __FILE__
-  Element = XRay::HTML::Element
-  TextElement = XRay::HTML::TextElement
-  Property = XRay::HTML::Property
-  puts TextElement.new('hello').inner_text
-  puts Element.new('div', {:class => 'info'}).outer_html
-  puts Element.new('div', [Property.new('class', 'info')]).outer_html
-  puts Element.new('div', {:class => 'info', :id => 'sample'}) == Element.new('div', [Property.new('class', 'info'), Property.new('id', 'sample')])
 end

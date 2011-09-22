@@ -82,10 +82,12 @@ h3. --html
     * [warn] 不能定义内嵌样式style
     * [warn] 避免重复引用*同一*或相同功能文件	**如何判断相同功能文件**
     * [warn] img标签加上alt属性	
-    * [warn] 标签全部小写，包含属性	
+    * [warn] 标签全部小写
+    * [warn] 属性名全部小写
     * [warn] a标签加上title属性，除非作为功能点的a标签	
     * [info] 功能a必须加target="\_self"，除非preventDefault过	**如何判断功能a** href !~ http
-
+    * [warn] 必须存在文档类型声明
+    * [info] 新页面统一使用HTML 5 DTD
     * 页面必须引用fdev css	
     * 新页面按库中的HTML基本结构模板书写基本页面结构	
     * head部份格式正确，包含字符集meta和title	

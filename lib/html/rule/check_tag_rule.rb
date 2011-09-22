@@ -13,12 +13,33 @@ module XRay
           @imported_scripts, @imported_css = [], []
         end
 
+        def visit_html(html)
+          ["必须存在文档类型声明", :warn] unless @have_dtd
+        end
+
+        def visit_dtd(dtd)
+          @have_dtd = true
+          check_dtd(dtd)
+        end
+
         def visit_tag(tag)
           check_tag(tag)
         end
 
         def visit_property(prop)
           check_prop(prop)
+        end
+
+        def check_dtd(dtd)
+          check [
+            :check_dtd_type_be_html5
+          ], dtd
+        end
+
+        def check_dtd_type_be_html5(dtd)
+          unless dtd.type.downcase == 'html'
+            ['新页面统一使用HTML 5 DTD', :info]
+          end
         end
 
         def check_tag(tag)
@@ -47,13 +68,13 @@ module XRay
         end
 
         def check_hyperlink_with_target(tag)
-          if tag.tag_name_equal? 'a' and tag.prop_value(:href)[0] == '#' and tag.prop_value(:target) != '_self'
+          if tag.tag_name_equal? 'a' and tag.prop_value(:href) =~ /^#/ and tag.prop_value(:target) != '_self'
             ['功能a必须加target="_self"，除非preventDefault过', :info]
           end
         end
 
         def check_hyperlink_with_title(tag)
-          if tag.tag_name_equal? 'a' and tag.prop_value(:href)[0] != '#' 
+          if tag.tag_name_equal? 'a' and tag.prop_value(:href) =~ /^[^#]/
             unless (prop = tag.prop_value(:title)) and !prop.empty?
               ['非功能能点的a标签必须加上title属性', :warn]
             end

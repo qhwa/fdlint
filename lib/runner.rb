@@ -173,6 +173,7 @@ end
 
 if __FILE__ == $0
   text = <<END
+    <!doctype xhtml>
     <a href="#" style="">
       <img src="http://g.cn/icon.png">test
     </a>

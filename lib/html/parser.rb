@@ -23,7 +23,7 @@ module XRay; module HTML
     TAG_END         = %r/<\/#{TAG_NAME}\s*>/m
     TAG             = %r/#{TAG_START}(\s+#{PROP})*\s*>/m
     SELF_CLOSE_TAG  = %r/#{TAG_START}(\s+#{PROP})*\s+\/>/m
-    DTD             = /<!doctype\s+(.*?)>/im
+    DTD             = /\s*<!(doctype)\s+(.*?)>/im
     COMMENT         = /<!--(.*?)-->/m
 
     def parse_html
@@ -31,20 +31,34 @@ module XRay; module HTML
       case nodes.size
         when 0 then nil
         when 1 then nodes[0]
-        else nodes
+        else 
+
+          class << nodes
+            def position; XRay::Position.new(0,0,0); end
+          end
+
+          nodes
       end
     end
 
     alias_method :parse, :parse_html
 
     def parse_element
-      if @scanner.check(COMMENT)
+      if @scanner.check(DTD) and !@dtd_checked
+        @dtd_checked = true
+        parse_dtd
+      elsif @scanner.check(COMMENT)
         parse_comment
       elsif @scanner.check(TAG_START)
         parse_tag
       else
         parse_text
       end
+    end
+
+    def parse_dtd
+      node = scan(DTD)
+      DTDElement.new(@scanner[2], @scanner[1], node.position)
     end
 
     def parse_comment
