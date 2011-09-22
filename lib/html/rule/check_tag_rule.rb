@@ -110,7 +110,9 @@ module XRay
         def check_prop(prop)
           check [
             :check_inline_style_prop,
-            :check_prop_name_downcase
+            :check_prop_name_downcase,
+            :check_id_prop_value_downcase,
+            :check_class_prop_value_downcase
           ], prop
         end
 
@@ -123,6 +125,18 @@ module XRay
         def check_prop_name_downcase(prop)
           if prop.name =~ /[A-Z]/
             ["属性名必须小写，连字符用中横线", :warn]
+          end
+        end
+
+        def check_id_prop_value_downcase(prop)
+          if prop.name_equal? 'id' and prop.value =~ /[A-Z]/
+            ["id名称全部小写，单词分隔使用中横线", :warn]
+          end
+        end
+
+        def check_class_prop_value_downcase(prop)
+          if prop.name_equal? 'class' and prop.value =~ /[A-Z]/
+            ["class名称全部小写，单词分隔使用中横线", :warn]
           end
         end
 

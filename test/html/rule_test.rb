@@ -10,6 +10,7 @@ require_relative 'rule/check_img_with_alt_prop_test'
 require_relative 'rule/check_hyperlink_with_target_test'
 require_relative 'rule/check_hyperlink_with_title_test'
 require_relative 'rule/check_dtd_test'
+require_relative 'rule/check_id_n_class_downcase_test'
 
 module XRayTest
   
@@ -26,6 +27,7 @@ module XRayTest
         tests << Rule::CheckHyperlinkWithTargetTest.suite
         tests << Rule::CheckHyperlinkWithTitleTest.suite
         tests << Rule::CheckDTDTest.suite
+        tests << Rule::CheckIDAndClassPropCaseTest.suite
         tests
       end
     end

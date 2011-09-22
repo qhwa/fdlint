@@ -88,13 +88,13 @@ h3. --html
     * [info] 功能a必须加target="\_self"，除非preventDefault过	**如何判断功能a** href !~ http
     * [warn] 必须存在文档类型声明
     * [info] 新页面统一使用HTML 5 DTD
+    * [warn] id、class名称全部小写，单词分隔使用中横线	
     * 页面必须引用fdev css	
     * 新页面按库中的HTML基本结构模板书写基本页面结构	
     * head部份格式正确，包含字符集meta和title	
     * 外链CSS置于head里，例外：应用里的footer样式	
     * 不通过@import在页面上引入CSS	
     * 外链产品线级js置于head，页面级js置于页底	
-    * id、class名称全部小写，单词分隔使用中横线	
     * 属性值使用双引号，且不能仅有属性名	
     * 标签必须闭合，嵌套正确	**是否包括meta、img等浏览器能辨认的标签？HTML5 DTD是否也要求如此？** yes!
     * 一个节点上定义的class个数最多不超过3个(不含lib中的class)	
