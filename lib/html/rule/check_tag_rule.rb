@@ -32,13 +32,20 @@ module XRay
 
         def check_dtd(dtd)
           check [
-            :check_dtd_type_be_html5
+            :check_dtd_type_be_html5,
+            :check_dtd_upcase
           ], dtd
         end
 
         def check_dtd_type_be_html5(dtd)
           unless dtd.type.downcase == 'html'
             ['新页面统一使用HTML 5 DTD', :info]
+          end
+        end
+
+        def check_dtd_upcase(dtd)
+          unless dtd.to_s =~ /^<!DOCTYPE/
+            ['必须使用大写的"DOCTYPE"', :info]
           end
         end
 
@@ -51,7 +58,8 @@ module XRay
             :check_hyperlink_with_target,
             :check_hyperlink_with_title,
             :check_no_import_in_style_tag,
-            :check_head_contain_meta_and_title
+            :check_head_contain_meta_and_title,
+            :check_block_in_block
           ], tag
         end
 
@@ -124,6 +132,12 @@ module XRay
           end
         end
 
+        def check_block_in_block(tag)
+          if !tag.tag_name_equal?('a') and tag.inline? and tag.children.any? { |e| !e.inline? }
+            ["行内标签不得包含块级标签，a标签例外", :warn]
+          end
+        end
+
         # PROPERTY
 
         def check_prop(prop)
@@ -185,6 +199,9 @@ module XRay
 
 
       end
+
+
+
 
     end
   end

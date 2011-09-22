@@ -88,21 +88,22 @@ h3. --html
     * [info] 功能a必须加target="\_self"，除非preventDefault过	**如何判断功能a** href !~ http
     * [warn] 必须存在文档类型声明
     * [info] 新页面统一使用HTML 5 DTD
+    * [warn] 必须使用大写的"DOCTYPE"
     * [warn] id、class名称全部小写，单词分隔使用中横线	
     * [warn] 不通过@import在页面上引入CSS	
     * [warn] 属性值使用双引号
     * [warn] 不能仅有属性名
     * [warn] head必须包含字符集meta和title	
-    * 页面必须引用fdev css	
-    * 新页面按库中的HTML基本结构模板书写基本页面结构	
-    * 外链CSS置于head里，例外：应用里的footer样式	
-    * 外链产品线级js置于head，页面级js置于页底	
-    * 标签必须闭合，嵌套正确	**是否包括meta、img等浏览器能辨认的标签？HTML5 DTD是否也要求如此？** yes!
-    * 一个节点上定义的class个数最多不超过3个(不含lib中的class)	
-    * 行内标签不得包含块级标签	
-    * h类标签按层次递减， h1唯一（detail页h1放在detail title上）	
+    * [warn] 行内标签不得包含块级标签，a标签例外
+
     * text、radio、checkbox、textarea、select必须加name属性	
     * 所有按钮必须用button（button/submit/reset）	
+    * 页面必须引用fdev css	**urlx3:**
+    * 新页面按库中的HTML基本结构模板书写基本页面结构	**模板**
+    * [info] 外链CSS置于head里，例外：应用里的footer样式	
+    * 外链产品线级js置于head，页面级js置于页底	
+    * [fatal] 标签必须闭合，嵌套正确	**是否包括meta、img等浏览器能辨认的标签？HTML5 DTD是否也要求如此？** yes!
+    * 一个节点上定义的class个数最多不超过3个(不含lib中的class fd- w952 layout grid)	
 
 tasks
 -----

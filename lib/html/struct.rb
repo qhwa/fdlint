@@ -4,6 +4,8 @@ module XRay
   module HTML
 
     Node = XRay::Node
+    INLINE_ELEMENTS = %w(a label abbr legend address link area mark audio meter bm nav cite optgroup code option del q details small dfn select command source datalist span em strong font sub i summary iframe sup img tbody input td ins time kbd var)
+
 
     class Element < Node
 
@@ -77,6 +79,10 @@ module XRay
         "[HTML: #{outer_html}]"
       end
 
+      def inline?
+        INLINE_ELEMENTS.include? tag_name.downcase
+      end
+
       protected
       def parse(text)
         @outer_html = text
@@ -122,6 +128,10 @@ module XRay
         false
       end
 
+      def inline?
+        true
+      end
+
       def to_s
         "[TEXT: #{text}]"
       end
@@ -149,6 +159,10 @@ module XRay
         text == other.text
       end
 
+      def inline?
+        true
+      end
+
       def to_s
         "[Comment: #{text}]"
       end
@@ -165,6 +179,10 @@ module XRay
 
       def to_s
         "<!#{@pre} #{type}>"
+      end
+
+      def inline?
+        true
       end
 
       alias_method :outer_html, :to_s

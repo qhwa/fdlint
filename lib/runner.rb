@@ -182,7 +182,9 @@ if __FILE__ == $0
     </style>
     <a href="#" style="">
       <img src="http://g.cn/icon.png">test
+      <div>image</div>
     </a>
+    <span><div>hello</div></span>
     <link rel="stylesheet" href="test.css" />
     <Link Rel="stylesheet" href="test.css" checked />
 END
