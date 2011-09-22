@@ -174,6 +174,9 @@ end
 if __FILE__ == $0
   text = <<END
     <!doctype xhtml>
+    <head>
+      <title>testing</title>
+    </head>
     <style>
       @import test.css
     </style>

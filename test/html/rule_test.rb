@@ -14,6 +14,7 @@ require_relative 'rule/check_id_n_class_downcase_test'
 require_relative 'rule/check_no_import_css_test'
 require_relative 'rule/check_prop_seperator_test'
 require_relative 'rule/check_prop_have_value_test'
+require_relative 'rule/check_head_contain_meta_and_title_test'
 
 module XRayTest
   
@@ -34,6 +35,7 @@ module XRayTest
         tests << Rule::CheckNoCSSImportTest.suite
         tests << Rule::CheckPropSeperatorTest.suite
         tests << Rule::CheckPropHaveValueTest.suite
+        tests << Rule::CheckHeadTest.suite
         tests
       end
     end

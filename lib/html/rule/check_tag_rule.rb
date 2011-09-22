@@ -50,7 +50,8 @@ module XRay
             :check_img_must_have_alt,
             :check_hyperlink_with_target,
             :check_hyperlink_with_title,
-            :check_no_import_in_style_tag
+            :check_no_import_in_style_tag,
+            :check_head_contain_meta_and_title
           ], tag
         end
 
@@ -109,6 +110,17 @@ module XRay
         def check_no_import_in_style_tag(tag)
           if tag.tag_name_equal? 'style' and tag.inner_text =~ /@import\s/m
             ["不通过@import在页面上引入CSS", :warn]
+          end
+        end
+
+        def check_head_contain_meta_and_title(tag)
+          if tag.tag_name_equal? 'head'
+            children = tag.children
+            has_meta = children.any? { |e| e.tag_name_equal? 'meta' and e.prop_value('charset') }
+            has_title = children.any? { |e| e.tag_name_equal? 'title' }
+            unless has_meta and has_title
+              ["head必须包含字符集meta和title", :warn]
+            end
           end
         end
 

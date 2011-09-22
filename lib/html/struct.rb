@@ -118,6 +118,10 @@ module XRay
         text == other.text
       end
 
+      def tag_name_equal?(name)
+        false
+      end
+
       def to_s
         "[TEXT: #{text}]"
       end
