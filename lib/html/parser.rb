@@ -68,7 +68,7 @@ module XRay; module HTML
 
     def parse_text
       text = ''
-      until @scanner.check(TAG) or @scanner.check(SELF_CLOSE_TAG) or @scanner.check(TAG_END) or @scanner.check(COMMENT) or @scanner.eos?
+      until text_end?
         text << '<' if @scanner.skip(/</)
         text << @scanner.scan(TEXT)
       end
@@ -124,6 +124,7 @@ module XRay; module HTML
     def parse_normal_tag
       skip /</
       tag, prop = scan(TAG_NAME), parse_properties
+      @parsing_script = tag =~ /^script$/i
       skip />/
 
       children = []
@@ -139,10 +140,10 @@ module XRay; module HTML
           skip end_tag
         rescue => e
           #TODO: html not validated
-          puts "---"
           raise e
         end
       end
+      @parsing_script = false
       Element.new(tag, prop, children)
     end
 
@@ -161,6 +162,14 @@ module XRay; module HTML
 
     def auto_close?(tag)
       XRay::HTML::AUTO_CLOSE_TAGS.include?(tag.to_s)
+    end
+
+    def text_end?
+      if @parsing_script
+        @scanner.check(/<\/script\s*>/) 
+      else
+        @scanner.check(%r(#{TAG}|#{SELF_CLOSE_TAG}|#{TAG_END}|#{COMMENT})) or @scanner.eos?
+      end
     end
 
   end

@@ -4,7 +4,7 @@ module XRay
   module HTML
 
     Node = XRay::Node
-    INLINE_ELEMENTS = %w(a label abbr legend address link area mark audio meter bm nav cite optgroup code option del q details small dfn select command source datalist span em strong font sub i summary iframe sup img tbody input td ins time kbd var)
+    INLINE_ELEMENTS = %w(a br label abbr legend address link area mark audio meter bm nav cite optgroup code option del q details small dfn select command source datalist span em strong font sub i summary iframe sup img tbody input td ins time kbd var)
 
 
     class Element < Node
@@ -14,7 +14,7 @@ module XRay
 
       def initialize(tag, props=[], children=[])
         @tag, @props, @children = tag, to_props(props), Array.[](children).flatten || []
-        @position = @tag.position.dup if tag.is_a? Node
+        @position = @tag.position.dup if tag.is_a?(Node) and tag.position
         @children.each { |el| el.parent = self }
       end
 

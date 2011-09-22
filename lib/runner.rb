@@ -76,7 +76,7 @@ module XRay
       true
     end
 
-    def check_html(text, opt=nil)
+    def check_html(text, opt={})
       @text = text
       parser = HTML::Parser.new(text, @logger)
       visitor = HTML::Rule::CheckTagRule.new( opt )
@@ -93,8 +93,20 @@ module XRay
       [!e && success? , @results]
     end
 
-    def check_html_file(file)
-      true
+    def check_html_file(file, opt={})
+      syntax_results, other_results = [],[],[]
+      begin
+        #TODO:use HTML Reader
+        source = File.read( file, {:encoding=>'gb2312'} ).encode!('utf-8')
+        ok, syntax_results = check_html(source)
+      rescue  EncodingError => e
+        other_results = [LogEntry.new( "File can't be read as #{@opt[:encoding]} charset", :fatal)]
+      rescue => e
+        other_results = [LogEntry.new( e.to_s, :fatal )]
+      ensure
+        @results = syntax_results + other_results
+      end
+      [@results.empty?, @results]
     end
 
     def check_file( file )
@@ -157,7 +169,7 @@ module XRay
       f = File.extname( name )
       if f =~ /\.css$/i
         'css'
-      elsif f =~ /\.js/i
+      elsif f =~ /\.js$/i
         'js'
       else
         'html'

@@ -85,9 +85,7 @@ h3. --html
     * [warn] 标签全部小写
     * [warn] 属性名全部小写
     * [warn] a标签加上title属性，除非作为功能点的a标签	
-    * [info] 功能a必须加target="\_self"，除非preventDefault过	**如何判断功能a** href !~ http
     * [warn] 必须存在文档类型声明
-    * [info] 新页面统一使用HTML 5 DTD
     * [warn] 必须使用大写的"DOCTYPE"
     * [warn] id、class名称全部小写，单词分隔使用中横线	
     * [warn] 不通过@import在页面上引入CSS	
@@ -98,11 +96,13 @@ h3. --html
     * [warn] text、radio、checkbox、textarea、select必须加name属性	
     * [warn] 所有按钮必须用button（button/submit/reset）	
     * [warn] 一个节点上定义的class个数最多不超过3个(不含lib中的class: fd- w952 layout grid)	
+    * [info] 功能a必须加target="\_self"，除非preventDefault过	**如何判断功能a** href !~ http
+    * [info] 新页面统一使用HTML 5 DTD
     * [info] 外链CSS置于head里(例外：应用里的footer样式)
-    * 页面必须引用fdev css	**urlx3:**
     * 新页面按库中的HTML基本结构模板书写基本页面结构	**模板**
-    * 外链产品线级js置于head，页面级js置于页底	
-    * [fatal] 标签必须闭合，嵌套正确	**是否包括meta、img等浏览器能辨认的标签？HTML5 DTD是否也要求如此？** yes!
+    * [fatal] 标签必须闭合、嵌套正确	**是否包括meta、img等浏览器能辨认的标签？HTML5 DTD是否也要求如此？** yes!
+    * 页面必须引用fdev css	**urlx3:** [skip]
+    * 外链产品线级js置于head，页面级js置于页底	[skip]
     * h类标签层次分明，递减 [skip]
 
 tasks

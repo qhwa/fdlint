@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Log In | Review Board</title>
+
+  <script type="text/javascript">
+    var AJAX_SERIAL = "1316135590";
+    var MEDIA_SERIAL = "1316135693";
+    var MEDIA_URL = "/media/";
+    var SITE_ROOT = "/";
+
+    var gUserAuthenticated = false;
+
+
+  </script>
+  <link rel="shortcut icon" type="image/x-icon" href="/media/rb/images/favicon.ico?1316135693" />
+  <link rel="apple-touch-icon-precomposed" type="image/png" href="/media/rb/images/apple-home-icon.png?1316135693" />
+  <link rel="stylesheet" type="text/css" href="/media/rb/css/common.css?1316135693" />
+
+<script type="text/javascript" src="/media/djblets/js/jquery-1.3.2.min.js"></script>
+
+ </head>
+
+ <body>
+
+  <div id="container">
+
+   <div id="headerbar">
+    <ul id="accountnav">
+
+     <li><a href="/account/login/?next_page=/account/login/">Log in</a></li>
+
+
+
+     <li>- <a href="/account/register/">Register</a></li>
+
+
+     <li>- <a href="http://www.reviewboard.org/docs/manual/1.6/">Documentation</a></li>
+     <li>- <a href="http://www.reviewboard.org/bugs/">Bugs</a></li>
+     <li>- <a href="http://www.reviewboard.org/bugs/new/">Report bug</a></li>
+    </ul>
+    <br />
+    <div id="rbinfo">
+     <a href="/"><img id="logo" src="/media/rb/images/logo.png?1316135693" alt="" border="0" /></a>
+     <h1 id="title">
+	  <a href="/">Review Board</a>
+	  <span class="version">1.6.1</span>
+	 </h1>
+    </div>
+   </div>
+   <div id="page-container">
+
+   
+    
+     <div id="navbar-outer">
+      <ul id="navbar">
+
+       <li><a href="/r/">All review requests</a></li>
+       <li><a href="/groups/">Groups</a></li>
+       <li><a href="/users/">Submitters</a></li>
+       <li id="searchbar">
+       <input type="text" name="q" id="search_field"  />
+       
+       </li>
+      </ul>
+     </div>
+     
+    
+
+
+    <noscript>
+<div class="box-container">
+ <div class="box important">
+  <div class="box-inner">
+
+     <h1>JavaScript is turned off</h1>
+     <p>Review Board requires JavaScript in order to function.
+     Please turn it on in your browser preferences.</p>
+     <p>Firefox users: if you prefer to turn on JavaScript only
+     for specific sites, we recommend the
+     <a href="https://addons.mozilla.org/en-US/firefox/addon/722">NoScript
+     extension</a>.</p>
+
+  </div>
+ </div>
+</div>
+
+    </noscript>
+    <div id="error"></div>
+    <div id="content">
+
+
+
+<div class="box-container">
+ <div class="box loginform">
+  <div class="box-inner">
+
+<form method="post" action=".">
+ <h1 class="title">Log In</h1>
+ <div class="main">
+ 
+ <input type="hidden" name="next_page" value="/dashboard/"></input>
+ <table>
+  <tr>
+   <td class="label"><label for="id_username">Username</label></td>
+   <td class="field"><input type="text" name="username" id="id_username" tabindex="1" /></td>
+
+   <td class="hint">
+    Don't have an account?
+    <a href="/account/register/">Create one now</a>
+   </td>
+
+  </tr>
+  <tr>
+   <td class="label"><label for="id_password">Password</label></td>
+   <td class="field"><input type="password" name="password" id="id_password" tabindex="2" /></td>
+
+   <td class="hint">
+    Forgot your password?
+    <a href="/account/recover/">Recover it</a>
+   </td>
+
+  </tr>
+  <tr>
+   <td>&nbsp;</td>
+   <td class="field"><input type="submit" value="Log in" tabindex="3" /></td>
+  </tr>
+ </table>
+ </div>
+</form>
+
+  </div>
+ </div>
+</div>
+
+
+
+    </div>
+   </div>
+  </div>
+  <script type="text/javascript" src="/media/rb/js/datastore.js?1316135693"></script>
+  <script type="text/javascript" src="/media/djblets/js/jquery-ui-1.6rc5.min.js"></script>
+  <script type="text/javascript" src="/media/djblets/js/jquery.gravy.js?1316135693"></script>
+  <script type="text/javascript" src="/media/rb/js/ui.autocomplete.min.js?1316135693"></script>
+  <script type="text/javascript" src="/media/rb/js/common.js?1316135693"></script>
+
+ </body>
+</html>
