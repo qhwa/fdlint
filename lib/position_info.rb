@@ -11,7 +11,7 @@ module XRay
   
     def initialize(text)
       lines = text.split(/\n/)
-      @lines_info = lines.map &:length
+      @lines_info = lines.map &:bytesize
     end
 
     def locate(pos)
