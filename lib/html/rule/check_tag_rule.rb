@@ -59,7 +59,9 @@ module XRay
             :check_hyperlink_with_title,
             :check_no_import_in_style_tag,
             :check_head_contain_meta_and_title,
-            :check_block_in_block
+            :check_block_in_block,
+            :check_form_element_with_name,
+            :check_form_button
           ], tag
         end
 
@@ -138,6 +140,23 @@ module XRay
           end
         end
 
+        def check_form_element_with_name(tag)
+          if (tag.tag_name_equal?('input') and %w(text radio checkbox).include?(tag.prop_value('type').to_s.downcase) or 
+          tag.tag_name_equal?('select') or
+          tag.tag_name_equal?('textarea'))
+            val = tag.prop_value('name')
+            unless val and !val.empty?
+              ["text、radio、checkbox、textarea、select必须加name属性", :warn]
+            end
+          end
+        end
+
+        def check_form_button(tag)
+          if tag.tag_name_equal?('input') and %w(button submit reset).include?(tag.prop_value('type').to_s.downcase)
+            ["所有按钮必须用button（button/submit/reset）", :warn]
+          end
+        end
+
         # PROPERTY
 
         def check_prop(prop)
@@ -147,7 +166,8 @@ module XRay
             :check_id_prop_value_downcase,
             :check_class_prop_value_downcase,
             :check_prop_value_sep,
-            :check_prop_value_exsit
+            :check_prop_value_exsit,
+            :check_class_count
           ], prop
         end
 
@@ -184,6 +204,16 @@ module XRay
         def check_prop_value_exsit(prop)
           if prop.value.nil?
             ["不能仅有属性名", :warn]
+          end
+        end
+
+        def check_class_count(prop)
+          if prop.name_equal? 'class'
+            names = prop.value.split /\s+/
+            names.reject! { |s| s =~ /^(fd-|layout|grid|w952)\b/ }
+            if names.size > 3
+              ["一个节点上定义的class个数最多不超过3个(不含lib中的class)", :warn]
+            end
           end
         end
 

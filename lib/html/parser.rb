@@ -112,8 +112,8 @@ module XRay; module HTML
     end
 
     def parse_prop_value
-      node = scan PROP_VALUE
-      Node.new("#{@scanner[1]}#{@scanner[2]}#{@scanner[3]}", node.position)
+      scan PROP_VALUE
+      "#{@scanner[1]}#{@scanner[2]}#{@scanner[3]}"
     end
 
     protected

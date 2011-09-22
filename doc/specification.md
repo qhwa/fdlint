@@ -78,7 +78,7 @@ h3. --css
 h3. --html
 
 1. 能分析出html的结构
-1. 能分析出html不符合的问题
+1. 能分析出html不符合checklist的问题
     * [warn] 不能定义内嵌样式style
     * [warn] 避免重复引用*同一*或相同功能文件	**如何判断相同功能文件**
     * [warn] img标签加上alt属性	
@@ -95,15 +95,15 @@ h3. --html
     * [warn] 不能仅有属性名
     * [warn] head必须包含字符集meta和title	
     * [warn] 行内标签不得包含块级标签，a标签例外
-
-    * text、radio、checkbox、textarea、select必须加name属性	
-    * 所有按钮必须用button（button/submit/reset）	
+    * [warn] text、radio、checkbox、textarea、select必须加name属性	
+    * [warn] 所有按钮必须用button（button/submit/reset）	
+    * [warn] 一个节点上定义的class个数最多不超过3个(不含lib中的class: fd- w952 layout grid)	
     * 页面必须引用fdev css	**urlx3:**
     * 新页面按库中的HTML基本结构模板书写基本页面结构	**模板**
     * [info] 外链CSS置于head里，例外：应用里的footer样式	
     * 外链产品线级js置于head，页面级js置于页底	
     * [fatal] 标签必须闭合，嵌套正确	**是否包括meta、img等浏览器能辨认的标签？HTML5 DTD是否也要求如此？** yes!
-    * 一个节点上定义的class个数最多不超过3个(不含lib中的class fd- w952 layout grid)	
+    * h类标签层次分明，递减 [skip]
 
 tasks
 -----
