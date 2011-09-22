@@ -98,9 +98,9 @@ h3. --html
     * [warn] text、radio、checkbox、textarea、select必须加name属性	
     * [warn] 所有按钮必须用button（button/submit/reset）	
     * [warn] 一个节点上定义的class个数最多不超过3个(不含lib中的class: fd- w952 layout grid)	
+    * [info] 外链CSS置于head里(例外：应用里的footer样式)
     * 页面必须引用fdev css	**urlx3:**
     * 新页面按库中的HTML基本结构模板书写基本页面结构	**模板**
-    * [info] 外链CSS置于head里，例外：应用里的footer样式	
     * 外链产品线级js置于head，页面级js置于页底	
     * [fatal] 标签必须闭合，嵌套正确	**是否包括meta、img等浏览器能辨认的标签？HTML5 DTD是否也要求如此？** yes!
     * h类标签层次分明，递减 [skip]

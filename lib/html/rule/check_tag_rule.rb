@@ -61,7 +61,8 @@ module XRay
             :check_head_contain_meta_and_title,
             :check_block_in_block,
             :check_form_element_with_name,
-            :check_form_button
+            :check_form_button,
+            :check_css_in_head
           ], tag
         end
 
@@ -154,6 +155,14 @@ module XRay
         def check_form_button(tag)
           if tag.tag_name_equal?('input') and %w(button submit reset).include?(tag.prop_value('type').to_s.downcase)
             ["所有按钮必须用button（button/submit/reset）", :warn]
+          end
+        end
+
+        def check_css_in_head(tag)
+          if tag.tag_name_equal?('link') and tag.prop_value(:rel) =~ /stylesheet/i
+            if tag.parent and !(tag.parent.tag_name_equal? 'head')
+              ["外链CSS置于head里(例外：应用里的footer样式)", :info]
+            end
           end
         end
 

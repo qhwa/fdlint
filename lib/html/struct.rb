@@ -10,10 +10,12 @@ module XRay
     class Element < Node
 
       attr_reader :tag, :props, :children
+      attr_accessor :parent
 
       def initialize(tag, props=[], children=[])
         @tag, @props, @children = tag, to_props(props), Array.[](children).flatten || []
         @position = @tag.position.dup if tag.is_a? Node
+        @children.each { |el| el.parent = self }
       end
 
       def text
