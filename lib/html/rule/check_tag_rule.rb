@@ -1,5 +1,6 @@
 # encoding: utf-8
 require_relative '../struct'
+require_relative '../query'
 
 module XRay
   module HTML
@@ -63,7 +64,8 @@ module XRay
             :check_form_element_with_name,
             :check_form_button,
             :check_css_in_head,
-            :check_tag_closed
+            :check_tag_closed,
+            :check_html_template
           ], tag
         end
 
@@ -170,6 +172,21 @@ module XRay
         def check_tag_closed(tag)
           if !tag.closed? or (tag.auto_close? and !tag.self_closed?)
             ["标签必须正确闭合", :warn]
+          end
+        end
+
+        def check_html_template(tag)
+          info = ["新页面按库中的HTML基本结构模板书写基本页面结构", :info]
+          if tag.tag_name_equal?('head')
+            return info unless tag.children.any? { |e| e === 'meta[name==description]' }
+            return info unless tag.children.any? { |e| e === 'meta[name==keywords]' }
+          elsif tag.tag_name_equal?('body')
+            info unless tag.children.any? { |e| e === 'div#doc' }
+          elsif tag === 'div#doc'
+            return info unless tag.children.any? { |e| e === 'div#header' }
+            return info unless tag.children.any? { |e| e === 'div#footer' }
+            return info unless tag.children.any? { |e| e === 'div#alibar' }
+            return info unless tag.children.any? { |e| e === 'div#content' }
           end
         end
 

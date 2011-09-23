@@ -79,6 +79,8 @@ h3. --html
 
 1. 能分析出html的结构
 1. 能分析出html不符合checklist的问题
+    * [fatal] 标签必须嵌套正确
+
     * [warn] 不能定义内嵌样式style
     * [warn] 避免重复引用*同一*或相同功能文件	**如何判断相同功能文件**
     * [warn] img标签加上alt属性	
@@ -96,14 +98,16 @@ h3. --html
     * [warn] text、radio、checkbox、textarea、select必须加name属性	
     * [warn] 所有按钮必须用button（button/submit/reset）	
     * [warn] 一个节点上定义的class个数最多不超过3个(不含lib中的class: fd- w952 layout grid)	
+    * [warn] 标签必须闭合
+
     * [info] 功能a必须加target="\_self"，除非preventDefault过	**如何判断功能a** href !~ http
     * [info] 新页面统一使用HTML 5 DTD
     * [info] 外链CSS置于head里(例外：应用里的footer样式)
-    * 新页面按库中的HTML基本结构模板书写基本页面结构	**模板**
-    * [fatal] 标签必须闭合、嵌套正确	**是否包括meta、img等浏览器能辨认的标签？HTML5 DTD是否也要求如此？** yes!
-    * 页面必须引用fdev css	**urlx3:** [skip]
-    * 外链产品线级js置于head，页面级js置于页底	[skip]
-    * h类标签层次分明，递减 [skip]
+    * [info] 新页面按库中的HTML基本结构模板书写基本页面结构
+
+    * [skip] 页面必须引用fdev css	**urlx3:** 
+    * [skip] 外链产品线级js置于head，页面级js置于页底	
+    * [skip] h类标签层次分明，递减 
 
 tasks
 -----

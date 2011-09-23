@@ -56,7 +56,7 @@ module XRay
       def ==(other)
         other.is_a?(Element) and tag_name == tag_name.to_s && prop_text == other.prop_text && inner_html == other.inner_html
       end
-      
+
       def has_prop?(name)
         @props.any? { |p| p.name_equal? name }
       end

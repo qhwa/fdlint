@@ -22,7 +22,7 @@ module XRayTest
         len = lines[0].length
         assert_equal Position.new(0, 0, 0), info.locate(0), "第一行第一个字符"
         assert_equal Position.new(6, 0, 6), info.locate(6), "第一行第7个字符"
-        assert_equal Position.new(len - 1, 0, len - 1), info.locate(len - 1), "第一行最后一个字符"
+        assert_equal Position.new(len - 1, 0, len - 2), info.locate(len - 1), "第一行最后一个字符"
     end
 
     def test_position_of_middle_line
