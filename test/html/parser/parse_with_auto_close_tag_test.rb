@@ -17,6 +17,16 @@ module XRayTest
             "TAG: #{tag} will auto close and have no children"
           end
         end
+
+        def test_manual_close
+          src = %q(<div class="main"><input type="hidden" name="next_page" value="/dashboard/" ></input></div>)
+          XRay::HTML::Parser.parse(src) do |e|
+            assert_equal Element.new('div', {:class => 'main'}, [
+              Element.new('input', {:type=>'hidden', :name=>'next_page', :value=>'/dashboard/'})
+            ]), e
+          end
+        end
+
         
       end
 

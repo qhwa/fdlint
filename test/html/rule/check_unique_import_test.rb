@@ -27,12 +27,12 @@ module XRayTest
         end
 
         def test_check_normal_style
-          tag = XRay::HTML::Element.new('link', {:rel => 'stylesheet', :href=>'http://style.china.alibaba.com/css/lib/fdev-v4/core/fdev-min.css'})
+          tag = XRay::HTML::Element.new('link', {:rel => 'stylesheet', :href=>'http://style.china.alibaba.com/css/lib/fdev-v4/core/fdev-min.css'}, [], :self)
           assert_equal [], @rule.check_tag(tag)
         end
 
         def test_check_repeated_style
-          tag = XRay::HTML::Element.new('link', {:rel => 'stylesheet', :href=>'http://style.china.alibaba.com/css/lib/fdev-v4/core/fdev-min.css'})
+          tag = XRay::HTML::Element.new('link', {:rel => 'stylesheet', :href=>'http://style.china.alibaba.com/css/lib/fdev-v4/core/fdev-min.css'}, [], :self)
           assert_equal [], @rule.check_tag(tag)
           (1..10).each do 
             assert_equal [["避免重复引用同一或相同功能文件", :warn]], @rule.check_tag(tag)

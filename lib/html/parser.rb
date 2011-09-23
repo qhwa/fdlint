@@ -3,8 +3,6 @@ require_relative 'struct'
 
 module XRay; module HTML
 
-  AUTO_CLOSE_TAGS = %w(area base basefont br col frame hr img input link meta param)
-
   class Parser < BaseParser
 
     def self.parse(src, &block)
@@ -51,8 +49,10 @@ module XRay; module HTML
         parse_comment
       elsif @scanner.check(TAG_START)
         parse_tag
-      else
+      elsif !text_end?
         parse_text
+      else
+        parse_error('Invalid HTML struct')
       end
     end
 
@@ -68,11 +68,10 @@ module XRay; module HTML
 
     def parse_text
       text = ''
-      until text_end?
+      until text_end? do
         text << '<' if @scanner.skip(/</)
         text << @scanner.scan(TEXT)
       end
-
       TextElement.new text
     end
 
@@ -128,23 +127,24 @@ module XRay; module HTML
       skip />/
 
       children = []
-      if auto_close?(tag.text)
-        #TODO: give a warning for this
+      end_tag = %r(<#{tag.text.sub(/^(?!=\/)/, '\/')}>)
+      if auto_close?(tag.text) and !@scanner.check(end_tag)
+        close_type = :none
       else
-        end_tag = %r(<#{tag.text.sub(/^(?!=\/)/, '\/')}>)
         until @scanner.check(TAG_END) or @scanner.eos? do
           child = parse_element
           children << child if child
         end
         begin
           skip end_tag
+          close_type = :after
         rescue => e
-          #TODO: html not validated
+          close_type = :none
           raise e
         end
       end
       @parsing_script = false
-      Element.new(tag, prop, children)
+      Element.new(tag, prop, children, close_type)
     end
 
     def parse_dtd_tag
@@ -156,9 +156,8 @@ module XRay; module HTML
       tag = scan(TAG_NAME)
       prop = parse_properties
       skip /\/>/
-      Element.new(tag, prop)
+      Element.new(tag, prop, [], :self)
     end
-
 
     def auto_close?(tag)
       XRay::HTML::AUTO_CLOSE_TAGS.include?(tag.to_s)

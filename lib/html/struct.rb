@@ -4,16 +4,17 @@ module XRay
   module HTML
 
     Node = XRay::Node
+    AUTO_CLOSE_TAGS = %w(area base basefont br col frame hr img input link meta param) 
     INLINE_ELEMENTS = %w(a br label abbr legend address link area mark audio meter bm nav cite optgroup code option del q details small dfn select command source datalist span em strong font sub i summary iframe sup img tbody input td ins time kbd var)
 
 
     class Element < Node
 
       attr_reader :tag, :props, :children
-      attr_accessor :parent
+      attr_accessor :parent, :close_type
 
-      def initialize(tag, props=[], children=[])
-        @tag, @props, @children = tag, to_props(props), Array.[](children).flatten || []
+      def initialize(tag, props=[], children=[], close_type=:after)
+        @tag, @props, @children, @close_type = tag, to_props(props), Array.[](children).flatten || [], close_type
         @position = @tag.position.dup if tag.is_a?(Node) and tag.position
         @children.each { |el| el.parent = self }
       end
@@ -85,6 +86,18 @@ module XRay
         INLINE_ELEMENTS.include? tag_name.downcase
       end
 
+      def auto_close?
+        AUTO_CLOSE_TAGS.include? tag_name.downcase
+      end
+
+      def closed?
+        @close_type != :none
+      end
+
+      def self_closed?
+        @close_type == :self
+      end
+
       protected
       def parse(text)
         @outer_html = text
@@ -126,13 +139,10 @@ module XRay
         text == other.text
       end
 
-      def tag_name_equal?(name)
-        false
-      end
-
-      def inline?
-        true
-      end
+      def tag_name_equal?(name); false; end
+      def inline?; true; end
+      def auto_close? ; false; end
+      def closed? ; true; end
 
       def to_s
         "[TEXT: #{text}]"
@@ -161,9 +171,10 @@ module XRay
         text == other.text
       end
 
-      def inline?
-        true
-      end
+      def tag_name_equal?(name); false; end
+      def inline? ; true; end
+      def auto_close? ; false; end
+      def closed? ; true; end
 
       def to_s
         "[Comment: #{text}]"

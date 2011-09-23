@@ -83,11 +83,12 @@ module XRay
       parser.add_visitor visitor
 
       begin
+        @results = []
         parser.parse_html
       rescue ParseError => e
-        puts "#{e.message}#{e.position}"
+        @results << LogEntry.new( e.to_s, :fatal, e.position.row, e.position.column )
       ensure
-        @results = parser.results
+        @results.concat parser.results
       end
 
       [!e && success? , @results]

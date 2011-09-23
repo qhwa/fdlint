@@ -62,7 +62,8 @@ module XRay
             :check_block_in_block,
             :check_form_element_with_name,
             :check_form_button,
-            :check_css_in_head
+            :check_css_in_head,
+            :check_tag_closed
           ], tag
         end
 
@@ -163,6 +164,12 @@ module XRay
             if tag.parent and !(tag.parent.tag_name_equal? 'head')
               ["外链CSS置于head里(例外：应用里的footer样式)", :info]
             end
+          end
+        end
+
+        def check_tag_closed(tag)
+          if !tag.closed? or (tag.auto_close? and !tag.self_closed?)
+            ["标签必须正确闭合", :warn]
           end
         end
 

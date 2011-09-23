@@ -19,6 +19,7 @@ require_relative 'rule/check_block_level_element_test'
 require_relative 'rule/check_form_element_name_test'
 require_relative 'rule/check_button_test'
 require_relative 'rule/check_class_count_test'
+require_relative 'rule/check_tag_closed_test'
 
 module XRayTest
   
@@ -44,6 +45,7 @@ module XRayTest
         tests << Rule::CheckFormElementNameTest.suite
         tests << Rule::CheckButtonTest.suite
         tests << Rule::CheckClassCountTest.suite
+        tests << Rule::CheckTagClosedTest.suite
         tests
       end
     end
