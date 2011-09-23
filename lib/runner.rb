@@ -139,7 +139,7 @@ module XRay
             left = col - 50
             right = col + 50
             left = 0 if left < 0
-            puts prf + lines[row][left..right]
+            puts prf + lines[row][left..right].gsub(/\t/, ' ')
             puts prf + ' ' * (col - left) << '^ ' << t
             puts "\n"
           else
