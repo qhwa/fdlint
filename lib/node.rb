@@ -15,6 +15,7 @@ module XRay
     def to_s
       text
     end
+
   end
 
 end

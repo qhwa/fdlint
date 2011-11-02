@@ -30,6 +30,11 @@ module XRay
         parse_error "skip fail: #{pattern}"
       end
     end
+
+    def check(pattern)
+      skip_empty
+      @scanner.check pattern
+    end
       
     def scan(pattern)
       skip_empty
@@ -52,6 +57,10 @@ module XRay
 
     def reset
       @scanner.reset
+    end
+
+    def eos?
+      @scanner.eos?
     end
 
     protected

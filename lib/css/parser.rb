@@ -17,7 +17,7 @@ module XRay
         
         stats = batch(:parse_statement) do 
           skip_empty
-          stop = inner ? @scanner.check(/\s*}/) : @scanner.eos?
+          stop = inner ? check(/}/) : eos?
           log 'parse complete' if stop 
           !stop
         end
@@ -29,7 +29,7 @@ module XRay
       def parse_statement
         log 'parse statement'
 
-        if @scanner.check /\s*@/
+        if check /@/
           parse_directive
         else
           parse_ruleset
@@ -43,10 +43,10 @@ module XRay
         keyword = scan /\w+/
         skip_empty
 
-        expr = @scanner.check(R_EXPR) ? scan(R_EXPR) : nil
+        expr = check(R_EXPR) ? scan(R_EXPR) : nil
 
         block = nil
-        if @scanner.check /\s*\{/
+        if check /\{/
           skip /\{/
           block = parse_stylesheet true
           skip /}/
@@ -78,7 +78,7 @@ module XRay
       
       def parse_selector
         log ' parse selector'
-        simple_selectors = batch(:parse_simple_selector) { !@scanner.check(/\s*\{/) }
+        simple_selectors = batch(:parse_simple_selector) { !check(/\{/) }
         Selector.new simple_selectors
       end
 
@@ -86,14 +86,14 @@ module XRay
         log '   parse simple selector'
         selector = scan /[^,\{]+/
 
-        @scanner.check(/\s*,/) && skip(/,/)
+        check(/,/) && skip(/,/)
 
         log " [#{selector}] #{selector.position}"
         selector
       end
       
       def parse_declarations
-        batch(:parse_declaration) { !@scanner.check(/\s*}/) }
+        batch(:parse_declaration) { !check(/}/) }
       end
       
       def parse_declaration
@@ -104,7 +104,7 @@ module XRay
         expression = parse_expression
         
         # 可选的分号
-        semicolon = @scanner.check(/\s*}/) ? /;?/ : /;/
+        semicolon = check(/}/) ? /;?/ : /;/
         skip semicolon
 
         skip_more_semicolon
@@ -148,7 +148,7 @@ module XRay
       end
 
       def skip_more_semicolon
-        if @scanner.check /\s*;/
+        if check /;/
           skip /\s*;/
           parse_warn 'more than one semicolon'
         end
