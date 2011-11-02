@@ -17,9 +17,7 @@ module XRay
         
         stats = batch(:parse_statement) do 
           skip_empty
-          stop = inner ? check(/}/) : eos?
-          log 'parse complete' if stop 
-          !stop
+          !(inner ? check(/}/) : eos?)
         end
         
         StyleSheet.new(stats)

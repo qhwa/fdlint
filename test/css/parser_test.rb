@@ -1,12 +1,11 @@
 require 'logger'
-
+require 'css/parser'
 require_relative '../helper'
 
-require 'css/parser'
 
 module XRayTest
   module CSS
-    class ParserTest < Test::Unit::TestCase
+    class ParserTest < Test::Unit::TestCase 
       ParseError = XRay::ParseError
       include XRay::CSS
       
@@ -274,11 +273,11 @@ module XRayTest
         sheet = parser.parse_stylesheet
         assert_equal 3, sheet.statements.length
       end
-      
+
       def create_parser(css)
         Parser.new(css, Logger.new(STDOUT))
       end
-    
+      
     end
   end
 end

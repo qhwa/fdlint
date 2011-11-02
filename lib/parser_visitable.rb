@@ -1,7 +1,6 @@
 require 'observer'
 
 require_relative 'log_entry'
-require_relative 'base_parser'
 
 module XRay
   
@@ -97,6 +96,5 @@ module XRay
   class BaseParser
     include ParserVisitable
   end
-
 
 end

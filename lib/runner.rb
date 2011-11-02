@@ -1,4 +1,5 @@
 require 'logger'
+require_relative 'base_parser'
 require_relative 'parser_visitable'
 require_relative 'file_validator'
 require_relative 'log_entry'
