@@ -3,7 +3,6 @@ require 'strscan'
 require_relative 'node'
 require_relative 'parse_error'
 require_relative 'position_info'
-require_relative 'encoding_error'
 
 module XRay
   
