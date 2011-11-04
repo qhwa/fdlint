@@ -34,6 +34,12 @@ module XRayTest
           assert_equal ['a = 1', 'b = 2', 'c++', 'i = i / 1'], 
               block.statements.collect(&:value)
         end
+
+        def test_parse_stat_var
+          js = '
+            var i = 0, j = 1, k = i + j;
+          '
+        end
       end
 
     end

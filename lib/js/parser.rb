@@ -4,6 +4,7 @@ require_relative 'struct'
 require_relative 'expr/identifier'
 
 require_relative 'stat/simple'
+require_relative 'stat/var'
 
 
 module XRay
@@ -14,6 +15,7 @@ module XRay
       include Expr::Identifier
 
       include Stat::Simple
+      include Stat::Var
 
 
       def parse_program(inner = false)

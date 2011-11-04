@@ -34,6 +34,9 @@ module XRay
     end
 
     class Statement < Node
+    end
+
+    class StatementSimple < Statement
       attr_reader :value
 
       def initialize(value, position)
@@ -54,8 +57,37 @@ module XRay
         @statements = statements
       end
 
-      def test
+      def text
         "{\n#{statements.collect(&:text).join("\n")}}"
+      end
+    end
+
+    class StatementVar < Statement
+      attr_reader :declarations
+      
+      def initialize(declarations, position)
+        super(nil, position)
+        @declarations = declarations
+      end
+
+      def text
+        "var #{declartions.collect(&:text).join(', ')};" 
+      end
+    end
+
+    class StatementVarDeclaration < Node
+      attr_reader :name, :expression
+      
+      def initialize(name, expression)
+        @name, @expression = name, expression
+      end
+
+      def text
+        expression ? "#{name} = #{expression}" : name.text
+      end
+
+      def position
+        name.position
       end
     end
   

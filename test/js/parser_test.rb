@@ -5,6 +5,7 @@ require_relative '../base_test'
 require 'js/parser'
 
 require_relative 'stat/simple'
+require_relative 'stat/var'
 
 module XRayTest
   module JS
@@ -12,6 +13,7 @@ module XRayTest
       include XRay::JS
 
       include Stat::Simple
+      include Stat::Var
 
       
       def test_parse_program()

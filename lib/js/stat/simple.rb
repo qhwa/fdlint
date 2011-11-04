@@ -15,7 +15,7 @@ module XRay
           log 'parse stat simple'
 
           stat = scan /[^;]*/
-          stat = Statement.new(stat.text, stat.position)
+          stat = StatementSimple.new(stat.text, stat.position)
           skip /;/
           log stat.text
           stat
@@ -32,6 +32,7 @@ module XRay
 
           StatementBlock.new stats, pos
         end
+
       end
        
     end
