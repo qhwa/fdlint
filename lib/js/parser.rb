@@ -1,7 +1,7 @@
 require_relative '../base_parser'
 require_relative 'struct'
 
-require_relative 'expr/identifier'
+require_relative 'expr/simple'
 
 require_relative 'stat/simple'
 require_relative 'stat/var'
@@ -12,7 +12,7 @@ module XRay
     
     class Parser < XRay::BaseParser
 
-      include Expr::Identifier
+      include Expr::Simple
 
       include Stat::Simple
       include Stat::Var

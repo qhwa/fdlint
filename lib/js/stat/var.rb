@@ -4,6 +4,7 @@ module XRay
       
       module Var
         def parse_stat_var
+          log 'parse stat var'
           pos = skip /var/
           decls = batch(:parse_stat_var_declaration) do
             if check(/;/)
@@ -18,7 +19,7 @@ module XRay
           StatementVar.new decls, pos
         end
 
-        def parse_stat_var_declaration
+        def parse_stat_var_declaration 
           name = parse_expr_identifier
           if check(/\=/)
             skip /\=/

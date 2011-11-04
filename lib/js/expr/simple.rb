@@ -2,7 +2,7 @@ module XRay
   module JS
     module Expr 
 
-      module Identifier
+      module Simple 
         
         R_IDENTIFY = /[a-zA-Z_$][\w$]*/
         RESERVED_WORDS = %w(
