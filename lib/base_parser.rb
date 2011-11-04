@@ -20,14 +20,18 @@ module XRay
     end
 
     def skip_empty
+      pos = scanner_pos
       @scanner.skip /\s*/
+      pos
     end
       
     def skip(pattern)
       skip_empty
+      pos = scanner_pos
       unless @scanner.skip pattern
         parse_error "skip fail: #{pattern}"
       end
+      pos
     end
 
     def check(pattern)
@@ -83,15 +87,15 @@ module XRay
       @log && @log.send(level, self.to_s + ': ' + message)
     end
 
+    def scanner_pos
+      pos = @scanner.pos
+      @pos_info.locate(@scanner.eos? ? pos -1 : pos)
+    end
+
     private
 
     def prepare_text(text)
       text.gsub(/\r\n/, "\n").gsub(/\r/, "\n")
-    end
-
-    def scanner_pos
-      pos = @scanner.pos
-      @pos_info.locate(@scanner.eos? ? pos -1 : pos)
     end
 
   end

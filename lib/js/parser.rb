@@ -3,7 +3,7 @@ require_relative 'struct'
 
 require_relative 'expr/identifier'
 
-require_relative 'stat/statement'
+require_relative 'stat/simple'
 
 
 module XRay
@@ -13,14 +13,14 @@ module XRay
 
       include Expr::Identifier
 
-      include Stat::Statement
+      include Stat::Simple
 
 
       def parse_program(inner = false)
         log 'parse program'
         elms = batch(:parse_source_element) do
           skip_empty
-          !(inner ? check(/}/) : eos?)
+          inner ? !check(/}/) : !eos? 
         end
         Program.new elms
       end
@@ -34,7 +34,7 @@ module XRay
       def parse_function_declaration
         log 'parse function declaration'
 
-        skip /function/
+        pos = skip /function/
         name = parse_expr_identifier
 
         skip /\(/
@@ -52,7 +52,7 @@ module XRay
         body = parse_program(true)
         skip /}/
         
-        FunctionDeclaraion.new name, params, body 
+        FunctionDeclaraion.new name, params, body, pos
       end
 
 

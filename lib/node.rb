@@ -2,10 +2,10 @@ module XRay
 
   class Node
 
-    attr_reader :text, :position
+    attr_accessor :text, :position
 
     def initialize(text = '', position = nil)
-      @text, @position = text.strip, position
+      @text, @position = (text || '').strip, position
     end
 
     def =~(other)

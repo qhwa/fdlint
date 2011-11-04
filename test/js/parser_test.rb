@@ -4,10 +4,15 @@ require_relative '../base_test'
 
 require 'js/parser'
 
+require_relative 'stat/simple'
+
 module XRayTest
   module JS
     class ParserTest < XRayTest::BaseTest 
       include XRay::JS
+
+      include Stat::Simple
+
       
       def test_parse_program()
         js = '
@@ -50,7 +55,7 @@ module XRayTest
 
         elms = func.body.elements
         assert_equal 4, elms.length
-        assert_equal 'a2 = a2 * a3;', elms[1].text
+        assert_equal 'a2 = a2 * a3', elms[1].value
       end
 
       def create_parser(js)
