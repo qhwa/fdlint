@@ -5,6 +5,7 @@ require_relative '../base_test'
 require 'js/parser'
 
 require_relative 'expr/simple'
+require_relative 'expr/primary'
 
 require_relative 'stat/simple'
 require_relative 'stat/var'
@@ -13,6 +14,8 @@ module XRayTest
   module JS
     class ParserTest < XRayTest::BaseTest 
       include XRay::JS
+
+      include Expr::Primary
 
       include Stat::Simple
       include Stat::Var

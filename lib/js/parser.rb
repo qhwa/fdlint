@@ -2,6 +2,7 @@ require_relative '../base_parser'
 require_relative 'struct'
 
 require_relative 'expr/simple'
+require_relative 'expr/primary'
 
 require_relative 'stat/simple'
 require_relative 'stat/var'
@@ -13,6 +14,7 @@ module XRay
     class Parser < XRay::BaseParser
 
       include Expr::Simple
+      include Expr::Primary
 
       include Stat::Simple
       include Stat::Var
@@ -37,7 +39,8 @@ module XRay
         log 'parse function declaration'
 
         pos = skip /function/
-        name = parse_expr_identifier
+
+        name = check(/\(/) ? nil : parse_expr_identifier
 
         skip /\(/
 
@@ -57,8 +60,7 @@ module XRay
         FunctionDeclaraion.new name, params, body, pos
       end
 
-
-      protected 
+      protected
 
       def filter_text(js)
         filter_comment js

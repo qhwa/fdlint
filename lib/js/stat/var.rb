@@ -23,7 +23,7 @@ module XRay
           name = parse_expr_identifier
           if check(/\=/)
             skip /\=/
-            expr = scan /[^;,]+/
+            expr = parse_expr_assignment 
           else
             expr = nil
           end

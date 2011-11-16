@@ -97,10 +97,9 @@ module XRay
 
     class Expression < Node
     end
-
-    class SimpleExpression < Expression
-      
+    
+    class ThisExpression < Node
     end
-  
+     
   end
 end
