@@ -4,6 +4,8 @@ require_relative '../base_test'
 
 require 'js/parser'
 
+require_relative 'expr/simple'
+
 require_relative 'stat/simple'
 require_relative 'stat/var'
 
@@ -57,7 +59,15 @@ module XRayTest
 
         elms = func.body.elements
         assert_equal 4, elms.length
-        assert_equal 'a2 = a2 * a3', elms[1].value
+        assert_equal 'a2 = a2 * a3;', elms[1].text
+      end
+
+      def test_with_fixture
+        path = File.expand_path '../fixtures/js/jquery-1.7.js', File.dirname(__FILE__)
+        body = IO.read(path)
+
+        #parser = create_parser(body)
+        #program = parser.parse_program
       end
 
       def create_parser(js)

@@ -14,6 +14,19 @@ module XRay
             null true false
         )
 
+        def parse_expression
+          parse_expr_simple
+        end
+
+        def parse_expr_simple
+          log 'parse expression'
+
+          expr = scan /[^;]*/
+          expr = SimpleExpression.new(expr.text, expr.position)
+          log expr.text
+          expr
+        end
+
         def parse_expr_identifier
           log 'parse expr identifier'
 

@@ -36,20 +36,23 @@ module XRay
     class Statement < Node
     end
 
-    class StatementSimple < Statement
-      attr_reader :value
+    class ExpressionStatement < Statement
+      attr_reader :expression
 
-      def initialize(value, position)
-        super(nil, position)
-        @value = value
+      def initialize(expression)
+        @expression = expression
       end
 
       def text
-        "#{value};" 
+        "#{expression};" 
+      end
+
+      def position
+        expression.position
       end
     end
 
-    class StatementBlock < Statement
+    class BlockStatement < Statement
       attr_reader :statements
 
       def initialize(statements, position)
@@ -62,7 +65,7 @@ module XRay
       end
     end
 
-    class StatementVar < Statement
+    class VarStatement < Statement
       attr_reader :declarations
       
       def initialize(declarations, position)
@@ -75,7 +78,7 @@ module XRay
       end
     end
 
-    class StatementVarDeclaration < Node
+    class VarStatementDeclaration < Node
       attr_reader :name, :expression
       
       def initialize(name, expression)
@@ -89,6 +92,14 @@ module XRay
       def position
         name.position
       end
+    end
+
+
+    class Expression < Node
+    end
+
+    class SimpleExpression < Expression
+      
     end
   
   end

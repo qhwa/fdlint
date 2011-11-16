@@ -58,6 +58,24 @@ module XRay
       end
 
 
+      protected 
+
+      def filter_text(js)
+        filter_comment js
+      end
+
+      private
+      
+      def filter_comment(js)
+        res = [/\/\*[^*]*\*+([^\/*][^*]*\*+)*\//, /\/\/.*$/]
+        res.each do |re|
+          js = js.gsub(re) do |m|
+            log "ignore comments: \n#{m}"
+            m.gsub /\S/, ' '
+          end
+        end 
+        js 
+      end
     end
 
   end

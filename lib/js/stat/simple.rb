@@ -4,21 +4,22 @@ module XRay
       
       module Simple
         def parse_statement
+          # block
           if check /\{/
             parse_stat_block
+
+          # empty
+          elsif check /;/
+            skip /;/
+
+          # var
+          elsif check /var\s/
+            parse_stat_var
+
+          # expression 
           else
-            parse_stat_simple
+            parse_stat_expression
           end
-        end
-
-        def parse_stat_simple
-          log 'parse stat simple'
-
-          stat = scan /[^;]*/
-          stat = StatementSimple.new(stat.text, stat.position)
-          skip /;/
-          log stat.text
-          stat
         end
 
         def parse_stat_block
@@ -30,7 +31,14 @@ module XRay
           end 
           skip /}/ 
 
-          StatementBlock.new stats, pos
+          BlockStatement.new stats, pos
+        end
+
+        def parse_stat_expression
+          log 'parse stat expression'
+          expr = parse_expression
+          skip /;/
+          ExpressionStatement.new expr 
         end
 
       end

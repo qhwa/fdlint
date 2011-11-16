@@ -16,7 +16,7 @@ module XRay
             end
           end
 
-          StatementVar.new decls, pos
+          VarStatement.new decls, pos
         end
 
         def parse_stat_var_declaration 
@@ -27,7 +27,7 @@ module XRay
           else
             expr = nil
           end
-          StatementVarDeclaration.new name, expr
+          VarStatementDeclaration.new name, expr
         end
       end
 
