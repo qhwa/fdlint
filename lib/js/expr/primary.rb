@@ -15,11 +15,11 @@ module XRay
             null true false
         )
 
+        R_NULL_BOOLEAN = /(?:this|null|true|false)\b/
+        R_NUMBERIC = /[+-]?(?:\d|(?:[.]\d))/
+        R_STRING = /['"]/
+        R_REGEXP = /\//
 
-        def parse_expr_this
-          log 'parse expr this'
-          ThisExpression.new scan(/this/)
-        end
 
         def parse_expr_identifier
           log 'parse expr identifier'
@@ -28,13 +28,37 @@ module XRay
           RESERVED_WORDS.include?(id.text) ? 
               pass_error('identifier can not be reserved word') : id
         
-          log "   #{id}"
+          log "  #{id}"
           id
         end
 
         def parse_expr_literal
+          log 'parse expr literal'
+
+          expr = if check R_NULL_BOOLEAN 
+            scan /this|null|true|false/
+          elsif check R_NUMBERIC
+            scan /[+-]?(?:(?:\d*[.]\d+)|(?:\d+))(?:[eE][+-]\d+)?/
+          elsif check /'/
+            scan /'(?:(?:\\')|(?:\\\n)|[^'\n])*'/
+          elsif check /"/
+            scan /"(?:(?:\\")|(?:\\\n)|[^"\n])*"/
+          else
+            raise 'assert false'
+          end
+
+          log "  #{expr}"
           
-          LiteralExpression.new scan(/null|true|false/) 
+          Expression.new expr
+        end
+
+        protected
+
+        def check_expr_literal
+          check R_NULL_BOOLEAN or 
+            check R_NUMBERIC or
+            check R_STRING or
+            check R_REGEXP
         end
 
       end

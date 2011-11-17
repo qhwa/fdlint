@@ -15,7 +15,10 @@ module XRay
           # function expression
           elsif check /function/
             parse_function_declaration
-
+          
+          # this
+          elsif check_expr_literal 
+            parse_expr_literal
           else
             parse_expr_simple
           end
@@ -26,11 +29,12 @@ module XRay
           parse_expression
         end
 
+
         def parse_expr_simple
           log 'parse expr simple'
 
           expr = Expression.new scan (/[^;]*/)
-          log expr.text
+          log "  #{expr}"
           expr
         end
          
