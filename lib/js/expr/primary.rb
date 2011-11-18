@@ -23,13 +23,40 @@ module XRay
         def parse_expr_primary
           # (expression)
           if check /\(/
-            skip /\(/
-            expr = parse_expression
-            skip /\)/
-            expr
+            parse_expr_parentheses
+
+          elsif check /\[/
+            parse_expr_array
+
+          elsif check /\{/
+            parse_expr_object
+
           elsif check_expr_literal
             parse_expr_literal
           end
+        end
+
+        def parse_expr_parentheses
+          log 'parse expr parentheses'
+
+          skip /\(/
+          expr = parse_expression
+          skip /\)/
+          expr
+        end
+
+        def parse_expr_array
+          log 'parse expr array'
+
+          pos = skip /\[/
+          elms = batch(:parse_expr_assignment, /]/, /,/)
+          skip /]/
+          
+          ArrayLiteral.new elms, pos
+        end
+
+        def parse_expr_object
+          log 'parse expr object'
         end
 
         def parse_expr_identifier
@@ -77,6 +104,12 @@ module XRay
               check R_NUMBERIC or
               check R_STRING or
               check R_REGEXP
+        end
+
+        private
+
+        def parse_assignment_elements()
+          
         end
 
       end

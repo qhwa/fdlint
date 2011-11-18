@@ -46,7 +46,8 @@ module XRay
       text ? Node.new(text, pos) : parse_error("scan fail: #{pattern}")
     end
       
-    def batch(name, &block)
+    def batch(name, stop = nil, skipp = nil, &block)
+      block = stop ? create_batch_default_block(stop, skipp) : block
       result = []
       while !@scanner.eos? && (block ? block.call : true) && item = send(name)
         result << item
@@ -96,6 +97,19 @@ module XRay
 
     def prepare_text(text)
       text.gsub(/\r\n/, "\n").gsub(/\r/, "\n")
+    end
+
+    def create_batch_default_block(stop, skipp)
+      not_first_time = false
+      lambda {
+        if check stop
+          false
+        else
+          not_first_time  && skipp && skip(skipp)
+          not_first_time = true
+          true
+        end
+      }
     end
 
   end

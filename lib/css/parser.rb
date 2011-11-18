@@ -76,7 +76,7 @@ module XRay
       
       def parse_selector
         log ' parse selector'
-        simple_selectors = batch(:parse_simple_selector) { !check(/\{/) }
+        simple_selectors = batch(:parse_simple_selector, /\{/)
         Selector.new simple_selectors
       end
 
@@ -91,7 +91,7 @@ module XRay
       end
       
       def parse_declarations
-        batch(:parse_declaration) { !check(/}/) }
+        batch(:parse_declaration, /}/)
       end
       
       def parse_declaration

@@ -28,14 +28,14 @@ module XRayTest
             console.debug(name2);
             name1 + name2 + name3;
           }
-
+          ; // empty statement
           var a = 1;
           a++;
         ' 
         parser = create_parser(js)
         program = parser.parse_program
 
-        assert_equal 3, program.elements.length
+        assert_equal 4, program.elements.length
 
         func = program.elements[0]
         assert_equal 3, func.body.elements.length

@@ -10,7 +10,7 @@ module XRay
 
           # empty
           elsif check /;/
-            skip /;/
+            parse_stat_empty
 
           # var
           elsif check /var\s/
@@ -26,12 +26,16 @@ module XRay
           log 'parse stat block'
           
           pos = skip /\{/
-          stats = batch(:parse_statement) do
-            !check(/}/)
-          end 
+          stats = batch(:parse_statement, /}/)
           skip /}/ 
 
           BlockStatement.new stats, pos
+        end
+
+        def parse_stat_empty
+          log 'parse stat empty'
+          pos = skip /;/
+          EmptyStatement.new(pos)
         end
 
         def parse_stat_expression

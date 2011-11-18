@@ -43,16 +43,7 @@ module XRay
         name = check(/\(/) ? nil : parse_expr_identifier
 
         skip /\(/
-
-        params = batch(:parse_expr_identifier) do 
-          if check(/\)/)
-            false
-          else
-            skip /,?/
-            true
-          end
-        end
-
+        params = batch(:parse_expr_identifier, /\)/, /,/)
         skip /\)\s*\{/
         body = parse_program(true)
         skip /}/

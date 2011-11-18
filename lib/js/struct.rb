@@ -36,6 +36,12 @@ module XRay
     class Statement < Node
     end
 
+    class EmptyStatement < Statement
+      def initialize(pos)
+        super(nil, pos)
+      end
+    end
+
     class ExpressionStatement < Statement
       attr_reader :expression
 
@@ -74,7 +80,7 @@ module XRay
       end
 
       def text
-        "var #{declartions.collect(&:text).join(', ')};" 
+        "var #{declarations.collect(&:text).join(', ')};" 
       end
     end
 
@@ -96,6 +102,22 @@ module XRay
 
 
     class Expression < Node
+    end
+    
+    class Literal < Expression
+    end
+
+    class ArrayLiteral < Literal
+      attr_reader :elements
+
+      def initialize(elements, position)
+        super(nil, position)
+        @elements = elements 
+      end
+
+      def text
+        "[#{elements.collect(&:text).join(', ')}]"
+      end
     end
      
   end

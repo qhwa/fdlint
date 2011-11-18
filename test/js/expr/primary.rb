@@ -3,6 +3,23 @@ module XRayTest
     module Expr
       
       module Primary
+
+        def test_parse_expr_parentheses
+          js = '(12.56)'
+          parser = create_parser js
+          expr = parser.parse_expr_parentheses
+
+          assert_equal '12.56', expr.text
+        end
+
+        def test_parse_expr_array
+          js = '[123, 456, "hello world", /this is re/]'
+          parser = create_parser js
+
+          array = parser.parse_expr_array
+          assert_equal ['123', '456', '"hello world"', '/this is re/'], 
+              array.elements.collect(&:text) 
+        end
         
         def test_parse_expr_literal
           jses = [
