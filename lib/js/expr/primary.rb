@@ -21,7 +21,6 @@ module XRay
         R_REGEXP = /\//
 
         def parse_expr_primary
-          # (expression)
           if check /\(/
             parse_expr_parentheses
 

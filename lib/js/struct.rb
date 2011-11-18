@@ -4,11 +4,11 @@ module XRay
   module JS
     Node = XRay::Node
 
-    class Program < Node
+    class ElementsNode < Node
       attr_reader :elements
 
-      def initialize(elements)
-        @elements = elements
+      def initialize(elements, position = nil)
+        @elements, @position = elements, position
       end
 
       def text
@@ -16,8 +16,12 @@ module XRay
       end
 
       def position
-        elements.empty? ? nil : elements[0].position
+        @position ? @position : 
+            elements.empty? ? nil : elements[0].position
       end
+    end
+
+    class Program < ElementsNode
     end
 
     class FunctionDeclaraion < Node
@@ -104,7 +108,7 @@ module XRay
     class Expression < Node
     end
 
-    class PrimaryExpression < Node
+    class PrimaryExpression < Expression
     end
 
     class ParenthesesExpression < PrimaryExpression
@@ -174,6 +178,7 @@ module XRay
         name.position
       end
     end
+
      
   end
 end

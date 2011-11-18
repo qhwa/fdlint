@@ -13,11 +13,9 @@ module XRay
 
         def parse_stat_var_declaration 
           name = parse_expr_identifier
-          if check(/\=/)
+          expr = if check(/\=/)
             skip /\=/
-            expr = parse_expr_assignment 
-          else
-            expr = nil
+            parse_expr_assignment
           end
           VarStatementDeclaration.new name, expr
         end
