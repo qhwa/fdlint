@@ -9,7 +9,7 @@ module XRayTest
           parser = create_parser js
           expr = parser.parse_expr_parentheses
 
-          assert_equal '12.56', expr.text
+          assert_equal '12.56', expr.expression.text
         end
 
         def test_parse_expr_array

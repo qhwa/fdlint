@@ -103,11 +103,37 @@ module XRay
 
     class Expression < Node
     end
-    
-    class Literal < Expression
+
+    class PrimaryExpression < Node
     end
 
-    class ArrayLiteral < Literal
+    class ParenthesesExpression < PrimaryExpression
+      attr_reader :expression
+
+      def initialize(expression, position)
+        super(nil, position)
+        @expression = expression
+      end
+
+      def text
+        "(#{expression})"
+      end
+    end
+
+    class CompositeExpression < Expression
+      attr_reader :type, :left, :right
+
+      def initialize(type, left, right, position)
+        super(nil, position)
+        @type, @left, @right = type, left, right
+      end
+
+      def text
+        "(#{type}, #{left}, #{right})"
+      end
+    end
+
+    class ArrayLiteral < PrimaryExpression
       attr_reader :elements
 
       def initialize(elements, position)
@@ -120,7 +146,7 @@ module XRay
       end
     end
 
-    class ObjectLiteral < Literal
+    class ObjectLiteral < PrimaryExpression
       attr_reader :elements
 
       def initialize(elements, position)

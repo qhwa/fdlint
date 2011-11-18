@@ -42,10 +42,11 @@ module XRay
         def parse_expr_parentheses
           log 'parse expr parentheses'
 
-          skip /\(/
+          pos = skip /\(/
           expr = parse_expression
           skip /\)/
-          expr
+          
+          ParenthesesExpression.new expr, pos
         end
 
         def parse_expr_array
@@ -94,7 +95,7 @@ module XRay
               pass_error('identifier can not be reserved word') : id
         
           log "  #{id}"
-          id
+          PrimaryExpression.new id
         end
 
         def parse_expr_literal
@@ -115,7 +116,7 @@ module XRay
           log 'parse expr literal this null boolean'
           expr = scan /this|null|true|false/
           log "  #{expr}"
-          Expression.new expr
+          PrimaryExpression.new expr
         end
 
         def parse_expr_literal_string
@@ -131,7 +132,7 @@ module XRay
 
           log "  #{expr}"
 
-          Expression.new expr 
+          PrimaryExpression.new expr 
         end
 
         def parse_expr_literal_number
@@ -140,14 +141,14 @@ module XRay
           
           log "  #{expr}"
 
-          Expression.new expr
+          PrimaryExpression.new expr
         end
 
         def parse_expr_literal_regexp
           log 'parse expr literal regexp'
           expr = scan %r{/(?:(?:\\/)|[^/])+/[a-z]*}
           log "  #{expr}"
-          Expression.new expr
+          PrimaryExpression.new expr
         end
 
         protected
