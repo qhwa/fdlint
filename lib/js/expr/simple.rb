@@ -5,15 +5,8 @@ module XRay
       module Simple 
         
         def parse_expression
-          # (expression)
-          if check(/\(/)
-            skip /\(/
-            expr = parse_expression
-            skip /\)/
-            expr
-         
-          # function expression
-          elsif check /function/
+          # function
+          if check /function/
             parse_function_declaration
           
           # primary

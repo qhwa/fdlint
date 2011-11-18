@@ -21,7 +21,13 @@ module XRay
         R_REGEXP = /\//
 
         def parse_expr_primary
-          if check_expr_literal
+          # (expression)
+          if check /\(/
+            skip /\(/
+            expr = parse_expression
+            skip /\)/
+            expr
+          elsif check_expr_literal
             parse_expr_literal
           end
         end
@@ -62,14 +68,15 @@ module XRay
         protected
 
         def check_expr_primary
-          check_expr_literal 
+          check /\(/ or
+              check_expr_literal 
         end
 
         def check_expr_literal
           check R_NULL_BOOLEAN or 
-            check R_NUMBERIC or
-            check R_STRING or
-            check R_REGEXP
+              check R_NUMBERIC or
+              check R_STRING or
+              check R_REGEXP
         end
 
       end
