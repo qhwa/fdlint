@@ -116,7 +116,36 @@ module XRay
       end
 
       def text
-        "[#{elements.collect(&:text).join(', ')}]"
+        "[#{elements.collect(&:text).join(",\n")}]"
+      end
+    end
+
+    class ObjectLiteral < Literal
+      attr_reader :elements
+
+      def initialize(elements, position)
+        super(nil, position)
+        @elements = elements
+      end
+
+      def text
+        "{#{elements.collect(&:text).join(",\n")}}"
+      end
+    end
+
+    class ObjectLiteralItem < Node
+      attr_reader :name, :value
+
+      def initialize(name, value)
+        @name, @value = name, value
+      end
+
+      def text
+        "#{name}: #{value}"
+      end
+
+      def position
+        name.position
       end
     end
      

@@ -15,7 +15,7 @@ module XRay
             null true false
         )
 
-        R_NULL_BOOLEAN = /(?:this|null|true|false)\b/
+        R_THIS_NULL_BOOLEAN = /(?:this|null|true|false)\b/
         R_NUMBERIC = /[+-]?(?:\d|(?:[.]\d))/
         R_STRING = /['"]/
         R_REGEXP = /\//
@@ -33,6 +33,9 @@ module XRay
 
           elsif check_expr_literal
             parse_expr_literal
+
+          else
+            parse_expr_identifier
           end
         end
 
@@ -57,6 +60,30 @@ module XRay
 
         def parse_expr_object
           log 'parse expr object'
+
+          pos = skip /\{/
+          elms = batch(:parse_expr_object_item, /}/, /,/)
+          skip /}/
+
+          ObjectLiteral.new elms, pos
+        end
+
+        def parse_expr_object_item
+          log 'parse expr object item'
+
+          name = if check R_STRING
+            parse_expr_literal_string
+          elsif check R_NUMBERIC
+            parse_expr_literal_number
+          else
+            parse_expr_identifier
+          end
+
+          skip /:/
+
+          value = parse_expr_assignment
+
+          ObjectLiteralItem.new name, value
         end
 
         def parse_expr_identifier
@@ -71,24 +98,55 @@ module XRay
         end
 
         def parse_expr_literal
-          log 'parse expr literal'
-
-          expr = if check R_NULL_BOOLEAN 
-            scan /this|null|true|false/
+          if check R_THIS_NULL_BOOLEAN 
+            parse_expr_literal_this_null_boolean
           elsif check R_NUMBERIC
-            scan /[+-]?(?:(?:\d*[.]\d+)|(?:\d+))(?:[eE][+-]\d+)?/
-          elsif check /'/ # single quot string
-            scan /'(?:(?:\\')|(?:\\\n)|[^'\n])*'/
-          elsif check /"/ # double quot string
-            scan /"(?:(?:\\")|(?:\\\n)|[^"\n])*"/
+            parse_expr_literal_number
+          elsif check R_STRING
+            parse_expr_literal_string
           elsif check R_REGEXP
-            scan %r{/(?:(?:\\/)|[^/])+/[a-z]*} 
+            parse_expr_literal_regexp
+          else
+            raise 'assert false'
+          end
+        end
+
+        def parse_expr_literal_this_null_boolean
+          log 'parse expr literal this null boolean'
+          expr = scan /this|null|true|false/
+          log "  #{expr}"
+          Expression.new expr
+        end
+
+        def parse_expr_literal_string
+          log 'parse expr literal string'
+
+          expr = if check /'/
+            scan /'(?:(?:\\')|(?:\\\n)|[^'\n])*'/
+          elsif check /"/
+            scan /"(?:(?:\\")|(?:\\\n)|[^"\n])*"/
           else
             raise 'assert false'
           end
 
           log "  #{expr}"
+
+          Expression.new expr 
+        end
+
+        def parse_expr_literal_number
+          log 'parse expr literal number'
+          expr = scan /[+-]?(?:(?:\d*[.]\d+)|(?:\d+))(?:[eE][+-]?\d+)?/
           
+          log "  #{expr}"
+
+          Expression.new expr
+        end
+
+        def parse_expr_literal_regexp
+          log 'parse expr literal regexp'
+          expr = scan %r{/(?:(?:\\/)|[^/])+/[a-z]*}
+          log "  #{expr}"
           Expression.new expr
         end
 
@@ -100,16 +158,10 @@ module XRay
         end
 
         def check_expr_literal
-          check R_NULL_BOOLEAN or 
+          check R_THIS_NULL_BOOLEAN or 
               check R_NUMBERIC or
               check R_STRING or
               check R_REGEXP
-        end
-
-        private
-
-        def parse_assignment_elements()
-          
         end
 
       end
