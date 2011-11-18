@@ -20,6 +20,11 @@ module XRay
         R_STRING = /['"]/
         R_REGEXP = /\//
 
+        def parse_expr_primary
+          if check_expr_literal
+            parse_expr_literal
+          end
+        end
 
         def parse_expr_identifier
           log 'parse expr identifier'
@@ -39,10 +44,12 @@ module XRay
             scan /this|null|true|false/
           elsif check R_NUMBERIC
             scan /[+-]?(?:(?:\d*[.]\d+)|(?:\d+))(?:[eE][+-]\d+)?/
-          elsif check /'/
+          elsif check /'/ # single quot string
             scan /'(?:(?:\\')|(?:\\\n)|[^'\n])*'/
-          elsif check /"/
+          elsif check /"/ # double quot string
             scan /"(?:(?:\\")|(?:\\\n)|[^"\n])*"/
+          elsif check R_REGEXP
+            scan %r{/(?:(?:\\/)|[^/])+/[a-z]*} 
           else
             raise 'assert false'
           end
@@ -53,6 +60,10 @@ module XRay
         end
 
         protected
+
+        def check_expr_primary
+          check_expr_literal 
+        end
 
         def check_expr_literal
           check R_NULL_BOOLEAN or 

@@ -16,9 +16,10 @@ module XRay
           elsif check /function/
             parse_function_declaration
           
-          # this
-          elsif check_expr_literal 
-            parse_expr_literal
+          # primary
+          elsif check_expr_primary
+            parse_expr_primary
+
           else
             parse_expr_simple
           end
