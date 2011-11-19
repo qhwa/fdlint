@@ -45,7 +45,7 @@ module XRay
           expr = parse_expression
           skip /\)/
           
-          ParenthesesExpression.new expr, pos
+          PrimaryExpression.new 'parentheses', expr, pos
         end
 
         def parse_expr_array
@@ -54,8 +54,8 @@ module XRay
           pos = skip /\[/
           elms = batch(:parse_expr_assignment, /]/, /,/)
           skip /]/
-          
-          ArrayLiteral.new elms, pos
+         
+          PrimaryExpression.new 'array', ElementsNode.new(elms), pos 
         end
 
         def parse_expr_object
@@ -64,8 +64,8 @@ module XRay
           pos = skip /\{/
           elms = batch(:parse_expr_object_item, /}/, /,/)
           skip /}/
-
-          ObjectLiteral.new elms, pos
+          
+          PrimaryExpression.new 'object', ElementsNode.new(elms), pos
         end
 
         def parse_expr_object_item
@@ -80,10 +80,9 @@ module XRay
           end
 
           skip /:/
-
           value = parse_expr_assignment
-
-          ObjectLiteralItem.new name, value
+          
+          Expression.new ':', name, value
         end
 
         def parse_expr_identifier
@@ -94,7 +93,8 @@ module XRay
               pass_error('identifier can not be reserved word') : id
         
           log "  #{id}"
-          PrimaryExpression.new id
+
+          PrimaryExpression.new 'id', id
         end
 
         def parse_expr_literal
@@ -115,7 +115,9 @@ module XRay
           log 'parse expr literal this null boolean'
           expr = scan /this|null|true|false/
           log "  #{expr}"
-          PrimaryExpression.new expr
+          type = expr.text.gsub(/true|false/, 'boolean')
+
+          PrimaryExpression.new type, expr 
         end
 
         def parse_expr_literal_string
@@ -131,7 +133,7 @@ module XRay
 
           log "  #{expr}"
 
-          PrimaryExpression.new expr 
+          PrimaryExpression.new 'string', expr 
         end
 
         def parse_expr_literal_number
@@ -140,14 +142,14 @@ module XRay
           
           log "  #{expr}"
 
-          PrimaryExpression.new expr
+          PrimaryExpression.new 'number', expr
         end
 
         def parse_expr_literal_regexp
           log 'parse expr literal regexp'
           expr = scan %r{/(?:(?:\\/)|[^/])+/[a-z]*}
           log "  #{expr}"
-          PrimaryExpression.new expr
+          PrimaryExpression.new 'regexp', expr
         end
 
         protected

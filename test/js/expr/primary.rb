@@ -9,16 +9,19 @@ module XRayTest
           parser = create_parser js
           expr = parser.parse_expr_parentheses
 
-          assert_equal '12.56', expr.expression.text
+          assert_equal 'parentheses', expr.type
+          assert_equal '12.56', expr.node.text
         end
 
         def test_parse_expr_array
           js = '[123, 456, "hello world", /this is re/]'
           parser = create_parser js
 
-          array = parser.parse_expr_array
+          expr = parser.parse_expr_array
+
+          assert_equal 'array', expr.type
           assert_equal ['123', '456', '"hello world"', '/this is re/'], 
-              array.elements.collect(&:text) 
+              expr.node.elements.collect(&:text)
         end
 
         def test_parse_expr_object
@@ -30,13 +33,15 @@ module XRayTest
           }'
 
           parser = create_parser js
-          obj = parser.parse_expr_object
+          expr = parser.parse_expr_object
+
+          assert_equal 'object', expr.type
 
           assert_equal ['name', '"key 2"', '12.59', '18'], 
-              obj.elements.collect(&:name).collect(&:text)
+              expr.node.elements.collect(&:left).collect(&:text)
 
           assert_equal ['"hello 1234"', '123.567e12', '12.58', '/hello/'],
-              obj.elements.collect(&:value).collect(&:text)
+              expr.node.elements.collect(&:right).collect(&:text)
         end
         
         def test_parse_expr_literal
@@ -75,7 +80,7 @@ module XRayTest
             123 .12 0.123 +123e+1 123.123e-1 12345.123e123
           )
           eqs << str1 << str2 << str3 << re
-          assert_equal eqs, exprs.collect(&:text)
+          assert_equal eqs, exprs.collect(&:node).collect(&:text)
         end
 
       end

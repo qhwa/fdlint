@@ -4,11 +4,11 @@ module XRay
   module JS
     Node = XRay::Node
 
-    class ElementsNode < Node
+    class Program < Node
       attr_reader :elements
 
-      def initialize(elements, position = nil)
-        @elements, @position = elements, position
+      def initialize(elements)
+        @elements = elements
       end
 
       def text
@@ -16,12 +16,8 @@ module XRay
       end
 
       def position
-        @position ? @position : 
-            elements.empty? ? nil : elements[0].position
+        elements.empty? ? nil : elements[0].position
       end
-    end
-
-    class Program < ElementsNode
     end
 
     class FunctionDeclaraion < Node
@@ -39,6 +35,7 @@ module XRay
 
     class Statement < Node
     end
+
 
     class EmptyStatement < Statement
       def initialize(pos)
@@ -104,81 +101,54 @@ module XRay
       end
     end
 
-
     class Expression < Node
+      attr_reader :type, :left, :right
+
+      def initialize(type, left, right = nil, position = nil)
+        @type, @left, @right, @position = type, left, right, position
+      end
+
+      def text
+        "(#{type},#{left},#{right})"
+      end
+
+      def position
+        @position ? @position : 
+            left ? left.position : 
+            right ? right.position : nil
+      end
     end
 
     class PrimaryExpression < Expression
-    end
 
-    class ParenthesesExpression < PrimaryExpression
-      attr_reader :expression
-
-      def initialize(expression, position)
-        super(nil, position)
-        @expression = expression
+      def initialize(type, expr, position = nil)
+        super(type, expr, nil, position)
       end
 
       def text
-        "(#{expression})"
+        node.text
+      end
+
+      def node
+        left
       end
     end
 
-    class CompositeExpression < Expression
-      attr_reader :type, :left, :right
-
-      def initialize(type, left, right, position)
-        super(nil, position)
-        @type, @left, @right = type, left, right
-      end
-
-      def text
-        "(#{type}, #{left}, #{right})"
-      end
-    end
-
-    class ArrayLiteral < PrimaryExpression
+    class ElementsNode < Node
       attr_reader :elements
 
-      def initialize(elements, position)
-        super(nil, position)
+      def initialize(elements)
         @elements = elements 
       end
 
       def text
-        "[#{elements.collect(&:text).join(",\n")}]"
-      end
-    end
-
-    class ObjectLiteral < PrimaryExpression
-      attr_reader :elements
-
-      def initialize(elements, position)
-        super(nil, position)
-        @elements = elements
-      end
-
-      def text
-        "{#{elements.collect(&:text).join(",\n")}}"
-      end
-    end
-
-    class ObjectLiteralItem < Node
-      attr_reader :name, :value
-
-      def initialize(name, value)
-        @name, @value = name, value
-      end
-
-      def text
-        "#{name}: #{value}"
+        "(#{elements.collect(&:text)})"
       end
 
       def position
-        name.position
+        elements.empty? ? nil : elements[0].position
       end
     end
-
      
   end
 end
