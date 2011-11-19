@@ -45,7 +45,7 @@ module XRay
           expr = parse_expression
           skip /\)/
           
-          PrimaryExpression.new 'parentheses', expr, pos
+          PrimaryExpression.new '()', expr, pos
         end
 
         def parse_expr_array
@@ -55,7 +55,7 @@ module XRay
           elms = batch(:parse_expr_assignment, /]/, /,/)
           skip /]/
          
-          PrimaryExpression.new 'array', ElementsNode.new(elms), pos 
+          PrimaryExpression.new '[]', ElementsNode.new(elms), pos 
         end
 
         def parse_expr_object
@@ -65,7 +65,7 @@ module XRay
           elms = batch(:parse_expr_object_item, /}/, /,/)
           skip /}/
           
-          PrimaryExpression.new 'object', ElementsNode.new(elms), pos
+          PrimaryExpression.new '{}', ElementsNode.new(elms), pos
         end
 
         def parse_expr_object_item

@@ -142,7 +142,7 @@ module XRay
       end
 
       def text
-        "(#{elements.collect(&:text)})"
+        "[#{elements.collect(&:text).join(',')}]"
       end
 
       def position

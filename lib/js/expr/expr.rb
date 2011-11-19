@@ -8,13 +8,8 @@ module XRay
           # function
           if check /function\b/
             parse_function_declaration
-          
-          # primary
-          elsif check_expr_primary
-            parse_expr_primary
-
           else
-            parse_expr_simple
+            parse_expr_primary
           end
         end
 
@@ -23,18 +18,23 @@ module XRay
           parse_expression
         end
 
-
-        def parse_expr_simple
-          log 'parse expr simple'
-          
-          expr = scan(/[^;]*/)
-          log "  #{expr}"
-          PrimaryExpression.new 'simple', expr
-        end
-
         protected
 
-        def parse_expr_composite()
+        def parse_expr_with_operate(left, pattern = nil, right = nil, &block)
+          block = block || lambda {
+            if check pattern
+              op = scan pattern
+              [op.text, right ? self.send(right) : nil]
+            end
+          }
+
+          expr = self.send left
+          while (ret = block.call) 
+            expr = Expression.new ret[0], expr, ret[1]
+          end 
+
+          log "  #{expr}"
+          expr
         end
          
       end

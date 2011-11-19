@@ -24,7 +24,7 @@ module XRayTest
       include Stat::Var
 
       
-      def test_parse_program()
+      def _test_parse_program()
         js = '
           function say(name1, name2, name3) {
             alert(name + " hello world");
@@ -44,7 +44,7 @@ module XRayTest
         assert_equal 3, func.body.elements.length
       end 
 
-      def test_parse_function_declaration
+      def _test_parse_function_declaration
         js = '
           function sum(a1, a2, a3) {
             a1 = a2 + a3;

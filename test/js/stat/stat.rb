@@ -4,7 +4,7 @@ module XRayTest
       
       module Stat
 
-        def test_parse_stat_block
+        def _test_parse_stat_block
           js = '
             {
               a = 1;

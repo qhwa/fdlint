@@ -9,7 +9,7 @@ module XRayTest
           parser = create_parser js
           expr = parser.parse_expr_parentheses
 
-          assert_equal 'parentheses', expr.type
+          assert_equal '()', expr.type
           assert_equal '12.56', expr.node.text
         end
 
@@ -19,7 +19,7 @@ module XRayTest
 
           expr = parser.parse_expr_array
 
-          assert_equal 'array', expr.type
+          assert_equal '[]', expr.type
           assert_equal ['123', '456', '"hello world"', '/this is re/'], 
               expr.node.elements.collect(&:text)
         end
@@ -35,7 +35,7 @@ module XRayTest
           parser = create_parser js
           expr = parser.parse_expr_object
 
-          assert_equal 'object', expr.type
+          assert_equal '{}', expr.type
 
           assert_equal ['name', '"key 2"', '12.59', '18'], 
               expr.node.elements.collect(&:left).collect(&:text)
