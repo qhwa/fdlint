@@ -86,6 +86,24 @@ module XRayTest
           add_expr_test jses, exprs, :parse_expr_relation
         end
 
+        def test_parse_expr_equal
+          jses = [
+            'a + 1 === c',
+            'a + 1 * c !== 11 + 22 < 3',
+            'a + 1 < 3 == 1 << 3',
+            'a << 4 - 5 == 1 << 3 === 5'
+          ]
+
+          exprs = [
+            '(===,(+,a,1),c)',
+            '(!==,(+,a,(*,1,c)),(<,(+,11,22),3))',
+            '(==,(<,(+,a,1),3),(<<,1,3))',
+            '(===,(==,(<<,a,(-,4,5)),(<<,1,3)),5)' 
+          ]
+
+          add_expr_test jses, exprs, :parse_expr_equal
+
+        end
 
       end
 

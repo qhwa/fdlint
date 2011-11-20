@@ -46,6 +46,8 @@ module XRay
         end
 
         def parse_expr_equal
+          log 'parse expr equal'
+          parse_expr_with_operate :parse_expr_relation, /===|!==|==|!=/
         end
         
       end
