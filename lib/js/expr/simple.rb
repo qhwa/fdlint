@@ -40,9 +40,12 @@ module XRay
           parse_expr_with_operate :parse_expr_add, /<<|>>>|>>/
         end
 
-        def parse_expr_relational
+        def parse_expr_relation
           log 'parse expr relational'
           parse_expr_with_operate :parse_expr_shift, />=|<=|>|<|\binstanceof\b|\bin\b/
+        end
+
+        def parse_expr_equal
         end
         
       end

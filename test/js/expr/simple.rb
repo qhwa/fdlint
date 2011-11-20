@@ -66,7 +66,7 @@ module XRayTest
           add_expr_test jses, exprs, :parse_expr_shift
         end
 
-        def test_parse_expr_relational
+        def test_parse_expr_relation
           jses = [
             'a + 1 < b',
             'a + 2 * 3 >= a++',
@@ -83,7 +83,7 @@ module XRayTest
             '(in,innameA,innameC)'
           ]
 
-          add_expr_test jses, exprs, :parse_expr_relational
+          add_expr_test jses, exprs, :parse_expr_relation
         end
 
 
