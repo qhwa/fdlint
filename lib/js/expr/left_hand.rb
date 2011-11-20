@@ -5,7 +5,8 @@ module XRay
       module LeftHand
         
         def parse_expr_lefthand
-          check(/new\b/) ? parse_expr_new : parse_expr_call
+          log 'parse expr lefthand'
+          check(/new\b/) ? parse_expr_new : parse_expr_member
         end 
 
         def parse_expr_new
@@ -13,8 +14,9 @@ module XRay
 
           pos = skip /new/
           expr = check(/new\b/) ? parse_expr_new : parse_expr_member
+          args = check(/\(/) ? parse_arguments_list : nil
 
-          CompositeExpression.new 'new', expr, nil, pos
+          CompositeExpression.new 'new', expr, args, pos
         end
 
         def parse_expr_member
@@ -23,12 +25,13 @@ module XRay
             if check /[.]/
               skip /[.]/
               ['.', parse_expr_identifier]
-
             elsif check /[\[]/
               skip /\[/
               expr = parse_expression
               skip /]/
               ['[', expr]
+            elsif check /\(/
+              ['(', parse_arguments_list]
             end
           end 
         end
@@ -38,20 +41,21 @@ module XRay
         def parse_expr_member_left
           if check /function\b/
             parse_function_declaration
-          elsif check /new\b/
-            pos = skip /new/
-            expr = parse_expr_member
-            skip /\(/
-            params = batch(:parse_expr_assignment, /\)/, /,/)
-            skip /\)/
-            Expression.new 'new', expr, ElementsNode.new(params), pos
           else
             parse_expr_primary
           end 
         end
 
-      end
 
+        def parse_arguments_list
+          log 'parse arguments list'
+          skip /\(/
+          params = batch(:parse_expr_assignment, /\)/, /,/)
+          skip /\)/
+          ElementsNode.new params
+        end
+
+      end
     end
   end
 end

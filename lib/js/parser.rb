@@ -4,6 +4,7 @@ require_relative 'struct'
 require_relative 'expr/expr'
 require_relative 'expr/primary'
 require_relative 'expr/left_hand'
+require_relative 'expr/postfix'
 
 require_relative 'stat/stat'
 require_relative 'stat/var'
@@ -16,6 +17,7 @@ module XRay
       include Expr::Expr
       include Expr::Primary
       include Expr::LeftHand
+      include Expr::Postfix
 
       include Stat::Stat
       include Stat::Var
@@ -42,14 +44,13 @@ module XRay
         pos = skip /function/
 
         name = check(/\(/) ? nil : parse_expr_identifier
-
         skip /\(/
         params = batch(:parse_expr_identifier, /\)/, /,/)
         skip /\)\s*\{/
         body = parse_program(true)
         skip /}/
         
-        FunctionDeclaraion.new name, params, body, pos
+        FunctionDeclaraion.new name, args, body, pos
       end
 
       protected

@@ -7,6 +7,7 @@ require 'js/parser'
 require_relative 'expr/expr'
 require_relative 'expr/primary'
 require_relative 'expr/left_hand'
+require_relative 'expr/postfix'
 
 require_relative 'stat/stat'
 require_relative 'stat/var'
@@ -19,6 +20,7 @@ module XRayTest
       include Expr::Expr
       include Expr::Primary
       include Expr::LeftHand
+      include Expr::Postfix
 
       include Stat::Stat
       include Stat::Var

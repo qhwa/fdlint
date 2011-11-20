@@ -34,8 +34,8 @@ module XRay
       pos
     end
 
-    def check(pattern)
-      skip_empty
+    def check(pattern, skip = true)
+      skip && skip_empty
       @scanner.check pattern
     end
       

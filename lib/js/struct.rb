@@ -20,6 +20,23 @@ module XRay
       end
     end
 
+    class ElementsNode < Node
+      attr_reader :elements
+
+      def initialize(elements, position = nil)
+        @elements, @position = elements, position
+      end
+
+      def text
+        "[#{elements.collect(&:text).join(',')}]"
+      end
+
+      def position
+        @position ? @position : 
+           elements.empty? ? nil : elements[0].position
+      end
+    end
+
     class FunctionDeclaraion < Node
       attr_reader :name, :parameters, :body
 
@@ -134,21 +151,6 @@ module XRay
       end
     end
 
-    class ElementsNode < Node
-      attr_reader :elements
-
-      def initialize(elements)
-        @elements = elements 
-      end
-
-      def text
-        "[#{elements.collect(&:text).join(',')}]"
-      end
-
-      def position
-        elements.empty? ? nil : elements[0].position
-      end
-    end
      
   end
 end

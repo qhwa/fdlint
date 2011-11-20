@@ -7,12 +7,12 @@ module XRayTest
         def test_parse_expr_member
           jses = [
             'abc[123].bcd[hello]["hello"]',
-            'new A(1, abc, "hello", /hello/, 11.10)[hello].abc["bcd"]'
+            'abc(1, abc, "hello", /hello/, 11.10)[hello].abc["bcd"](1, 2, 3)'
           ]
 
           eqs = [
             '([,([,(.,([,abc,123),bcd),hello),"hello")',
-            '([,(.,([,(new,A,[1,abc,"hello",/hello/,11.10]),hello),abc),"bcd")'
+            '((,([,(.,([,((,abc,[1,abc,"hello",/hello/,11.10]),hello),abc),"bcd"),[1,2,3])'
           ]
           
           jses.each_with_index do |js, index|
