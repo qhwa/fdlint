@@ -6,10 +6,12 @@ module XRayTest
         
         def test_parse_expr_postfix
           jses = [
-            'hello++'
+            'hello++',
+            'i--'
           ]
           eqs = [
-            '(++,hello,)'
+            '(++,hello,)',
+            '(--,i,)'
           ]
 
           jses.each_with_index do |js, index|
