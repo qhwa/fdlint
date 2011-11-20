@@ -10,16 +10,12 @@ module XRayTest
             'abc(1, abc, "hello", /hello/, 11.10)[hello].abc["bcd"](1, 2, 3)'
           ]
 
-          eqs = [
+          exprs = [
             '([,([,(.,([,abc,123),bcd),hello),"hello")',
             '((,([,(.,([,((,abc,[1,abc,"hello",/hello/,11.10]),hello),abc),"bcd"),[1,2,3])'
           ]
-          
-          jses.each_with_index do |js, index|
-            parser = create_parser js
-            expr = parser.parse_expr_member
-            assert_equal eqs[index], expr.text 
-          end
+
+          add_expr_test jses, exprs, :parse_expr_member
         end 
          
       end

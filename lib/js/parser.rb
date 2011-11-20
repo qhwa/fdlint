@@ -2,9 +2,9 @@ require_relative '../base_parser'
 require_relative 'struct'
 
 require_relative 'expr/expr'
+require_relative 'expr/simple'
 require_relative 'expr/primary'
 require_relative 'expr/left_hand'
-require_relative 'expr/postfix'
 
 require_relative 'stat/stat'
 require_relative 'stat/var'
@@ -15,9 +15,9 @@ module XRay
     class Parser < XRay::BaseParser
 
       include Expr::Expr
+      include Expr::Simple
       include Expr::Primary
       include Expr::LeftHand
-      include Expr::Postfix
 
       include Stat::Stat
       include Stat::Var

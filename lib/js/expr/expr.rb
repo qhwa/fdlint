@@ -20,11 +20,11 @@ module XRay
 
         protected
 
-        def parse_expr_with_operate(left, pattern = nil, right = nil, &block)
+        def parse_expr_with_operate(left, pattern = nil, &block)
           block = block || lambda {
             if check pattern
               op = scan pattern
-              [op.text, right ? self.send(right) : nil]
+              [op.text, self.send(left)]
             end
           }
 
