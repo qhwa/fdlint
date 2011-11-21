@@ -2,16 +2,18 @@ module XRayTest
   module JS
     module Expr
       
-      module Simple
+      module Operate
         
         def test_parse_expr_postfix
           jses = [
             'hello++',
-            'i--'          
+            'i--',
+            'j\n++'
           ]
           exprs = [
             '(++,hello,)',
-            '(--,i,)'       
+            '(--,i,)',
+            'j'      
           ]
           add_expr_test jses, exprs, :parse_expr_postfix
         end

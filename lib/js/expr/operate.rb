@@ -2,7 +2,7 @@ module XRay
   module JS
     module Expr
       
-      module Simple
+      module Operate
 
         def parse_expr_postfix
           log 'parse expr postfix'
