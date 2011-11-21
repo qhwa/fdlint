@@ -1,8 +1,13 @@
+require_relative 'var'
+
 module XRay
   module JS
     module Stat 
       
       module Stat
+
+        include Var
+
         def parse_statement
           # block
           if check /\{/

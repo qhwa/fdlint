@@ -1,8 +1,12 @@
+require_relative 'var'
+
 module XRayTest
   module JS
     module Stat
       
       module Stat
+
+        include Var
 
         def _test_parse_stat_block
           js = '

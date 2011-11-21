@@ -107,6 +107,37 @@ module XRayTest
 
         end
 
+        def test_parse_expr_bit
+          jses = [
+            '1 & b + 1',
+            '1 & 2 ^ 3 & 4 ^ 5 + 6 & 7',
+            '1 + 2 | 3 + 4 & 5 ^ 6 | 7 - 8'
+          ]
+
+          exprs = [
+            '(&,1,(+,b,1))',
+            '(^,(^,(&,1,2),(&,3,4)),(&,(+,5,6),7))',
+            '(|,(|,(+,1,2),(^,(&,(+,3,4),5),6)),(-,7,8))' 
+          ]
+
+          add_expr_test jses, exprs, :parse_expr_bit_or
+        end
+
+
+        def test_parse_expr_logical
+          jses = [
+            'a + 1 == 0 && b - 1 > 3',
+            'a + 1 == 0 && b === c || a - b == c - d && c > 0'
+          ]
+
+          exprs = [
+            '(&&,(==,(+,a,1),0),(>,(-,b,1),3))',
+            '(||,(&&,(==,(+,a,1),0),(===,b,c)),(&&,(==,(-,a,b),(-,c,d)),(>,c,0)))'
+          ]
+
+          add_expr_test jses, exprs, :parse_expr_logical_or
+        end
+
       end
 
     end

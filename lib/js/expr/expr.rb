@@ -1,8 +1,14 @@
+require_relative 'primary'
+require_relative 'left_hand'
+require_relative 'operate'
+
+
 module XRay
   module JS
     module Expr 
 
-      module Expr 
+      module Expr
+        include Primary, LeftHand, Operate
         
         def parse_expression
           # function
