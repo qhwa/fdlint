@@ -151,6 +151,19 @@ module XRay
       end
     end
 
-     
+    class ConditionExpression < Expression
+      attr_reader :condition
+      
+      def initialize(condition, left, right)
+        super('?:', left, right, condition.position)
+        @condition = condition
+      end
+
+      def text
+        "#{condition} ? #{left} : #{right}"
+      end
+
+    end
+
   end
 end

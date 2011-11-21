@@ -154,11 +154,6 @@ module XRay
 
         protected
 
-        def check_expr_primary
-          check /\(/ or
-              check_expr_literal 
-        end
-
         def check_expr_literal
           check R_THIS_NULL_BOOLEAN or 
               check R_NUMBERIC or

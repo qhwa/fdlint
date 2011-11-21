@@ -21,7 +21,29 @@ module XRay
 
         def parse_expr_assignment
           log 'parse expr assignment'
-          parse_expression
+
+          expr = parse_expr_condition
+
+          r = /=|\*=|\/=|%=|\+=|-=|<<=|>>=|>>>=|&=|\^=|\|=/
+          if expr.left_hand? && check(r)
+            op = scan r
+            expr = Expression.new op.text, expr, parse_expr_assignment
+          end
+          expr
+        end
+
+        def parse_expr_condition
+          log 'parse expr condition'
+          expr = parse_expr_logical_or
+          if check /\?/
+            skip /\?/
+            left = parse_expr_assignment
+            skip /:/
+            right = parse_expr_assignment
+
+            expr = ConditionExpression.new expr, left, right
+          end
+          expr
         end
 
         protected

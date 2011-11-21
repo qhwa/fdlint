@@ -6,7 +6,13 @@ module XRay
         
         def parse_expr_lefthand
           log 'parse expr lefthand'
-          check(/new\b/) ? parse_expr_new : parse_expr_member
+          expr = check(/new\b/) ? parse_expr_new : parse_expr_member
+
+          def expr.left_hand?
+            true
+          end
+
+          expr
         end 
 
         def parse_expr_new
@@ -16,7 +22,7 @@ module XRay
           expr = check(/new\b/) ? parse_expr_new : parse_expr_member
           args = check(/\(/) ? parse_arguments_list : nil
 
-          CompositeExpression.new 'new', expr, args, pos
+          Expression.new 'new', expr, args, pos
         end
 
         def parse_expr_member
