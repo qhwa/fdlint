@@ -7,12 +7,8 @@ module XRay
         def parse_expr_lefthand
           log 'parse expr lefthand'
           expr = check(/new\b/) ? parse_expr_new : parse_expr_member
-
-          def expr.left_hand?
-            true
-          end
-
-          expr
+          expr.left_hand = true
+          expr 
         end 
 
         def parse_expr_new
@@ -46,7 +42,7 @@ module XRay
 
         def parse_expr_member_left
           if check /function\b/
-            parse_function_declaration
+            parse_function_declaration(false)
           else
             parse_expr_primary
           end 

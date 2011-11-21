@@ -119,7 +119,7 @@ module XRay
     end
 
     class Expression < Node
-      attr_reader :type, :left, :right
+      attr_reader :type, :left, :right 
 
       def initialize(type, left, right = nil, position = nil)
         @type, @left, @right, @position = type, left, right, position
@@ -133,6 +133,14 @@ module XRay
         @position ? @position : 
             left ? left.position : 
             right ? right.position : nil
+      end
+
+      def left_hand?
+        @left_hand || false
+      end
+
+      def left_hand=(left_hand)
+        @left_hand = left_hand
       end
     end
 
@@ -148,6 +156,10 @@ module XRay
 
       def node
         left
+      end
+
+      def left_hand
+        true
       end
     end
 

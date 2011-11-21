@@ -11,12 +11,8 @@ module XRay
         include Primary, LeftHand, Operate
         
         def parse_expression
-          # function
-          if check /function\b/
-            parse_function_declaration
-          else
-            parse_expr_primary
-          end
+          log 'parse expression'
+          parse_expr_with_operate :parse_expr_assignment, /,/ 
         end
 
         def parse_expr_assignment
