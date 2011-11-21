@@ -14,6 +14,7 @@ require_relative 'css/rule/compression_test'
 require_relative 'html/parser_test'
 require_relative 'html/rule_test'
 require_relative 'html/query_test'
+require_relative 'js/parser_test'
 
 module XRayTest
 
@@ -37,6 +38,9 @@ module XRayTest
       tests << HTML::ParserTest.suite
       tests << HTML::RuleTest.suite
       tests << HTML::QueryTest.suite
+
+      #JS
+      tests << JS::ParserTest.suite
 
       tests
     end
