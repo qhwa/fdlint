@@ -40,7 +40,11 @@ module XRay
     end
 
     class Program < Element
+      attr_reader :elements
       
+      def initialize(elements)
+        super('program', elements)
+      end 
     end
 
     class FunctionDeclaraion < Node
