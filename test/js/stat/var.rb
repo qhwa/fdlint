@@ -4,19 +4,25 @@ module XRayTest
       
       module Var
         def test_parse_stat_var
-          js = 'var a, i = 1, j = 2;'
+          js = 'var a = 1, b, c = 1 + a;' 
+          expr = parse_js :parse_stat_var, js
 
-          parser = create_parser(js)
+          assert_equal 'var', expr.type
 
-          var = parser.parse_stat_var
-          decls = var.declarations
-
+          decls = expr.declarations
+          
           assert_equal 3, decls.length
+          assert_equal '[(var=,a,1),(var=,b,),(var=,c,(+,1,a))]', decls.text
+          assert_equal true, expr.end_with_semicolon?
 
-          assert_equal 'a', decls[0].name.text
+          js = "var a = c++, b = c, c = 123\n a = 1 + 1"
+          expr = parse_js :parse_stat_var, js
+          assert_equal false, expr.end_with_semicolon?
 
-          assert_equal 'i', decls[1].name.text
-          assert_equal '1', decls[1].expression.text
+          js = 'var a = c, b = a--'
+          expr = parse_js :parse_stat_var, js
+          assert_equal false, expr.end_with_semicolon?
+        
         end
       end
 

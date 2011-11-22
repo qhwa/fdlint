@@ -15,7 +15,7 @@ module XRayTest
             '(--,i,)',
             'j'      
           ]
-          add_expr_test jses, exprs, :parse_expr_postfix
+          add_test :parse_expr_postfix, jses, exprs 
         end
 
         def test_parse_expr_unary
@@ -31,7 +31,7 @@ module XRayTest
             '(delete,,([,a,hello))',
             '(!,,a)'
           ]
-          add_expr_test jses, exprs, :parse_expr_unary
+          add_test :parse_expr_unary, jses, exprs 
         end
 
         def test_parse_expr_mul
@@ -41,7 +41,7 @@ module XRayTest
           exprs = [
             '(/,(*,(%,(/,(*,a,b),c),d),e),f)'
           ]
-          add_expr_test jses, exprs, :parse_expr_mul
+          add_test :parse_expr_mul, jses, exprs 
         end
 
         def test_parse_expr_add
@@ -51,7 +51,7 @@ module XRayTest
           exprs = [
             '(+,(+,(-,(+,(*,a,b),c),(/,d,e)),(%,f,d)),a)'
           ]
-          add_expr_test jses, exprs, :parse_expr_add
+          add_test :parse_expr_add, jses, exprs 
         end
 
         def test_parse_expr_shift
@@ -65,7 +65,7 @@ module XRayTest
             '(>>,(+,a,1),(+,1,2))',
             '(>>>,(>>,(*,1,100),2),(-,(+,1,(*,2,3)),4))'
           ]
-          add_expr_test jses, exprs, :parse_expr_shift
+          add_test :parse_expr_shift, jses, exprs 
         end
 
         def test_parse_expr_relation
@@ -85,7 +85,7 @@ module XRayTest
             '(in,innameA,innameC)'
           ]
 
-          add_expr_test jses, exprs, :parse_expr_relation
+          add_test :parse_expr_relation, jses, exprs
         end
 
         def test_parse_expr_equal
@@ -103,7 +103,7 @@ module XRayTest
             '(===,(==,(<<,a,(-,4,5)),(<<,1,3)),5)' 
           ]
 
-          add_expr_test jses, exprs, :parse_expr_equal
+          add_test :parse_expr_equal, jses, exprs
 
         end
 
@@ -120,7 +120,7 @@ module XRayTest
             '(|,(|,(+,1,2),(^,(&,(+,3,4),5),6)),(-,7,8))' 
           ]
 
-          add_expr_test jses, exprs, :parse_expr_bit_or
+          add_test :parse_expr_bit_or, jses, exprs       
         end
 
 
@@ -135,7 +135,7 @@ module XRayTest
             '(||,(&&,(==,(+,a,1),0),(===,b,c)),(&&,(==,(-,a,b),(-,c,d)),(>,c,0)))'
           ]
 
-          add_expr_test jses, exprs, :parse_expr_logical_or
+          add_test :parse_expr_logical_or, jses, exprs
         end
 
       end

@@ -37,30 +37,51 @@ module XRay
         @position ? @position : 
            elements.empty? ? nil : elements[0].position
       end
+
+      def method_missing(m, *args, &block)
+        @elements.send(m, *args, &block)
+      end
+
     end
 
     class Program < Element
-      attr_reader :elements
-      
+      alias :elements :left
+
       def initialize(elements)
         super('program', elements)
-      end 
+      end
+
     end
 
-    class FunctionDeclaraion < Node
-      attr_reader :name, :parameters, :body
-
+    class FunctionDeclaraion < Element
+      attr_reader :body
+      alias :name :left
+      alias :parameters :right
+       
       def initialize(name, parameters, body, pos)
-        super(nil, pos)
-        @name, @parameters, @body = name, parameters, body
-      end
-
-      def text
-        "function #{name}(#{parameters.collect(&:text).join(', ')}) {\n #{body} \n}"  
+        super('function', name, parameters, pos)
+        @body = body
       end
     end
 
-    class Statement < Node
+    class Statement < Element
+
+      def end_with_semicolon=(end_with_semicolon)
+        @end_with_semicolon = !!end_with_semicolon
+      end
+
+      def end_with_semicolon?
+        @end_with_semicolon || false
+      end
+
+    end
+
+    class VarStatement < Statement
+      alias :declarations :left
+
+      def initialize(declarations, position)
+        super('var', declarations, nil, position)
+      end
     end
 
     class EmptyStatement < Statement
@@ -82,48 +103,6 @@ module XRay
 
       def position
         expression.position
-      end
-    end
-
-    class BlockStatement < Statement
-      attr_reader :statements
-
-      def initialize(statements, position)
-        super(nil, position)
-        @statements = statements
-      end
-
-      def text
-        "{\n#{statements.collect(&:text).join("\n")}}"
-      end
-    end
-
-    class VarStatement < Statement
-      attr_reader :declarations
-      
-      def initialize(declarations, position)
-        super(nil, position)
-        @declarations = declarations
-      end
-
-      def text
-        "var #{declarations.collect(&:text).join(', ')};" 
-      end
-    end
-
-    class VarStatementDeclaration < Node
-      attr_reader :name, :expression
-      
-      def initialize(name, expression)
-        @name, @expression = name, expression
-      end
-
-      def text
-        expression ? "#{name} = #{expression}" : name.text
-      end
-
-      def position
-        name.position
       end
     end
 

@@ -5,21 +5,17 @@ module XRayTest
       module Primary
 
         def test_parse_expr_parentheses
-          js = '(12.56)'
-          parser = create_parser js
-          expr = parser.parse_expr_parentheses
+          expr = parse_js :parse_expr_parentheses, '(12.56)'
 
-          assert_equal '()', expr.type
+          assert_equal 'parentheses', expr.type
           assert_equal '12.56', expr.node.text
         end
 
         def test_parse_expr_array
           js = '[123, 456, "hello world", /this is re/]'
-          parser = create_parser js
+          expr = parse_js :parse_expr_array, js
 
-          expr = parser.parse_expr_array
-
-          assert_equal '[]', expr.type
+          assert_equal 'array', expr.type
           assert_equal ['123', '456', '"hello world"', '/this is re/'], 
               expr.node.elements.collect(&:text)
         end
@@ -32,10 +28,9 @@ module XRayTest
             18: /hello/    
           }'
 
-          parser = create_parser js
-          expr = parser.parse_expr_object
+          expr = parse_js :parse_expr_object, js
 
-          assert_equal '{}', expr.type
+          assert_equal 'object', expr.type
 
           assert_equal ['name', '"key 2"', '12.59', '18'], 
               expr.node.elements.collect(&:left).collect(&:text)
@@ -71,8 +66,7 @@ module XRayTest
           jses << str1 << str2 << str3 << re
 
           exprs = jses.collect do |js|
-            parser = create_parser js
-            parser.parse_expr_literal
+            parse_js :parse_expr_literal, js
           end
 
           eqs = %w(

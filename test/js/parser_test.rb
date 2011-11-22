@@ -17,7 +17,7 @@ module XRayTest
       include Stat::Stat
 
       
-      def _test_parse_program()
+      def test_parse_program()
         js = '
           function say(name1, name2, name3) {
             alert(name + " hello world");
@@ -30,20 +30,17 @@ module XRayTest
         ' 
         parser = create_parser(js)
         program = parser.parse_program
-
-        assert_equal 4, program.elements.length
-
-        func = program.elements[0]
-        assert_equal 3, func.body.elements.length
+        elms = program.elements
+        
+        assert_equal 4, elms.length
       end 
 
-      def _test_parse_function_declaration
+      def test_parse_function_declaration
         js = '
           function sum(a1, a2, a3) {
             a1 = a2 + a3;
             a2 = a2 * a3;
             a3++;
-            return a1 + a2 + a3;
           }
         ' 
 
@@ -51,26 +48,35 @@ module XRayTest
         func = parser.parse_function_declaration
 
         assert_equal 'sum', func.name.text
-
-        params = func.parameters
-        assert_equal 3, params.length
-        assert_equal %w(a1 a2 a3), params.collect(&:text) 
-
-        elms = func.body.elements
-        assert_equal 4, elms.length
-        assert_equal 'a2 = a2 * a3;', elms[1].text
+        assert_equal '[a1,a2,a3]', func.parameters.text
       end
 
-      def test_with_fixture
+      def _test_with_fixture
         path = File.expand_path '../fixtures/js/jquery-1.7.js', File.dirname(__FILE__)
         body = IO.read(path)
 
-        #parser = create_parser(body)
-        #program = parser.parse_program
+        parser = create_parser(body)
+        program = parser.parse_program
       end
 
       def create_parser(js)
         Parser.new(js, Logger.new(STDOUT))
+      end
+
+      def parse_js(action, js)
+        parser = create_parser js
+        parser.send(action)
+      end
+
+      def add_test(action, jses, exprs)
+        if jses.class == String
+          jses = [jses]
+          exprs = [exprs]
+        end
+        jses.each_with_index do |js, index|
+          expr = parse_js action, js 
+          assert_equal exprs[index], expr.text
+        end
       end
     end
   end

@@ -23,7 +23,7 @@ module XRay
           r = /=|\*=|\/=|%=|\+=|-=|<<=|>>=|>>>=|&=|\^=|\|=/
           if expr.left_hand? && check(r)
             op = scan r
-            expr = Expression.new op.text, expr, parse_expr_assignment
+            expr = create_element Expression, op.text, expr, parse_expr_assignment
           end
           expr
         end
@@ -37,7 +37,7 @@ module XRay
             skip /:/
             right = parse_expr_assignment
 
-            expr = ConditionExpression.new expr, left, right
+            expr = create_element ConditionExpression, expr, left, right
           end
           expr
         end
@@ -54,10 +54,8 @@ module XRay
 
           expr = self.send left
           while (ret = block.call) 
-            expr = Expression.new ret[0], expr, ret[1]
+            expr = create_element Expression, ret[0], expr, ret[1]
           end 
-
-          log "  #{expr}"
           expr
         end
          

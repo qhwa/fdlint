@@ -20,7 +20,7 @@ module XRayTest
             '(,,(,,(=,a,1),(=,b,2)),(=,c,3))'
           ]
 
-          add_expr_test jses, exprs, :parse_expression
+          add_test :parse_expression, jses, exprs 
         end
         
         def test_parse_expr_assignment
@@ -34,7 +34,7 @@ module XRayTest
             '(*=,a,(+,1,2))'
           ]
 
-          add_expr_test jses, exprs, :parse_expr_assignment
+          add_test :parse_expr_assignment, jses, exprs 
 
         end
 
@@ -47,18 +47,9 @@ module XRayTest
             '(?:,(==,(+,a,1),0),1,2)'
           ]
 
-          add_expr_test jses, exprs, :parse_expr_condition
+          add_test :parse_expr_condition, jses, exprs 
         end
 
-        protected
-
-        def add_expr_test(jses, exprs, action)
-          jses.each_with_index do |js, index|
-            parser = create_parser js
-            expr = parser.send action
-            assert_equal exprs[index], expr.text
-          end  
-        end
       end
 
     end

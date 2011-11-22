@@ -18,7 +18,7 @@ module XRay
           expr = check(/new\b/) ? parse_expr_new : parse_expr_member
           args = check(/\(/) ? parse_arguments_list : nil
 
-          Expression.new 'new', expr, args, pos
+          create_element Expression, 'new', expr, args, pos
         end
 
         def parse_expr_member
@@ -35,7 +35,7 @@ module XRay
             elsif check /\(/
               ['(', parse_arguments_list]
             end
-          end 
+          end
         end
 
         protected

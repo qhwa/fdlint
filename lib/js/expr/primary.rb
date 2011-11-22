@@ -21,6 +21,7 @@ module XRay
         R_REGEXP = /\//
 
         def parse_expr_primary
+          log "parse expr primary"
           if check /\(/
             parse_expr_parentheses
 
@@ -45,7 +46,7 @@ module XRay
           expr = parse_expression
           skip /\)/
           
-          PrimaryExpression.new '()', expr, pos
+          create_expression 'parentheses', expr, pos
         end
 
         def parse_expr_array
@@ -54,8 +55,8 @@ module XRay
           pos = skip /\[/
           elms = batch(:parse_expr_assignment, /]/, /,/)
           skip /]/
-         
-          PrimaryExpression.new '[]', Elements.new(elms), pos 
+
+          create_expression 'array', Elements.new(elms), pos 
         end
 
         def parse_expr_object
@@ -64,8 +65,8 @@ module XRay
           pos = skip /\{/
           elms = batch(:parse_expr_object_item, /}/, /,/)
           skip /}/
-          
-          PrimaryExpression.new '{}', Elements.new(elms), pos
+
+          create_expression 'object', Elements.new(elms), pos
         end
 
         def parse_expr_object_item
@@ -92,9 +93,7 @@ module XRay
           RESERVED_WORDS.include?(id.text) ? 
               pass_error('identifier can not be reserved word') : id
         
-          log "  #{id}"
-
-          PrimaryExpression.new 'id', id
+          create_expression 'id', id
         end
 
         def parse_expr_literal
@@ -114,10 +113,9 @@ module XRay
         def parse_expr_literal_this_null_boolean
           log 'parse expr literal this null boolean'
           expr = scan /this|null|true|false/
-          log "  #{expr}"
           type = expr.text.gsub(/true|false/, 'boolean')
 
-          PrimaryExpression.new type, expr 
+          create_expression type, expr 
         end
 
         def parse_expr_literal_string
@@ -131,34 +129,34 @@ module XRay
             raise 'assert false'
           end
 
-          log "  #{expr}"
-
-          PrimaryExpression.new 'string', expr 
+          create_expression 'string', expr 
         end
 
         def parse_expr_literal_number
           log 'parse expr literal number'
           expr = scan /[+-]?(?:(?:\d*[.]\d+)|(?:\d+))(?:[eE][+-]?\d+)?/
-          
-          log "  #{expr}"
-
-          PrimaryExpression.new 'number', expr
+          create_expression 'number', expr
         end
 
         def parse_expr_literal_regexp
           log 'parse expr literal regexp'
           expr = scan %r{/(?:(?:\\/)|[^/])+/[a-z]*}
-          log "  #{expr}"
-          PrimaryExpression.new 'regexp', expr
+          create_expression 'regexp', expr
         end
 
-        protected
+        private
 
         def check_expr_literal
           check R_THIS_NULL_BOOLEAN or 
               check R_NUMBERIC or
               check R_STRING or
               check R_REGEXP
+        end
+
+        def create_expression(*args)
+          expr = PrimaryExpression.new *args
+          log "  #{expr}"
+          expr
         end
 
       end

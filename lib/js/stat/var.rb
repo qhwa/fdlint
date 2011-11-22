@@ -5,10 +5,22 @@ module XRay
       module Var
         def parse_stat_var
           log 'parse stat var'
+
           pos = skip /var/
-          decls = batch(:parse_stat_var_declaration, /;/, /,/)
-          skip /;/
-          VarStatement.new decls, pos
+
+          decs = []
+          decs << parse_stat_var_declaration 
+          while check /,/
+            skip /,/
+            decs << parse_stat_var_declaration
+          end
+          
+          semicolon = !!check(/;/)
+          skip /\s*;|[ \t]*\n|\s*\z/, true
+        
+          stat = create_element VarStatement, Elements.new(decs), pos
+          stat.end_with_semicolon = semicolon
+          stat
         end
 
         def parse_stat_var_declaration 
@@ -17,7 +29,7 @@ module XRay
             skip /\=/
             parse_expr_assignment
           end
-          VarStatementDeclaration.new name, expr
+          create_element Statement, 'var=', name, expr
         end
       end
 

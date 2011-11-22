@@ -16,11 +16,7 @@ module XRay
 
       def parse_program(inner = false)
         log 'parse program'
-        elms = batch(:parse_source_element) do
-          skip_empty
-          inner ? !check(/}/) : !eos? 
-        end
-        Program.new elms
+        Program.new parse_source_elements
       end
 
       def parse_source_element
@@ -38,16 +34,22 @@ module XRay
         skip /\(/
         params = batch(:parse_expr_identifier, /\)/, /,/)
         skip /\)\s*\{/
-        body = parse_program(true)
+        body = parse_source_elements true
         skip /}/
-        
-        FunctionDeclaraion.new name, params, body, pos
+         
+        FunctionDeclaraion.new name, Elements.new(params), body, pos
       end
 
       protected
 
       def filter_text(js)
         filter_comment js
+      end
+
+      def create_element(klass, *args)
+        elm = klass.new *args
+        log "  #{elm}"
+        elm
       end
 
       private
@@ -62,6 +64,15 @@ module XRay
         end 
         js 
       end
+      
+      def parse_source_elements(inner = false)
+        elms = batch(:parse_source_element) do
+          skip_empty
+          inner ? !check(/}/) : !eos? 
+        end
+        Elements.new elms
+      end
+
     end
 
   end

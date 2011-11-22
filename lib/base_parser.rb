@@ -25,8 +25,8 @@ module XRay
       pos
     end
       
-    def skip(pattern)
-      skip_empty
+    def skip(pattern, not_skip_empty = false)
+      not_skip_empty || skip_empty
       pos = scanner_pos
       unless @scanner.skip pattern
         parse_error "skip fail: #{pattern}"
@@ -34,20 +34,23 @@ module XRay
       pos
     end
 
-    def check(pattern, skip = true)
-      skip && skip_empty
-      @scanner.check pattern
+    def check(pattern, not_skip_empty = false)
+      last_pos = @scanner.pos
+      not_skip_empty || skip_empty
+      ret = @scanner.check pattern
+      @scanner.pos = last_pos
+      ret
     end
       
-    def scan(pattern)
-      skip_empty
+    def scan(pattern, not_skip_empty = false)
+      not_skip_empty || skip_empty
       pos = @pos_info.locate(@scanner.pos)
       text = @scanner.scan pattern
       text ? Node.new(text, pos) : parse_error("scan fail: #{pattern}")
     end
       
-    def batch(name, stop = nil, skipp = nil, &block)
-      block = stop ? create_batch_default_block(stop, skipp) : block
+    def batch(name, stop = nil, skip_pattern = nil, not_skip_empty = false, &block)
+      block = stop ? create_batch_default_block(stop, skip_pattern, not_skip_empty) : block
       result = []
       while !@scanner.eos? && (block ? block.call : true) && item = send(name)
         result << item
@@ -99,13 +102,13 @@ module XRay
       text.gsub(/\r\n/, "\n").gsub(/\r/, "\n")
     end
 
-    def create_batch_default_block(stop, skipp)
+    def create_batch_default_block(stop, skip_pattern, not_skip_empty)
       not_first_time = false
       lambda {
-        if check stop
+        if check(stop, not_skip_empty)
           false
         else
-          not_first_time  && skipp && skip(skipp)
+          not_first_time  && skip_pattern && skip(skip_pattern)
           not_first_time = true
           true
         end

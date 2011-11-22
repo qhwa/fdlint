@@ -15,7 +15,7 @@ module XRayTest
             '((,([,(.,([,((,abc,[1,abc,"hello",/hello/,11.10]),hello),abc),"bcd"),[1,2,3])'
           ]
 
-          add_expr_test jses, exprs, :parse_expr_member
+          add_test :parse_expr_member, jses, exprs 
         end 
          
       end

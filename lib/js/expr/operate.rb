@@ -7,9 +7,9 @@ module XRay
         def parse_expr_postfix
           log 'parse expr postfix'
           expr = parse_expr_lefthand
-          if check(/[ \t]*(?:\+\+|--)/, false)
+          if check(/[ \t]*(?:\+\+|--)/, true)
             op = scan /\+\+|--/
-            expr = Expression.new op.text, expr
+            expr = create_element Expression, op.text, expr
           end
           expr
         end
@@ -19,7 +19,7 @@ module XRay
           r = /delete|void|typeof|\+\+|--|\+|-|~|!/
           if check r
             op = scan r
-            Expression.new op.text, nil, parse_expr_unary
+            create_element Expression, op.text, nil, parse_expr_unary
           else
             parse_expr_postfix
           end

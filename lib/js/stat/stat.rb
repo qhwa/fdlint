@@ -34,7 +34,7 @@ module XRay
           stats = batch(:parse_statement, /}/)
           skip /}/ 
 
-          BlockStatement.new stats, pos
+          create_statement 'block', Elements.new(stats)
         end
 
         def parse_stat_empty
@@ -49,6 +49,7 @@ module XRay
           skip /;/
           ExpressionStatement.new expr 
         end
+
 
       end
        
