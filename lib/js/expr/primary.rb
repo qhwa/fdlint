@@ -55,7 +55,7 @@ module XRay
           elms = batch(:parse_expr_assignment, /]/, /,/)
           skip /]/
          
-          PrimaryExpression.new '[]', ElementsNode.new(elms), pos 
+          PrimaryExpression.new '[]', Elements.new(elms), pos 
         end
 
         def parse_expr_object
@@ -65,7 +65,7 @@ module XRay
           elms = batch(:parse_expr_object_item, /}/, /,/)
           skip /}/
           
-          PrimaryExpression.new '{}', ElementsNode.new(elms), pos
+          PrimaryExpression.new '{}', Elements.new(elms), pos
         end
 
         def parse_expr_object_item

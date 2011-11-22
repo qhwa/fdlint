@@ -42,7 +42,7 @@ module XRay
 
         def parse_expr_member_left
           if check /function\b/
-            parse_function_declaration(false)
+            parse_function_declaration(true)
           else
             parse_expr_primary
           end 
@@ -54,7 +54,7 @@ module XRay
           skip /\(/
           params = batch(:parse_expr_assignment, /\)/, /,/)
           skip /\)/
-          ElementsNode.new params
+          Elements.new params
         end
 
       end

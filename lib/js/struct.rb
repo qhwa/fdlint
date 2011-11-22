@@ -4,23 +4,25 @@ module XRay
   module JS
     Node = XRay::Node
 
-    class Program < Node
-      attr_reader :elements
+    class Element < Node
+      attr_reader :type, :left, :right 
 
-      def initialize(elements)
-        @elements = elements
+      def initialize(type, left, right = nil, position = nil)
+        @type, @left, @right, @position = type, left, right, position
       end
 
       def text
-        elements.collect(&:text).join("\n")
+        "(#{type},#{left},#{right})"
       end
 
       def position
-        elements.empty? ? nil : elements[0].position
+        @position ? @position : 
+            left ? left.position : 
+            right ? right.position : nil
       end
     end
 
-    class ElementsNode < Node
+    class Elements < Node
       attr_reader :elements
 
       def initialize(elements, position = nil)
@@ -35,6 +37,10 @@ module XRay
         @position ? @position : 
            elements.empty? ? nil : elements[0].position
       end
+    end
+
+    class Program < Element
+      
     end
 
     class FunctionDeclaraion < Node
@@ -52,7 +58,6 @@ module XRay
 
     class Statement < Node
     end
-
 
     class EmptyStatement < Statement
       def initialize(pos)
@@ -118,23 +123,7 @@ module XRay
       end
     end
 
-    class Expression < Node
-      attr_reader :type, :left, :right 
-
-      def initialize(type, left, right = nil, position = nil)
-        @type, @left, @right, @position = type, left, right, position
-      end
-
-      def text
-        "(#{type},#{left},#{right})"
-      end
-
-      def position
-        @position ? @position : 
-            left ? left.position : 
-            right ? right.position : nil
-      end
-
+    class Expression < Element
       def left_hand?
         @left_hand || false
       end
@@ -157,10 +146,6 @@ module XRay
       def node
         left
       end
-
-      def left_hand
-        true
-      end
     end
 
     class ConditionExpression < Expression
@@ -172,7 +157,7 @@ module XRay
       end
 
       def text
-        "#{condition} ? #{left} : #{right}"
+        "(#{type},#{condition},#{left},#{right})"
       end
 
     end

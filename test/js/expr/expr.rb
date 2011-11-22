@@ -30,7 +30,7 @@ module XRayTest
           ]
 
           exprs = [
-            '(=,a,(==,(+,1,2),0) ? 1 : 0)',
+            '(=,a,(?:,(==,(+,1,2),0),1,0))',
             '(*=,a,(+,1,2))'
           ]
 
@@ -44,7 +44,7 @@ module XRayTest
           ]
 
           exprs = [
-            '(==,(+,a,1),0) ? 1 : 2'
+            '(?:,(==,(+,a,1),0),1,2)'
           ]
 
           add_expr_test jses, exprs, :parse_expr_condition

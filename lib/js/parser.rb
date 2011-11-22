@@ -29,12 +29,12 @@ module XRay
         check(/function\b/) ? parse_function_declaration : parse_statement
       end
 
-      def parse_function_declaration(force_name = true)
+      def parse_function_declaration(skip_name = false)
         log 'parse function declaration'
 
         pos = skip /function/
 
-        name = (force_name || !check(/\(/)) ? parse_expr_identifier : nil
+        name = (skip_name && check(/\(/)) ? nil : parse_expr_identifier
         skip /\(/
         params = batch(:parse_expr_identifier, /\)/, /,/)
         skip /\)\s*\{/
