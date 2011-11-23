@@ -3,7 +3,7 @@ module XRay
     module Expr
       
       module Operate
-
+     
         def parse_expr_postfix
           log 'parse expr postfix'
           expr = parse_expr_lefthand
@@ -41,8 +41,10 @@ module XRay
         end
 
         def parse_expr_relation
-          log 'parse expr relational'
-          parse_expr_with_operate :parse_expr_shift, />=|<=|>|<|\binstanceof\b|\bin\b/
+          not_in = expr_operate_not_in?
+          log "parse expr relational#{not_in ? '(notin)' : ''}"
+          pattern = not_in ? (/>=|<=|>|<|\binstanceof\b/) : (/>=|<=|>|<|\binstanceof\b|\bin\b/)
+          parse_expr_with_operate :parse_expr_shift, pattern 
         end
 
         def parse_expr_equal
@@ -73,6 +75,14 @@ module XRay
         def parse_expr_logical_or
           log 'parse expr logical or'
           parse_expr_with_operate :parse_expr_logical_and, /\|\|/
+        end
+
+        def expr_operate_not_in?
+          @operate_not_in || false
+        end
+
+        def expr_operate_not_in=(value)
+          @operate_not_in = !!value
         end
         
       end

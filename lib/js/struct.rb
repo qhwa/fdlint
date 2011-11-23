@@ -5,9 +5,9 @@ module XRay
     Node = XRay::Node
 
     class Element < Node
-      attr_reader :type, :left, :right 
+      attr_reader :type, :left, :right
 
-      def initialize(type, left, right = nil, position = nil)
+      def initialize(type, left = nil, right = nil, position = nil)
         @type, @left, @right, @position = type, left, right, position
       end
 
@@ -84,26 +84,70 @@ module XRay
       end
     end
 
-    class EmptyStatement < Statement
-      def initialize(pos)
-        super(nil, pos)
+    class BlockStatement < Statement
+      alias :elements :left
+
+      def initialize(elements, pos)
+        super('block', elements, nil, pos)
       end
     end
 
+    class IfStatement < Statement
+      attr_reader :false_part
+      alias :condition :left
+      alias :true_part :right
+       
+      def initialize(condition, true_part, false_part, position)
+        super('if', condition, true_part, position)
+        @false_part = false_part
+      end
+    end
+
+    class DowhileStatement < Statement
+      alias :body :left
+      alias :condition :right
+
+      def initialize(body, condition, pos)
+        super('dowhile', body, condition, pos)
+      end
+    end
+
+    class WhileStatement < Statement
+      alias :condition :left
+      alias :body :right
+
+      def initialize(condition, body, pos)
+        super('while', condition, body, pos)
+      end
+    end
+
+    class ForStatement < Statement
+      alias :condition :left
+      alias :body :right
+
+      def initialize(condition, body, pos)
+        super('for', condition, body, pos)
+      end
+    end
+
+    class ForConditionElement < Element
+      attr_reader :third
+      alias :first :left
+      alias :second :right
+
+      def initialize(type, first, second, third, pos)
+        super(type, first, second)
+        @third = third
+      end
+
+    end
+
     class ExpressionStatement < Statement
-      attr_reader :expression
+      alias :expression :left
 
       def initialize(expression)
-        @expression = expression
-      end
-
-      def text
-        "#{expression};" 
-      end
-
-      def position
-        expression.position
-      end
+        super('expression', expression)
+      end 
     end
 
     class Expression < Element

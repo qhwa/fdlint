@@ -1,4 +1,6 @@
 require_relative 'var'
+require_relative 'if'
+require_relative 'iter'
 
 module XRayTest
   module JS
@@ -6,7 +8,7 @@ module XRayTest
       
       module Stat
 
-        include Var
+        include Var, If, Iter
 
         def test_parse_stat_block
           js = '
@@ -14,11 +16,16 @@ module XRayTest
               a = 1;
               b = 2;
               c++;
-              i = i / 1;    
+              i = i / 1;
+              ;
+              i++;
             }
           '
-          expr = '(block,[(=,a,1);,(=,b,2);,(++,c,);,(=,i,(/,i,1));],)'
           
+          expr = parse_js :parse_stat_block, js
+          assert_equal 6, expr.elements.length
+
+          assert_equal 'empty', expr.elements[4].type
         end
       end
 

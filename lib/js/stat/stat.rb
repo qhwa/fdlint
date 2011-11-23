@@ -1,4 +1,6 @@
 require_relative 'var'
+require_relative 'if'
+require_relative 'iter'
 
 module XRay
   module JS
@@ -6,22 +8,30 @@ module XRay
       
       module Stat
 
-        include Var
+        include Var, If, Iter
 
         def parse_statement
-          # block
           if check /\{/
             parse_stat_block
 
-          # empty
           elsif check /;/
             parse_stat_empty
 
-          # var
           elsif check /var\s/
             parse_stat_var
 
-          # expression 
+          elsif check /if\b/
+            parse_stat_if
+
+          elsif check /do\b/
+            parse_stat_dowhile
+
+          elsif check /while\b/
+            parse_stat_while
+
+          elsif check /for\b/
+            parse_stat_for
+
           else
             parse_stat_expression
           end
@@ -34,20 +44,27 @@ module XRay
           stats = batch(:parse_statement, /}/)
           skip /}/ 
 
-          create_statement 'block', Elements.new(stats)
+          create_element BlockStatement, Elements.new(stats), pos
         end
 
         def parse_stat_empty
           log 'parse stat empty'
           pos = skip /;/
-          EmptyStatement.new(pos)
+          
+          create_element Statement, 'empty'
         end
 
         def parse_stat_expression
           log 'parse stat expression'
+
           expr = parse_expression
-          skip /;/
-          ExpressionStatement.new expr 
+          stat = create_element ExpressionStatement, expr
+
+          stat.end_with_semicolon = !!check(/;/)
+
+          skip /\s*;|[ \t]*\n|\s*\z/, true
+          
+          stat
         end
 
 
