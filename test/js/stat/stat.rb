@@ -22,11 +22,61 @@ module XRayTest
             }
           '
           
-          expr = parse_js :parse_stat_block, js
-          assert_equal 6, expr.elements.length
+          stat = parse_js :parse_stat_block, js
+          assert_equal 6, stat.elements.length
 
-          assert_equal 'empty', expr.elements[4].type
+          assert_equal 'empty', stat.elements[4].type
         end
+
+        def test_parse_stat_continue
+          js = 'continue ; '
+          stat = parse_js :parse_stat_continue, js
+
+          assert_equal 'continue', stat.type
+          assert_equal true, stat.end_with_semicolon?
+          assert_equal nil, stat.left
+
+          js = "continue\n"
+          stat = parse_js :parse_stat_continue, js
+          assert_equal false, stat.end_with_semicolon?
+          assert_equal nil, stat.left
+
+          js = 'continue abcde;'
+          stat = parse_js :parse_stat_continue, js
+          assert_equal true, stat.end_with_semicolon?
+          assert_equal 'abcde', stat.left.text
+        end
+
+        def test_parse_break
+          js = 'break'
+          stat = parse_js :parse_stat_break, js
+          assert_equal 'break', stat.type
+        end
+
+        def test_parse_stat_return
+          js = 'return a + 1;'
+          stat = parse_js :parse_stat_return, js
+
+          assert_equal 'return', stat.type
+          assert_equal '(+,a,1)', stat.left.text
+
+          js = 'return;'
+          stat = parse_js :parse_stat_return, js
+          assert_equal nil, stat.left
+
+          js = "return\n"
+          stat = parse_js :parse_stat_return, js
+          assert_equal false, stat.end_with_semicolon?
+        end
+
+        def test_parse_throw
+          js = 'throw "assert false";'
+          stat = parse_js :parse_stat_throw, js
+
+          assert_equal 'throw', stat.type
+          assert_equal '"assert false"', stat.left.text
+        end
+
       end
 
     end
