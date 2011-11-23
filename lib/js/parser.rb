@@ -48,21 +48,18 @@ module XRay
 
       def create_element(klass, *args)
         elm = klass.new *args
-        log "  #{elm}"
+        log "  #{elm.text} #{elm.position}"
         elm
       end
 
       private
       
       def filter_comment(js)
-        res = [/\/\*[^*]*\*+([^\/*][^*]*\*+)*\//, /\/\/.*$/]
-        res.each do |re|
-          js = js.gsub(re) do |m|
-            log "ignore comments: \n#{m}"
-            m.gsub /\S/, ' '
-          end
-        end 
-        js 
+        re_comment = /\/\*[^*]*\*+([^\/*][^*]*\*+)*\//
+        js.gsub(re_comment) do |m| 
+          log "ignore comments: \n#{m}"
+          m.gsub /\S/, ' '
+        end
       end
       
       def parse_source_elements(inner = false)

@@ -1,6 +1,8 @@
 require_relative 'var'
 require_relative 'if'
+require_relative 'switch'
 require_relative 'iter'
+require_relative 'try'
 
 module XRay
   module JS
@@ -8,35 +10,31 @@ module XRay
       
       module Stat
 
-        include Var, If, Iter
+        include Var, If, Switch, Iter, Try
 
         def parse_statement
-          if check /\{/
-            parse_stat_block
-
-          elsif check /;/
-            parse_stat_empty
-
-          elsif check /var\s/
-            parse_stat_var
-
-          elsif check /if\b/
-            parse_stat_if
-
-          elsif check /do\b/
-            parse_stat_dowhile
-
-          elsif check /while\b/
-            parse_stat_while
-
-          elsif check /for\b/
-            parse_stat_for
-
-          elsif check /continue\b/
-            parse_stat_continue
-
-          else
-            parse_stat_expression
+          map = {
+            /{/ => 'block',
+            /;/ => 'empty',
+            /var\b/ => 'var',
+            /if\b/ => 'if',
+            /switch\b/ => 'switch',
+            /do\b/ => 'dowhile',
+            /while\b/ => 'while',
+            /for\b/ => 'for',
+            /continue\b/ => 'continue',
+            /break\b/ => 'break',
+            /return\b/ => 'return',
+            /throw\b/ => 'throw',
+            /try\b/ => 'try',
+            /\/\// => 'comment',
+            /./ => 'expression'
+          }
+          
+          map.each do |k, v|
+            if check(k)
+              return self.send('parse_stat_' + v)
+            end
           end
         end
 
@@ -83,6 +81,17 @@ module XRay
         def parse_stat_throw
           log 'parse stat throw'
           parse_stat_simple /throw/, :parse_expression
+        end
+
+        def parse_stat_label
+          log 'parse stat label'
+          raise 'not impelments'
+        end
+
+        def parse_stat_comment
+          log 'parse stat comment'
+          node = scan /\/\/.*$/
+          create_element Statement, 'comment', node
         end
 
         private

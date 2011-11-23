@@ -51,7 +51,9 @@ module XRayTest
             '0.123 = c',
             '+123e+1 = d',
             '123.123e-1 = e',
-            '12345.123e123'
+            '12345.123e123',
+
+            '/\\/g,var a = "bcd"'
           ]
 
           str1 = %q("hello this is a single line str\\"ing")
@@ -72,6 +74,7 @@ module XRayTest
           eqs = %w(
             this null true false
             123 .12 0.123 +123e+1 123.123e-1 12345.123e123
+            /\\/g
           )
           eqs << str1 << str2 << str3 << re
           assert_equal eqs, exprs.collect(&:node).collect(&:text)

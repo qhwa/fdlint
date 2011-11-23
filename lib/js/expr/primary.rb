@@ -18,7 +18,7 @@ module XRay
         R_THIS_NULL_BOOLEAN = /(?:this|null|true|false)\b/
         R_NUMBERIC = /[+-]?(?:\d|(?:[.]\d))/
         R_STRING = /['"]/
-        R_REGEXP = /\//
+        R_REGEXP = /\/[^\/]/
 
         def parse_expr_primary
           log "parse expr primary"

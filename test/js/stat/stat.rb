@@ -1,6 +1,8 @@
 require_relative 'var'
 require_relative 'if'
+require_relative 'switch'
 require_relative 'iter'
+require_relative 'try'
 
 module XRayTest
   module JS
@@ -8,7 +10,12 @@ module XRayTest
       
       module Stat
 
-        include Var, If, Iter
+        include Var, If, Switch, Iter, Try
+
+        def test_parse_statement
+          js = ''
+          stat = parse_js :parse_statement, js 
+        end
 
         def test_parse_stat_block
           js = '
@@ -64,7 +71,7 @@ module XRayTest
           stat = parse_js :parse_stat_return, js
           assert_equal nil, stat.left
 
-          js = "return\n"
+          js = "return"
           stat = parse_js :parse_stat_return, js
           assert_equal false, stat.end_with_semicolon?
         end

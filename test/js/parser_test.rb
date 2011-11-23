@@ -32,7 +32,7 @@ module XRayTest
         program = parser.parse_program
         elms = program.elements
         
-        assert_equal 4, elms.length
+        assert_equal 5, elms.length
       end 
 
       def test_parse_function_declaration
@@ -49,14 +49,6 @@ module XRayTest
 
         assert_equal 'sum', func.name.text
         assert_equal '[a1,a2,a3]', func.parameters.text
-      end
-
-      def _test_with_fixture
-        path = File.expand_path '../fixtures/js/jquery-1.7.js', File.dirname(__FILE__)
-        body = IO.read(path)
-
-        parser = create_parser(body)
-        program = parser.parse_program
       end
 
       def create_parser(js)
@@ -80,4 +72,13 @@ module XRayTest
       end
     end
   end
+end
+
+
+if __FILE__ == $0
+  path = File.expand_path '../fixtures/js/jquery-1.7.js', File.dirname(__FILE__)
+  body = IO.read(path)
+
+  #parser = XRay::JS::Parser.new(body, Logger.new(STDOUT))
+  #program = parser.parse_program
 end

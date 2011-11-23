@@ -42,7 +42,7 @@ module XRay
 
         def parse_expr_member_left
           if check /function\b/
-            parse_function_declaration(true)
+            create_element FunctionExpression, parse_function_declaration(true)
           else
             parse_expr_primary
           end 

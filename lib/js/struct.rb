@@ -103,6 +103,26 @@ module XRay
       end
     end
 
+    class SwitchStatement < Statement
+      alias :expression :left
+      alias :case_block :right
+       
+      def initialize(expression, case_block, position)
+        super('switch', expression, case_block, position)
+      end
+    end
+
+    class CaseBlockStatement < Statement
+      attr_reader :bottom_case_clauses
+      alias :case_clauses :left
+      alias :default_clause :right
+
+      def initialize(case_clauses, default_clause, bottom_case_clauses, position)
+        super('caseblock', case_clauses, default_clause, position)
+        @bottom_case_clauses = bottom_case_clauses
+      end
+    end
+
     class DowhileStatement < Statement
       alias :body :left
       alias :condition :right
@@ -140,6 +160,17 @@ module XRay
         @third = third
       end
 
+    end
+
+    class TryStatement < Statement
+      attr_reader :finally_part
+      alias :try_part :left
+      alias :catch_part :right
+
+      def initialize(try_part, catch_part, finally_part, pos)
+        super('try', try_part, catch_part, pos)
+        @finally_part = finally_part
+      end
     end
 
     class ExpressionStatement < Statement
@@ -187,6 +218,17 @@ module XRay
         "(#{type},#{condition},#{left},#{right})"
       end
 
+    end
+
+    class FunctionExpression < Expression
+      attr_reader :body
+      alias :name :left
+      alias :parameters :right
+       
+      def initialize(func)
+        super('function', func.name, func.parameters, func.position)
+        @body = func.body
+      end
     end
 
   end
