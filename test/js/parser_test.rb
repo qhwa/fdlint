@@ -24,10 +24,11 @@ module XRayTest
           /**
            * this is mutiline comment
            */
-          function say(name1, name2, name3) {
+          function say(name1, name2/*inline comment*/, name3) {
             alert(name + " hello world");
             console.debug(name2);
-            name1 + name2 + name3;
+            name1 + name2 + // line comment
+              name3;
           }
           ; // hello this is comment
           var a = 1;
@@ -40,10 +41,10 @@ module XRayTest
         assert_equal 4, elms.length
 
         s_comments = parser.singleline_comments
-        assert_equal '// hello this is comment', s_comments[0].text
+        assert_equal 2, s_comments.length
 
         m_comments = parser.mutiline_comments
-        assert_equal 1, m_comments.length
+        assert_equal 2, m_comments.length
       end 
 
       def test_parse_function_declaration
