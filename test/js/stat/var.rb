@@ -22,7 +22,14 @@ module XRayTest
           js = 'var a = c, b = a--'
           expr = parse_js :parse_stat_var, js
           assert_equal false, expr.end_with_semicolon?
-        
+          
+          js = <<EOF 
+  var rBackslash = /\\\\/g,
+	rReturn = /\\r\\n/g,
+	rNonWord = /\\W/;
+EOF
+          expr = parse_js :parse_stat_var, js
+          assert_equal '(var,[(var=,rBackslash,/\\\\/g),(var=,rReturn,/\\r\\n/g),(var=,rNonWord,/\\W/)],)', expr.text
         end
       end
 

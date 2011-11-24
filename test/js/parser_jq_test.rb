@@ -1,6 +1,6 @@
 require 'logger'
 
-require 'js/parser'
+require_relative '../../lib/js/parser'
 
 if __FILE__ == $0
   path = File.expand_path '../fixtures/js/jquery-1.7.js', File.dirname(__FILE__)

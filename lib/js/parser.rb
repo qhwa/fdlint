@@ -89,10 +89,14 @@ module XRay
       end
 
       def parse_comments
-        if check /\/\//
-          @singleline_comments << parse_singleline_comment
-        elsif check /\/\*/
-          @mutiline_comments << parse_mutiline_comment
+        while true
+          if check /\/\//
+            @singleline_comments << parse_singleline_comment
+          elsif check /\/\*/
+            @mutiline_comments << parse_mutiline_comment
+          else
+            break
+          end
         end
       end
 
