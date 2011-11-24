@@ -31,6 +31,7 @@ module XRay
       unless @scanner.skip pattern
         parse_error "skip fail: #{pattern}"
       end
+      after_skip(pattern)
       pos
     end
 
@@ -43,6 +44,12 @@ module XRay
     end
       
     def scan(pattern, not_skip_empty = false)
+      node = raw_scan pattern, not_skip_empty
+      after_scan(pattern)
+      node
+    end
+
+    def raw_scan(pattern, not_skip_empty = false)
       not_skip_empty || skip_empty
       pos = @pos_info.locate(@scanner.pos)
       text = @scanner.scan pattern
@@ -74,6 +81,12 @@ module XRay
     
     def filter_text(text)
       text
+    end
+
+    def after_skip(pattern)
+    end
+
+    def after_scan(pattern)
     end
     
     def parse_warn(message)

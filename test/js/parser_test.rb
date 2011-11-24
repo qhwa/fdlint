@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'logger'
 
 require_relative '../base_test'
@@ -19,12 +21,15 @@ module XRayTest
       
       def test_parse_program()
         js = '
+          /**
+           * this is mutiline comment
+           */
           function say(name1, name2, name3) {
             alert(name + " hello world");
             console.debug(name2);
             name1 + name2 + name3;
           }
-          ; // empty statement
+          ; // hello this is comment
           var a = 1;
           a++;
         ' 
@@ -32,7 +37,13 @@ module XRayTest
         program = parser.parse_program
         elms = program.elements
         
-        assert_equal 5, elms.length
+        assert_equal 4, elms.length
+
+        s_comments = parser.singleline_comments
+        assert_equal '// hello this is comment', s_comments[0].text
+
+        m_comments = parser.mutiline_comments
+        assert_equal 1, m_comments.length
       end 
 
       def test_parse_function_declaration
@@ -50,6 +61,17 @@ module XRayTest
         assert_equal 'sum', func.name.text
         assert_equal '[a1,a2,a3]', func.parameters.text
       end
+
+      def test_parse_singleline_comment
+        js = '
+          // this is simple comment
+          a = 123;
+        ' 
+        
+        comment = parse_js :parse_singleline_comment, js 
+        assert_equal '// this is simple comment', comment.text
+      end
+
 
       def create_parser(js)
         Parser.new(js, Logger.new(STDOUT))
@@ -75,10 +97,3 @@ module XRayTest
 end
 
 
-if __FILE__ == $0
-  path = File.expand_path '../fixtures/js/jquery-1.7.js', File.dirname(__FILE__)
-  body = IO.read(path)
-
-  #parser = XRay::JS::Parser.new(body, Logger.new(STDOUT))
-  #program = parser.parse_program
-end

@@ -91,7 +91,7 @@ module XRay
 
           id = scan(R_IDENTIFY)
           RESERVED_WORDS.include?(id.text) ? 
-              parse_error('identifier can not be reserved word') : id
+              parse_error("identifier can not be reserved word: #{id}") : id
         
           create_expression 'id', id
         end

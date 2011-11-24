@@ -27,7 +27,6 @@ module XRay
             /return\b/ => 'return',
             /throw\b/ => 'throw',
             /try\b/ => 'try',
-            /\/\// => 'comment',
             /./ => 'expression'
           }
           
@@ -86,12 +85,6 @@ module XRay
         def parse_stat_label
           log 'parse stat label'
           raise 'not impelments'
-        end
-
-        def parse_stat_comment
-          log 'parse stat comment'
-          node = scan /\/\/.*$/
-          create_element Statement, 'comment', node
         end
 
         private

@@ -13,9 +13,16 @@ module XRay
       include Expr::Expr
       include Stat::Stat
 
+      attr_reader :singleline_comments, :mutiline_comments
+
+      def initialize(js, logger)
+        super(js, logger)
+        @singleline_comments, @mutiline_comments = [], []
+      end
 
       def parse_program(inner = false)
         log 'parse program'
+        parse_comments
         Program.new parse_source_elements
       end
 
@@ -40,11 +47,21 @@ module XRay
         FunctionDeclaraion.new name, Elements.new(params), body, pos
       end
 
-      protected
-
-      def filter_text(js)
-        filter_comment js
+      def parse_singleline_comment
+        log 'parse singleline comment'
+        comment = raw_scan /\/\/.*/
+        log "  #{comment}"
+        comment
       end
+
+      def parse_mutiline_comment
+        log 'parse mutiline comment'
+        comment = raw_scan /\/\*[^*]*\*+([^\/*][^*]*\*+)*\//
+        log "  #{comment}"
+        comment
+      end
+
+      protected
 
       def create_element(klass, *args)
         elm = klass.new *args
@@ -52,22 +69,31 @@ module XRay
         elm
       end
 
-      private
-      
-      def filter_comment(js)
-        re_comment = /\/\*[^*]*\*+([^\/*][^*]*\*+)*\//
-        js.gsub(re_comment) do |m| 
-          log "ignore comments: \n#{m}"
-          m.gsub /\S/, ' '
-        end
+      #override
+      def after_scan(pattern)
+        parse_comments
       end
-      
+
+      def after_skip(pattern)
+        parse_comments
+      end
+
+      private
+
       def parse_source_elements(inner = false)
         elms = batch(:parse_source_element) do
           skip_empty
           inner ? !check(/}/) : !eos? 
         end
         Elements.new elms
+      end
+
+      def parse_comments
+        if check /\/\//
+          @singleline_comments << parse_singleline_comment
+        elsif check /\/\*/
+          @mutiline_comments << parse_mutiline_comment
+        end
       end
 
     end
