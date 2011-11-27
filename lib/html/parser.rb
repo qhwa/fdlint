@@ -13,7 +13,7 @@ module XRay; module HTML
     end
 
     TEXT            = /[^<]+/m
-    PROP_NAME       = %r/\w[-\w]*/m
+    PROP_NAME       = %r/\w[-:\w]*/m
     PROP_VALUE      = %r/'([^']*)'|"([^"]*)"|([^\s>]+)/m
     PROP            = %r/#{PROP_NAME}\s*(?:=\s*#{PROP_VALUE})?/m
     TAG_NAME        = /\w[^>\s]*/ 
@@ -180,5 +180,6 @@ if __FILE__ == $0
   XRay::HTML::Parser.parse(%q(<div class="info" checked>information</div>)) { |e| puts e.outer_html }
   XRay::HTML::Parser.parse(%q(<img width="100" height='150' id=img > <center>text</center>)) { |e| puts e.first.outer_html }
   XRay::HTML::Parser.parse(%q(<center><div><div><center>text</center></div></div></center>)) { |e| puts e.outer_html }
+  XRay::HTML::Parser.parse(%q(<center ns:name="value"><div><div><center>text</center></div></div></center>)) { |e| puts e.outer_html }
   begin; XRay::HTML::Parser.parse(%q(<center><div></center></div>)) { |e| puts e.outer_html }; rescue; end
 end

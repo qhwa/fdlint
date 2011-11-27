@@ -57,6 +57,16 @@ module XRayTest
           end
         end
 
+        def test_parse_prop_name_with_colon
+          parse('<input ns:name="checkbox" name="agreement" checked/>') do |e|
+            assert_equal Element.new('input', {
+              :'ns:name' => 'checkbox',
+              :name => 'agreement',
+              :checked => nil
+            }), e
+          end
+        end
+
         def parse(src, &block)
           XRay::HTML::Parser.parse(src, &block)
         end
