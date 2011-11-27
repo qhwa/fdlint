@@ -87,6 +87,15 @@ module XRay
           raise 'not impelments'
         end
 
+        def after_parse_statement(stat)
+          skip /[ \t]*/, true
+          colon = !!check(/;/, true)
+          stat.end_with_semicolon = colon
+          colon ? skip(/;/, true) :
+              !eos? ? skip(/\n/, true) : nil
+          stat
+        end
+
         private
 
         def parse_stat_simple(pattern, action)
@@ -96,15 +105,6 @@ module XRay
           
           stat = create_element Statement, type.text, left, nil, type.position
           after_parse_statement stat
-        end
-
-        def after_parse_statement(stat)
-          skip /[ \t]*/, true
-          colon = !!check(/;/, true)
-          stat.end_with_semicolon = colon
-          colon ? skip(/;/, true) :
-              !eos? ? skip(/\n/, true) : nil
-          stat
         end
 
       end

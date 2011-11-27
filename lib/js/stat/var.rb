@@ -10,10 +10,7 @@ module XRay
 
           decs = parse_stat_var_declarationlist
           stat = create_element VarStatement, decs, pos
-          stat.end_with_semicolon = !!check(/;/)
-          
-          skip /\s*;|[ \t]*\n|\s*\z/, true
-          stat
+          after_parse_statement stat
         end
 
         def parse_stat_var_declarationlist
