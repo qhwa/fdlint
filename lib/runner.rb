@@ -184,7 +184,7 @@ module XRay
     end
 
     def is_css?(text)
-      /^\s*@/m =~ text or /\{.*?:.*?;\s*\}/m =~ text
+      /^\s*@/m =~ text or /^\s*([*:.#-_\w]+\s*)+\{/ =~ text
     end
 
     def self.file_type( name )
