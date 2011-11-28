@@ -204,4 +204,3 @@ module XRay
 
   end
 end
-
