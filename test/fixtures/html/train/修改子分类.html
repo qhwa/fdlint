@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn" lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <meta name="Description" content="" />
+    <meta name="Keywords" content="" />   
+</head>
+<body>
+	<!--头部banner  start-->
+	<div class="header"><img src="http://img.china.alibaba.com/images/trade/train/back/banner.png"/></div>
+	<!--头部banner  end-->
+	<div class='layout'>
+	<div class='grid-left mod-content-menu' >
+	<!--左侧导航   start-->
+	<link href="http://style.china.alibaba.com/css/fdevlib2/fdev2.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="http://style.china.alibaba.com/css/trade/train/back/left-menu.css" rel="stylesheet" type="text/css" media="screen" />
+	<div id="leftMenu">
+		<h2 class="title">
+			<span>分类管理</span>
+		</h2>
+		<div class="content">
+			<ul class="cell-menu-content">
+				<li id="1001"><a href="">添加一级分类</a></li>
+				<li id="1002"><a href="">管理分类</a></li>
+				<li class="last" id="1003"><a href="">行业管理</a></li>
+			</ul>
+		</div>
+		<h2 class="title">
+			<span>课程管理</span>
+		</h2>
+		<div class="content">
+			<ul class="cell-menu-content">
+				<li id="2001"><a href="">添加课程</a></li>
+				<li id="2002"><a href="">管理课程</a></li>
+				<li id="2003" class="last"><a href="">设置推荐课程</a></li>
+			</ul>
+		</div>
+		<h2 class="title">
+			<span>反馈管理</span>
+		</h2>
+		<div class="content">
+			<ul class="cell-menu-content">
+				<li class="last" id="3001"><a href="">管理反馈</a></li>
+			</ul>
+		</div>
+		<h2 class="title">
+			<span>商人俱乐部</span>
+		</h2>
+		<div class="content">
+			<ul class="cell-menu-content">
+				<li id="4001"><a href="">上传成功故事</a></li>
+				<li id="4002"><a href="">管理成功故事</a></li>
+				<li id="4003"><a href="">审核成功故事</a></li>
+				<li id="4004"><a href="">设置推荐客户</a></li>
+				<li class="last" id="4005"><a href="">上传广告Banner</a></li>
+			</ul>
+		</div>
+		<h2 class="title">
+			<span>系统设置</span>
+		</h2>
+		<div class="content">
+			<ul class="cell-menu-content">
+				<li id="5001"><a href="">首页广告设置</a></li>
+				<li id="5002"><a href="">博客链接设置</a></li>
+				<li id="5003"><a href="">管理账户</a></li>
+				<li class="last" id="5004"><a href="">退出</a></li>
+			</ul>
+		</div>
+		</div>
+	<!--左侧导航   end-->
+	</div>
+	<div class='grid-right mod-content-detail' >
+		<!--面包屑  start-->
+		<div class="cell-bread-chip">
+			<span>您当前的位置   &gt; 分类管理  &gt; 修改子分类</span>
+		</div>
+		<!--面包屑  end-->
+		<!--执行操作detail  start-->
+		<link href="http://style.china.alibaba.com/css/trade/train/back/formSubmit.css" rel="stylesheet" type="text/css" media="screen" />
+		<link href="http://style.china.alibaba.com/css/trade/train/back/addCate.css" rel="stylesheet" type="text/css" media="screen" />
+			<form class="cell-submit-form" name="cateForm" id="cateForm" method="post" onsubmit="return YAHOO.addCate.checkForm()" action="http://style.china.alibaba.com/css/trade/train/html/home_top.html">
+				<p>
+					<label class="title">&nbsp;&nbsp;上级分类：</label>
+					<span>诚信通会员课程--分类1</span>
+				</p>
+				<p><label class="required-label">*</label>
+					<label class="title">分类名称：</label>
+					<input type="input" id="typeName" class="typeName" maxLen="10"/>
+				</p>
+				<p class="typeDes-content"><label class="required-label">*</label>
+					<label class="title">分类介绍：</label>
+					<textarea id="typeDes" class="typeDes" maxLen="300"></textarea>
+				</p>
+				<p class="orderNum-content"><label class="required-label">*</label>
+					<label class="title">排序编号：</label>
+					<input id="orderNum" class="orderNum" value="0"/>
+					<span>默认为0，编号越大，排序越靠前。</span>
+				</p>
+				<p class="opre-bt">
+					<button type="submit" id="submit">提&nbsp;交</button>
+				</p>
+			</form>
+		<!--执行操作detail  end-->
+	</div>
+</div>
+<script type="text/javascript" src="http://style.china.alibaba.com/js/trade/train/back/merge/addCate.js"></script>
+</body>
+</html>

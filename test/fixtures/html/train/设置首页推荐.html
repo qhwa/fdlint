@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn" lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <meta name="Description" content="" />
+    <meta name="Keywords" content="" />   
+</head>
+<body>
+	<!--头部banner  start-->
+	<div class="header"><img src="http://img.china.alibaba.com/images/trade/train/back/banner.png"/></div>
+	<!--头部banner  end-->
+	<div class='layout'>
+	<div class='grid-left mod-content-menu' >
+	<!--左侧导航   start-->
+	<link href="http://style.china.alibaba.com/css/fdevlib2/fdev2.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="http://style.china.alibaba.com/css/trade/train/back/left-menu.css" rel="stylesheet" type="text/css" media="screen" />
+	<div id="leftMenu">
+		<h2 class="title">
+			<span>分类管理</span>
+		</h2>
+		<div class="content">
+			<ul class="cell-menu-content">
+				<li id="1001"><a href="">添加一级分类</a></li>
+				<li id="1002"><a href="">管理分类</a></li>
+				<li class="last" id="1003"><a href="">行业管理</a></li>
+			</ul>
+		</div>
+		<h2 class="title">
+			<span>课程管理</span>
+		</h2>
+		<div class="content">
+			<ul class="cell-menu-content">
+				<li id="2001"><a href="">添加课程</a></li>
+				<li id="2002"><a href="">管理课程</a></li>
+				<li id="2003" class="last"><a href="">设置推荐课程</a></li>
+			</ul>
+		</div>
+		<h2 class="title">
+			<span>反馈管理</span>
+		</h2>
+		<div class="content">
+			<ul class="cell-menu-content">
+				<li class="last" id="3001"><a href="">管理反馈</a></li>
+			</ul>
+		</div>
+		<h2 class="title">
+			<span>商人俱乐部</span>
+		</h2>
+		<div class="content">
+			<ul class="cell-menu-content">
+				<li id="4001"><a href="">上传成功故事</a></li>
+				<li id="4002"><a href="">管理成功故事</a></li>
+				<li id="4003"><a href="">审核成功故事</a></li>
+				<li id="4004"><a href="">设置推荐客户</a></li>
+				<li class="last" id="4005"><a href="">上传广告Banner</a></li>
+			</ul>
+		</div>
+		<h2 class="title">
+			<span>系统设置</span>
+		</h2>
+		<div class="content">
+			<ul class="cell-menu-content">
+				<li id="5001"><a href="">首页广告设置</a></li>
+				<li id="5002"><a href="">博客链接设置</a></li>
+				<li id="5003"><a href="">管理账户</a></li>
+				<li class="last" id="5004"><a href="">退出</a></li>
+			</ul>
+		</div>
+		</div>
+	<!--左侧导航   end-->
+	</div>
+	<div class='grid-right mod-content-detail' >
+		<!--面包屑  start-->
+		<div class="cell-bread-chip">
+			<span>您当前的位置   &gt; 课程管理  &gt; 设置推荐课程</span>
+		</div>
+		<!--面包屑  end-->
+		<!--执行操作detail  start-->
+		<link href="http://style.china.alibaba.com/css/trade/train/back/formSubmit.css" rel="stylesheet" type="text/css" media="screen" />
+		<link href="http://style.china.alibaba.com/css/trade/train/back/list.css" rel="stylesheet" type="text/css" media="screen" />
+		<div class="box recommend-subject">
+			<form action="" class="details">
+				<p>
+					课程类型：<label><input  type="radio" name="subjectType" checked="checked"/>诚信通会员课程</label><label><input  type="radio" name="subjectType"/>普通会员课程</label>
+				</p>
+				<p>
+					课程搜索：<input type="text" id="subjectSearch"/><button type="submit" class="myButton">搜索</button>
+				</p>
+				<p class="recommendTip">
+					系统总共已推荐<strong id="total">3</strong>门课程，已有<strong id="left">4</strong>门课程被左侧推荐，其中<strong id="leftCXT">5</strong>门课程为诚信通会员（免费会员）课程，已有<strong id="rightCXT">6</strong>门诚信通会员（免费会员）课程被右侧推荐。
+				</p>
+			</form>
+			<table class="grid">
+				<thead>
+					<tr>
+						<th>编号</th>
+						<th>课程名称</th>
+						<th class="fixWidth">是否推荐</th>
+						<th class="fixWidth">首页左侧推荐</th>
+						<th class="fixWidth">首页右侧推荐</th>
+					</tr>
+				</thead>
+				<tfoot>
+						<tr>
+							<td colspan="8">
+								<div class="paging clearfix">
+                                		<a title="第一页" href="#">1</a>
+										<em>...</em>
+										<a title="" href="#">10</a>
+										<a title="" href="#">11</a>
+										<a title="" href="#">12</a>
+										<a title="" href="#" class="currentPage">13</a>
+										<a title="" href="#">14</a>
+										<a title="" href="#">15</a>
+										<em>...</em>
+										<a title="" href="#">20</a>
+										<span>第<select>
+												<option>1</option>
+												<option>2</option>
+												<option>3</option>
+												<option>4</option>
+												<option>5</option>
+												<option>6</option>
+												<option>7</option>
+												<option>8</option>
+											</select>页</span>
+                                	</div>
+							</td>
+						</tr>
+					</tfoot>
+					<tbody>
+						<tr>
+							<td>00309<input type="hidden" id='course-123' value="123"/></td>
+							<td>课程名1</td>
+							<td>已推荐<a title="取消" commendType="common" hasRecommend="true" class="recommendBtn" id="commonRecommend-123">[推荐]</a></td>
+							<td>未推荐<a title=""  commendType="left" hasRecommend="false" disabled="disabled" class="disabled leftRecommendBtn" id="leftRecommend-123">[推荐]</a></td>
+							<td>已推荐<a title="取消" commendType="right" hasRecommend="true" disabled="disabled" class="disabled rightRecommendBtn" id="rightRecommend-123">[推荐]</a></td>
+						</tr>
+						<tr>
+							<td>00309<input type="hidden" id='course-234' value="234"/></td>
+							<td>课程名1</td>
+							<td>已推荐<a title="取消" commendType="common" class="recommendBtn" id="commonRecommend-234">[取消]</a></td>
+							<td>未推荐<a title=""  commendType="left"  class="disabled leftRecommendBtn" id="leftRecommend-234">[推荐]</a></td>
+							<td>已推荐<a title="取消" commendType="right" class="rightRecommendBtn" id="rightRecommend-234">[取消]</a></td>
+						</tr>
+						<tr>
+							<td>00309<input type="hidden" id="course-345" value="345"/></td>
+							<td>课程名1</td>
+							<td>已推荐<a title="取消" commendType="common" class="recommendBtn" id="commonRecommend-345">[取消]</a></td>
+							<td>未推荐<a title="" commendType="left" class="leftRecommendBtn" id="leftRecommend-345">[取消]</a></td>
+							<td>已推荐<a title="取消" commendType="right" disabled="disabled" class="disabled rightRecommendBtn" id="rightRecommend-345">[推荐]</a></td>
+						</tr>
+					</tbody>
+			</table>
+		</div>
+		
+		<!--执行操作detail  end-->
+	</div>
+</div>
+</body>
+<script type="text/javascript" src="http://style.china.alibaba.com/js/trade/train/back/merge/recommendSubject.js"></script>
+<script type="text/javascript">
+	requestUrl.commonUrl = 'http://style.china.alibaba.com/css/trade/train/html/recommend_test.js';
+	requestUrl.leftUrl = 'http://style.china.alibaba.com/css/trade/train/html/recommend_test.js';
+	requestUrl.rightUrl = 'http://style.china.alibaba.com/css/trade/train/html/recommend_test.js';
+
+</script>
+</html>

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'logger'
 require_relative 'base_parser'
 require_relative 'parser_visitable'
@@ -128,6 +130,16 @@ module XRay
       send( :"check_#{Runner.file_type file}_file", file ) if Runner.style_file? file
     end
 
+    def check(text)
+      if is_html?(text)
+        check_html(text)
+      elsif is_css?(text)
+        check_css(text)
+      else 
+        check_js(text)
+      end
+    end
+
     def print_results( opt={} )
       opt = @opt.merge opt
       prf = opt[:prefix] || ''
@@ -180,6 +192,14 @@ module XRay
       true
     end
 
+    def is_html?(text)
+      /^\s*</m =~ text
+    end
+
+    def is_css?(text)
+      /^\s*@/m =~ text or /^\s*([*:.#-_\w]+\s*)+\{/ =~ text
+    end
+
     def self.file_type( name )
       f = File.extname( name )
       if f =~ /\.css$/i
@@ -198,24 +218,3 @@ module XRay
   end
 end
 
-if __FILE__ == $0
-  text = <<END
-    <!doctype xhtml>
-    <head>
-      <title>testing</title>
-    </head>
-    <style>
-      @import test.css
-    </style>
-    <a href="#" style="">
-      <img src="http://g.cn/icon.png">test
-      <div>image</div>
-    </a>
-    <span><div>hello</div></span>
-    <link rel="stylesheet" href="test.css" />
-    <Link Rel="stylesheet" href="test.css" checked />
-END
-  runner = XRay::Runner.new
-  runner.check_html text
-  runner.print_results_with_source
-end

@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn" lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <meta name="Description" content="" />
+    <meta name="Keywords" content="" />   
+</head>
+<body>
+	<!--头部banner  start-->
+	<div class="header"><img src="http://img.china.alibaba.com/images/trade/train/back/banner.png"/></div>
+	<!--头部banner  end-->
+	<div class='layout'>
+	<div class='grid-left mod-content-menu' >
+	<!--左侧导航   start-->
+	<link href="http://style.china.alibaba.com/css/fdevlib2/fdev2.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="http://style.china.alibaba.com/css/trade/train/back/left-menu.css" rel="stylesheet" type="text/css" media="screen" />
+	<div id="leftMenu">
+		<h2 class="title">
+			<span>分类管理</span>
+		</h2>
+		<div class="content">
+			<ul class="cell-menu-content">
+				<li id="1001"><a href="">添加一级分类</a></li>
+				<li id="1002"><a href="">管理分类</a></li>
+				<li class="last" id="1003"><a href="">行业管理</a></li>
+			</ul>
+		</div>
+		<h2 class="title">
+			<span>课程管理</span>
+		</h2>
+		<div class="content">
+			<ul class="cell-menu-content">
+				<li id="2001"><a href="">添加课程</a></li>
+				<li id="2002"><a href="">管理课程</a></li>
+				<li id="2003" class="last"><a href="">设置推荐课程</a></li>
+			</ul>
+		</div>
+		<h2 class="title">
+			<span>反馈管理</span>
+		</h2>
+		<div class="content">
+			<ul class="cell-menu-content">
+				<li class="last" id="3001"><a href="">管理反馈</a></li>
+			</ul>
+		</div>
+		<h2 class="title">
+			<span>商人俱乐部</span>
+		</h2>
+		<div class="content">
+			<ul class="cell-menu-content">
+				<li id="4001"><a href="">上传成功故事</a></li>
+				<li id="4002"><a href="">管理成功故事</a></li>
+				<li id="4003"><a href="">审核成功故事</a></li>
+				<li id="4004"><a href="">设置推荐客户</a></li>
+				<li class="last" id="4005"><a href="">上传广告Banner</a></li>
+			</ul>
+		</div>
+		<h2 class="title">
+			<span>系统设置</span>
+		</h2>
+		<div class="content">
+			<ul class="cell-menu-content">
+				<li id="5001"><a href="">首页广告设置</a></li>
+				<li id="5002"><a href="">博客链接设置</a></li>
+				<li id="5003"><a href="">管理账户</a></li>
+				<li class="last" id="5004"><a href="">退出</a></li>
+			</ul>
+		</div>
+		</div>
+	<!--左侧导航   end-->
+	</div>
+	<div class='grid-right mod-content-detail' >
+		<!--面包屑  start-->
+		<div class="cell-bread-chip">
+			<span>您当前的位置   &gt; 分类管理  &gt; 管理分类</span>
+		</div>
+		<!--面包屑  end-->
+		<!--执行操作detail  start-->
+		<link href="http://style.china.alibaba.com/css/trade/train/back/formSubmit.css" rel="stylesheet" type="text/css" media="screen" />
+		<link href="http://style.china.alibaba.com/css/trade/train/back/list.css" rel="stylesheet" type="text/css" media="screen" />
+		<div class="box type-manage">
+			<div class="details">
+				<p>
+					课程类型：<label><input  type="radio" name="subjectType" checked="checked"/>诚信通会员课程</label><label><input  type="radio" name="subjectType"/>普通会员课程</label>
+				</p>
+			</div>
+			<table id="typeList" class="grid" url="http://style.china.alibaba.com/css/trade/train/html/delType_test.js">
+				<thead>
+					<tr>
+						<th class="type-name">分类名称</th>
+						<th>排序</th>
+						<th>课程</th>
+						<th class="operateCell">操作</th>
+					</tr>
+				</thead>
+				<tfoot>
+					<tr>
+						<td colspan="4">
+									
+						</td>
+					</tr>
+				</tfoot>
+				<tbody>
+					<tr id="11111">
+						<td class="parent">
+							<p>大类阿杜风奥德赛发生的发大水发生的1</p>
+						</td>
+						<td>1</td>
+						<td>10</td>
+						<td>
+							<input type="hidden" value="123" id="cate-123"/>
+							<a title="修改" href="#">[修改]</a>
+							<a title="添加子分类" href="#">[添加子分类]</a>
+							<a title="删除" class="deleteType" id="del-123">[删除]</a>
+							<a title="所有课程" href="#">[所有课程]</a>
+						</td>
+					</tr>
+					<tr class="even">
+						<td class="children">
+							<p>小类1</p>
+						</td>
+						<td>1</td>
+						<td>10</td>
+						<td>
+							<input type="hidden" value="234"  id="cate-234"/>
+							<a title="修改" href="#">[修改]</a>
+							<a title="新增课程" href="#">[新增课程]</a>
+							<a title="删除" class="deleteType" lineNum="1"  id="del-234">[删除]</a>
+							<a title="所有课程" href="#">[所有课程]</a>
+						</td>
+					</tr>
+					<tr>
+						<td class="children">
+							<p>小类2</p></td>
+						<td>1</td>
+						<td>10</td>
+						<td>
+							<input type="hidden" value="345"  id="cate-345"/>
+							<a title="修改" href="#">[修改]</a>
+							<a title="新增课程" href="#">[新增课程]</a>
+							<a title="删除" href="#" class="deleteType" lineNum="2"  id="del-345">[删除]</a>
+							<a title="所有课程" href="#">[所有课程]</a>
+						</td>
+					</tr>
+					<tr class="even">
+						<td class="children">
+							<p>小类3asdfasdfasd阿三发生的发生的发生的飞洒爱上对方</p>
+						</td>
+						<td>1</td>
+						<td>10</td>
+						<td>
+							<input type="hidden" value="456"/>
+							<a title="修改" href="#">[修改]</a>
+							<a title="新增课程" href="#">[新增课程]</a>
+							<a title="删除"  class="deleteType" lineNum="3">[删除]</a>
+							<a title="所有课程" href="#">[所有课程]</a>
+						</td>
+					</tr>
+					<tr>
+						<td class="parent">
+							<p>大类2</p>
+						</td>
+						<td>1</td>
+						<td>10</td>
+						<td>
+							<input type="hidden" value="567"/>
+							<a title="修改" href="#">[修改]</a>
+							<a title="添加子分类" href="#">[添加子分类]</a>
+							<a title="删除"  class="deleteType" lineNum="4">[删除]</a>
+							<a title="所有课程" href="#">[所有课程]</a>
+						</td>
+					</tr>
+					<tr class="even">
+						<td class="children">
+							<p>小类阿斯顿发生的发生的发生的发生的发生的</p>
+						</td>
+						<td>1</td>
+						<td>10</td>
+						<td>
+							<input type="hidden" value="678"/>
+							<a title="修改" href="#">[修改]</a>
+							<a title="新增课程" href="#">[新增课程]</a>
+							<a title="删除" href="#" class="deleteType" lineNum="5">[删除]</a>
+							<a title="所有课程" href="#">[所有课程]</a>
+						</td>
+					</tr>
+					<tr>
+						<td class="children">
+							<p>小类5</p>
+						</td>
+						<td>1</td>
+						<td>10</td>
+						<td>
+							<input type="hidden" value="789"/>
+							<a title="修改" href="#">[修改]</a>
+							<a title="新增课程" href="#">[新增课程]</a>
+							<a title="删除" href="#" class="deleteType" lineNum="6">[删除]</a>
+							<a title="所有课程" href="#">[所有课程]</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		<!--执行操作detail  end-->
+	</div>
+</div>
+</body>
+<script type="text/javascript" src="http://style.china.alibaba.com/js/trade/train/back/merge/typeManage.js"></script>
+</html>

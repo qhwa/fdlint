@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn" lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <meta name="Description" content="" />
+    <meta name="Keywords" content="" />   
+</head>
+<body>
+	<!--头部banner  start-->
+	<div class="header"><img src="http://img.china.alibaba.com/images/trade/train/back/banner.png"/></div>
+	<!--头部banner  end-->
+	<div class='layout'>
+	<div class='grid-left mod-content-menu' >
+	<!--左侧导航   start-->
+	<link href="http://style.china.alibaba.com/css/fdevlib2/fdev2.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="http://style.china.alibaba.com/css/trade/train/back/left-menu.css" rel="stylesheet" type="text/css" media="screen" />
+	<div id="leftMenu">
+		<h2 class="title">
+			<span>分类管理</span>
+		</h2>
+		<div class="content">
+			<ul class="cell-menu-content">
+				<li id="1001"><a href="">添加一级分类</a></li>
+				<li id="1002"><a href="">管理分类</a></li>
+				<li class="last" id="1003"><a href="">行业管理</a></li>
+			</ul>
+		</div>
+		<h2 class="title">
+			<span>课程管理</span>
+		</h2>
+		<div class="content">
+			<ul class="cell-menu-content">
+				<li id="2001"><a href="">添加课程</a></li>
+				<li id="2002"><a href="">管理课程</a></li>
+				<li id="2003" class="last"><a href="">设置推荐课程</a></li>
+			</ul>
+		</div>
+		<h2 class="title">
+			<span>反馈管理</span>
+		</h2>
+		<div class="content">
+			<ul class="cell-menu-content">
+				<li class="last" id="3001"><a href="">管理反馈</a></li>
+			</ul>
+		</div>
+		<h2 class="title">
+			<span>商人俱乐部</span>
+		</h2>
+		<div class="content">
+			<ul class="cell-menu-content">
+				<li id="4001"><a href="">上传成功故事</a></li>
+				<li id="4002"><a href="">管理成功故事</a></li>
+				<li id="4003"><a href="">审核成功故事</a></li>
+				<li id="4004"><a href="">设置推荐客户</a></li>
+				<li class="last" id="4005"><a href="">上传广告Banner</a></li>
+			</ul>
+		</div>
+		<h2 class="title">
+			<span>系统设置</span>
+		</h2>
+		<div class="content">
+			<ul class="cell-menu-content">
+				<li id="5001"><a href="">首页广告设置</a></li>
+				<li id="5002"><a href="">博客链接设置</a></li>
+				<li id="5003"><a href="">管理账户</a></li>
+				<li class="last" id="5004"><a href="">退出</a></li>
+			</ul>
+		</div>
+		</div>
+	<!--左侧导航   end-->
+	</div>
+	<div class='grid-right mod-content-detail' >
+		<!--面包屑  start-->
+		<div class="cell-bread-chip">
+			<span>您当前的位置   &gt; 课程管理  &gt; 添加课程</span>
+		</div>
+		<!--面包屑  end-->
+		<!--执行操作detail  start-->
+		<link href="http://style.china.alibaba.com/css/trade/train/back/formSubmit.css" rel="stylesheet" type="text/css" media="screen" />
+		<link href="http://style.china.alibaba.com/css/trade/train/back/courceEdit.css" rel="stylesheet" type="text/css" media="screen" />
+			<form action="" method="post" id="editForm" class="cell-submit-form cell-cource-edit">
+				<p class="kinds-info">
+					<label class="title"><em>* </em>诚信通会员课程分类：</label>
+					<select name="fatherKinds" id="cxtKindCate" id="editForm" class="kindCate fatherKinds">
+						<option value="">--请选择--</option>
+					</select>
+					<select name="sonKinds" id="cxtSonKinds" class="kindCate sonKinds">
+						<option value="">--请选择--</option>
+					</select>
+				</p>
+				<p class="kinds-info">
+					<label class="title"><em>* </em>普通会员课程分类：</label>
+					<select name="fatherKinds" id="commonKindCate" class="kindCate fatherKinds">
+						<option value="">--请选择--</option>
+					</select>
+					<select name="sonKinds" id="commonSonKinds" class="kindCate sonKinds">
+						<option value="">--请选择--</option>
+					</select>
+					<span class="tip">(课程分类至少选择一种)</span>
+				</p>
+				<p>
+					<label class="title"><em>* </em>课程名称：</label>
+					<input type="text" maxlength="50" class="courseName" id="courseName" value="" id="courseName"/>
+				</p>
+				<p class="courseDesc-info">
+					<label class="title"><em>* </em>课程介绍：</label>
+					<textarea class="courseDesc" id="courseDesc" maxlength="300"></textarea>
+				</p>
+				<p class="courseDetail-info">
+					<label class="title"><em>* </em>课程详情：</label>
+					<span class="courseDetail" >
+						<textarea id='courseDetail'></textarea>
+					</span>
+				</p>
+				<p class="coursePic-uploader upload-path">
+					<span class="path" >
+						<label class="title"><em>* </em>课程图片：</label>
+						<input type="text" readonly="readonly" class="picPath" id="courseImgPathInput"/>
+					</span>
+					<span class="bt" >
+						<em id="courseImgPath"></em>
+					</span>
+					<span id="loadingImg" style="display:none;"><img src="http://img.china.alibaba.com/images/cxt/trustcode/loading.gif"/></span>
+				</p>
+				<p class="pic-desc">
+					<span>尺寸：163X87  大小：100K以下</span>
+				</p>
+				<p class="pic-show" id="prevImg" style="display:none;">
+					<span><img src="" alt="预览图片" /></span>
+				</p>
+				<p class="upload-path">
+					<span class="path" >
+						<label class="title">操作下载地址：</label>
+						<input type="text" readonly="readonly" class="picPath" id="processPathInput" value=""/>
+					</span>
+					<span class="bt" >
+						<em id="processPath"></em>
+					</span>
+				</p>
+				<p class="upload-path">
+					<span class="path" >
+						<label class="title">PPT下载地址：</label>
+						<input type="text" readonly="readonly" class="picPath" id="pptPathInput" value=""/>
+					</span>
+					<span class="bt" >
+						<em id="pptPath"></em>
+					</span>
+				</p>
+				<p class="upload-path">
+					<label class="title">视频地址：</label>
+					<input type="text" class="picPath" value=""/>
+				</p>
+				<p class="upload-path">
+					<span class="path" >
+						<label class="title">Flash地址：</label>
+						<input type="text" class="picPath" readonly="readonly" id="flashPathInput" value=""/>
+					</span>
+					<span class="bt" >
+						<em id="flashPath"></em>
+					</span>
+				</p>
+				<p class="order-code">
+					<label class="title"><em>* </em>排序编号：</label>
+					<input type="text" class="code-input" id="orderNum" value="0"/>
+				</p>
+				<p class="upload-path">
+					<label class="title"><em>* </em>课程标签：</label>
+					<input type="text" class="picPath" id="courseTag" value=""/>
+				</p>
+				<p class="opre-bt">
+					<button type="button" id="submit">创&nbsp;建</button>
+				</p>
+			</form>
+		<!--执行操作detail  end-->
+	</div>
+</div>
+<!--编辑器源文件-->
+<script type="text/javascript" src="http://style.china.alibaba.com/css/trade/train/html/jscripts/tiny_mce/tiny_mce_src.js"></script>
+<script type="text/javascript" src="http://style.china.alibaba.com/js/trade/train/back/merge/addCourse.js"></script>
+<!--测试-->
+<script type="text/javascript" src="http://style.china.alibaba.com/css/trade/train/html/cxtCate_test.js"></script>
+<script type="text/javascript" src="http://style.china.alibaba.com/css/trade/train/html/commonCate_test.js"></script>
+
+<script type="text/javascript">
+	var parameter = {
+		uploadUrl:['http://style.china.alibaba.com/css/trade/train/html/uploader_test.js',
+				'http://style.china.alibaba.com/css/trade/train/html/uploader_test.js',
+				'http://style.china.alibaba.com/css/trade/train/html/uploader_test.js',
+				'http://style.china.alibaba.com/css/trade/train/html/uploader_test.j'],//上传的后台地址,对应每个按钮的上传地址
+		uploadBt:['courseImgPath','processPath','pptPath','flashPath'],//上传按钮的id
+		sizeLimitEach:[102400,8388608,8388608,8388608] //文件上传的大小的限制以b为单位
+	};
+</script>
+</body>
+</html>
