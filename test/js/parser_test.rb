@@ -1,8 +1,5 @@
 # encoding: utf-8
-
-require 'logger'
-
-require_relative '../base_test'
+require_relative '../helper'
 
 require 'js/parser'
 
@@ -12,7 +9,7 @@ require_relative 'stat/stat'
 
 module XRayTest
   module JS
-    class ParserTest < XRayTest::BaseTest 
+    class ParserTest < Test::Unit::TestCase 
       include XRay::JS
 
       include Expr::Expr

@@ -1,6 +1,6 @@
-require 'logger'
-require 'css/parser'
 require_relative '../helper'
+
+require 'css/parser'
 
 
 module XRayTest

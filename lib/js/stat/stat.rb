@@ -51,7 +51,9 @@ module XRay
           log 'parse stat empty'
           pos = skip /;/
           
-          create_element Statement, 'empty'
+          stat = create_element Statement, 'empty'
+          stat.end_with_semicolon = true
+          stat
         end
 
         def parse_stat_expression

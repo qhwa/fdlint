@@ -15,6 +15,7 @@ require_relative 'html/parser_test'
 require_relative 'html/rule_test'
 require_relative 'html/query_test'
 require_relative 'js/parser_test'
+require_relative 'js/rule_test'
 
 module XRayTest
 
@@ -41,6 +42,7 @@ module XRayTest
 
       #JS
       tests << JS::ParserTest.suite
+      tests << JS::RuleTest.suite
 
       tests
     end
