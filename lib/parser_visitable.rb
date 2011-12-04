@@ -20,10 +20,8 @@ module XRay
     
     include Observable
 
-    attr_reader :results
-
     def self.included(klass)
-      klass.public_instance_methods(false).each do |method|
+      klass.public_instance_methods(true).each do |method|
         wrap(klass, method)
       end
 
@@ -54,26 +52,26 @@ module XRay
       end
     end
 
-    def initialize
-      @visitors = []
-      @results = []
+    def add_visitor(visitor)
+      @visitors ||= []
+      @visitors << visitor
     end
 
-    def add_visitor(visitor)
-      @visitors << visitor
+    def results
+      @results || []
     end
 
     private 
 
     def visit(name, node)
       name = name.sub(/^parse_/, '')
-      @visitors.each { |visitor|
+      @visitors and @visitors.each do |visitor|
         method = 'visit_' + name
         if visitor.respond_to? method
           results = visitor.send(method, node)
           results && notify(node, results)
         end
-      }
+      end
     end
 
     def notify(node, results)
@@ -85,16 +83,13 @@ module XRay
       results.each { |ret|
         message, level = ret
         result = VisitResult.new(node, message, level || :info)
+        @results ||= []
         @results << result
         self.changed
         notify_observers(result, self)
       }
     end
 
-  end
-
-  class BaseParser
-    include ParserVisitable
   end
 
 end

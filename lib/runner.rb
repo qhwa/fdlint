@@ -14,6 +14,19 @@ require_relative 'html/rule/check_tag_rule'
 
 module XRay
 
+  module CSS
+    class VisitableParser < Parser
+      include XRay::ParserVisitable
+    end
+  end
+
+  module HTML 
+    class VisitableParser < Parser
+      include XRay::ParserVisitable
+    end
+  end
+
+
   class Runner
 
     CSS = XRay::CSS
@@ -31,7 +44,7 @@ module XRay
 
     def check_css(css, opt={})
       @text = css
-      parser = CSS::Parser.new(css, @logger)
+      parser = CSS::VisitableParser.new(css, @logger)
       visitor = CSS::Rule::CheckListRule.new( opt )
 
       parser.add_visitor visitor
@@ -79,7 +92,7 @@ module XRay
 
     def check_html(text, opt={})
       @text = text
-      parser = HTML::Parser.new(text, @logger)
+      parser = HTML::VisitableParser.new(text, @logger)
       visitor = HTML::Rule::CheckTagRule.new( opt )
       parser.add_visitor visitor
 
