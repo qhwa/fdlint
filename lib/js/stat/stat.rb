@@ -94,7 +94,7 @@ module XRay
           colon = !!check(/;/, true)
           stat.end_with_semicolon = colon
           colon ? skip(/;/, true) :
-              !eos? ? skip(/\n/, true) : nil
+              (eos? || check(/}/)) ? nil : skip(/\n/, true)
           stat
         end
 
@@ -103,7 +103,7 @@ module XRay
         def parse_stat_simple(pattern, action)
           type = scan pattern
           skip /[ \t]*/, true
-          left = (eos? || check(/[;\n]/, true)) ? nil : self.send(action)
+          left = (eos? || check(/[;\n}]/, true)) ? nil : self.send(action)
           
           stat = create_element Statement, type.text, left, nil, type.position
           after_parse_statement stat

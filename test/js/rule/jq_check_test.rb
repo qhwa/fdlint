@@ -54,7 +54,20 @@ module XRayTest
             message, level = visit js, :check_data_call_param
             assert_equal :error, level
           end
-           
+        end
+
+        def test_check_ctor_selector
+          jses = [
+            "$('.myclass', div)",
+            "$('.myclass')",
+            "$('[name=123]')",
+            "$(':first')"    
+          ]
+          
+          jses.each do |js|
+            message, level = visit js, :check_ctor_selector
+            assert_equal :warn, level
+          end
         end
 
         private
