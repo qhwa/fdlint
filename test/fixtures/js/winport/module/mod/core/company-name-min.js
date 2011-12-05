@@ -1,0 +1,1 @@
+(function(c,b){var d=b.UI;var a={init:function(f){var e=c("div.logo img",f);d.resizeImage(e,80)}};b.ModContext.register("wp-company-name",a)})(jQuery,Platform.winport);

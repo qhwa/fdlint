@@ -21,7 +21,8 @@ module XRayTest
           jses = [
             'jQuery.bind',
             'jQuery[method]',
-            'jQuery(function($) {})'
+            'jQuery(function($) {})',
+            'jQuery.extend'
           ]
 
           jses.each do |js|

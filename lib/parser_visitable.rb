@@ -64,8 +64,12 @@ module XRay
     private 
 
     def visit(name, node)
+      unless @visitors
+        return
+      end
+
       name = name.sub(/^parse_/, '')
-      @visitors and @visitors.each do |visitor|
+      @visitors.each do |visitor|
         method = 'visit_' + name
         if visitor.respond_to? method
           results = visitor.send(method, node)

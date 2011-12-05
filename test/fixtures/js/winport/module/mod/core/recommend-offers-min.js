@@ -1,0 +1,1 @@
+(function(c,b){var a=b.mod.unit.Offers,d=b.widget.PagingSwitcher;b.ModContext.register("wp-recommend-offers-main",function(g){var e=c("div.group",g),f=c("div.paging a",g);new d(f,e)});b.ModContext.register("wp-recommend-offers-sub",function(h){var g=c("div.image img",h),e=c("ul",h),f=c("div.paging a",h);a.resizeImage(g,64);new d(f,e)})})(jQuery,Platform.winport);

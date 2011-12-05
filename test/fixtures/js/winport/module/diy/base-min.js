@@ -1,0 +1,1 @@
+jQuery.namespace("Platform.winport.diy","Platform.winport.diy.form");

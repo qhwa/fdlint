@@ -8,7 +8,7 @@ module XRay
      
       class JqCheck
 
-        include RuleHelper
+        include RuleHelper, Helper
 
         JQ_IDS = %w(jQuery $ jQ jq)
         
@@ -22,38 +22,46 @@ module XRay
 
 
         def check_direct_jquery_call(expr)
-          unless expr.left.type == 'id' && expr.left.text == 'jQuery'
+          expr = find_expr_member(expr) do |expr| 
+            ['.', '(', '['].include?(expr.type) && expr.left.text == 'jQuery'
+          end
+
+          unless expr
             return
           end
 
-          if expr.type == '.' && expr.right.text != 'namespace' || expr.type != '.'
-              
+          unless expr.type == '.' && expr.right.text == 'namespace'
             ['禁止直接使用jQuery变量，使用全局闭包写法"(function($, NS){....})(jQuery,Namespace);"，jQuery.namespace例外', :error]
           end
         end
 
         def check_forbit_method_call(expr)
           methods = %w(sub noConflict)
-          if expr.type == '.' && 
-              expr.left.type == 'id' && JQ_IDS.include?(expr.left.text) &&
-              methods.include?(expr.right.text)
+          expr = find_expr_member(expr) do |expr|
+            expr.type == '.' && JQ_IDS.include?(expr.left.text) && 
+              methods.include?(expr.right.text) 
+          end
+
+          if expr
             ['禁止使用jQuery.sub()和jQuery.noConflict方法', :error]
           end
         end
 
         def check_data_call_param(expr)
-          unless expr.type == '('
-            return
+          
+          expr = find_expr_member(expr) do |expr| 
+            if expr.type == '('
+              name = expr.left
+              if name.is_a?(Expression) && name.type == '.' && 
+                  name.right.text == 'data'
+                param = expr.right[0]
+                param && param.text =~ /[-_]/
+              end
+            end  
           end
-
-          name = expr.left
-          if name.type == '.' && 
-              name.left.type == 'id' && JQ_IDS.include?(name.left.text) &&
-              name.right.text == 'data' 
-            param = expr.right[0].text
-            unless param && /^[a-z][a-zA-Z0-9]*$/ =~ param
-              ['使用".data()"读写自定义属性时需要转化成驼峰形式', :error] 
-            end
+          
+          if expr
+            ['使用".data()"读写自定义属性时需要转化成驼峰形式', :error] 
           end
         end
          

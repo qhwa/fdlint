@@ -12,6 +12,10 @@ module XRayTest
           js = 'eval("a = 1 + 2 + 3")' 
           message, level = visit js
           assert_equal :error, level
+
+          js = 'window.eval("1 + 2 + 3")'
+          message, level = visit js
+          assert_equal :error, level
         end 
 
         private

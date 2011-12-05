@@ -1,14 +1,22 @@
 # encoding: utf-8
 
+require_relative 'helper'
+
 module XRay
   module JS
     module Rule
      
       class NoEval
+
+        include Helper
         
         def visit_expr_member(expr)
-          if expr.type == '(' && 
-                expr.left.type == 'id' && expr.left.text == 'eval'
+          expr = find_expr_member(expr) { |expr| expr.type == '.' }
+          checks = %w(
+            (.,window,eval)
+            eval
+          )
+          if expr && checks.include?(expr.left.text)
             ['不允许使用eval', :error] 
           end
         end

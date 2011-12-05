@@ -3,31 +3,34 @@ require 'test/unit'
 require 'test/unit/testsuite'
 require 'test/unit/ui/console/testrunner'
 
-require_relative 'rule/semicolon_test'
-require_relative 'rule/stat_if_with_brace_test'
-require_relative 'rule/stat_if_with_muti_else_test'
-require_relative 'rule/no_eval_test'
-require_relative 'rule/use_strict_equal_test'
-require_relative 'rule/new_object_and_new_array_test'
-require_relative 'rule/nest_try_catch_test'
-require_relative 'rule/jq_check_test'
 
 module XRayTest
   
   module JS 
 
     class RuleTest < Test::Unit::TestSuite
-
+      
+      NAMES = %w(
+        semicolon_test
+        stat_if_with_brace_test
+        stat_if_with_muti_else_test
+        no_eval_test
+        use_strict_equal_test
+        new_object_and_new_array_test
+        nest_try_catch_test
+        jq_check_test
+      )
+        
       def self.suite
         tests = Test::Unit::TestSuite.new
-        tests << Rule::SemicolonTest.suite
-        tests << Rule::StatIfWithBraceTest.suite
-        tests << Rule::StatIfWithMutiElseTest.suite
-        tests << Rule::NoEvalTest.suite
-        tests << Rule::UseStrictEqualTest.suite
-        tests << Rule::NewObjectAndNewArrayTest.suite
-        tests << Rule::NestTryCatchTest.suite
-        tests << Rule::JqCheckTest.suite
+        NAMES.each do |name|
+          require_relative "rule/#{name}"
+
+          name = name.gsub(/_(\w)/) { |m| m[1].upcase }
+          name = name[0].upcase + name[1..-1]
+
+          tests << Rule.const_get(name).suite
+        end
         tests
       end
     end
