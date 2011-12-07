@@ -12,9 +12,30 @@ require_relative 'css/rule/check_file_name_rule'
 require_relative 'css/rule/check_compression_rule'
 require_relative 'html/parser'
 require_relative 'html/rule/check_tag_rule'
+require_relative 'js/parser'
+require_relative 'js/rule/all'
 
 
 module XRay
+
+  module CSS
+    class VisitableParser < Parser
+      include XRay::ParserVisitable
+    end
+  end
+
+  module HTML 
+    class VisitableParser < Parser
+      include XRay::ParserVisitable
+    end
+  end
+
+  module JS
+    class VisitableParser < Parser
+      include XRay::ParserVisitable
+    end
+  end
+
 
   class Runner
 
@@ -33,7 +54,7 @@ module XRay
 
     def check_css(css, opt={})
       @text = css
-      parser = CSS::Parser.new(css, @logger)
+      parser = CSS::VisitableParser.new(css, @logger)
       visitor = CSS::Rule::CheckListRule.new( opt )
 
       parser.add_visitor visitor
@@ -71,17 +92,42 @@ module XRay
       [@results.empty?, @results]
     end
 
-    def check_js(text)
-      true
+    def check_js(js)
+      parser = JS::VisitableParser.new(js, @logger)
+      rules = JS::Rule::All.new.rules
+      rules.each do |rule|
+        parser.add_visitor rule
+      end
+      
+      begin
+        parser.parse_program
+      rescue ParseError => e
+        puts "#{e.message}#{e.position}"
+      ensure
+        @results = parser.results
+      end
+
+      [!e && success? , @results]
     end
 
-    def check_js_file(file)
-      true
+    def check_js_file(file, opt = {})
+      syntax_results, other_results = [], []
+      begin
+        source = File.read(file, { :encoding => 'gb2312' }).encode!('utf-8')
+        ok, syntax_results = check_js(source)
+      rescue  EncodingError => e
+        other_results = [LogEntry.new( "File can't be read as #{@opt[:encoding]} charset", :fatal)]
+      rescue => e
+        other_results = [LogEntry.new( e.to_s, :fatal )]
+      ensure
+        @results = syntax_results + other_results
+      end
+      [@results.empty?, @results]
     end
 
     def check_html(text, opt={})
       @text = text
-      parser = HTML::Parser.new(text, @logger)
+      parser = HTML::VisitableParser.new(text, @logger)
       visitor = HTML::Rule::CheckTagRule.new( opt )
       parser.add_visitor visitor
 
@@ -98,7 +144,7 @@ module XRay
     end
 
     def check_html_file(file, opt={})
-      syntax_results, other_results = [],[],[]
+      syntax_results, other_results = [],[]
       begin
         #TODO:use HTML Reader
         source = File.read( file, {:encoding=>'gb2312'} ).encode!('utf-8')

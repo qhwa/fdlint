@@ -1,0 +1,1 @@
+(function(c,b){var a=b.mod.unit.Offers;b.ModContext.register("wp-new-supply-offers-sub",function(e){var d=c("div.image img",e);a.resizeImage(d,64)})})(jQuery,Platform.winport);

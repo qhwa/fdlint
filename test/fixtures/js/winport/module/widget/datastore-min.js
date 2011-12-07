@@ -1,0 +1,1 @@
+(function(c,b){var d=b.Util;var a={request:function(g,f,e){var h=c.extend({},e);g="data-"+g;h.url=f;delete h.success;c.add(g,h);c.use(g,function(){e.success.apply(e,arguments)})}};b.widget.DataStore=a;c.add("wp-datastore")})(jQuery,Platform.winport);

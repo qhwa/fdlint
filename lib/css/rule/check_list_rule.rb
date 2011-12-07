@@ -1,10 +1,14 @@
 # encoding: utf-8
 
+require_relative '../../rule_helper'
+
 module XRay
   module CSS
     module Rule
 
       class CheckListRule
+        
+        include RuleHelper
         
         def initialize(options = {}) 
           @options = options
@@ -13,7 +17,7 @@ module XRay
         # selector
 
         def visit_simple_selector(selector)
-          check([
+          dispatch([
             :check_selector_with_id,
             :check_selector_with_global_tag,
             :check_selector_level,
@@ -58,7 +62,7 @@ module XRay
 
         # declaration
         def visit_declaration(dec)
-          check([
+          dispatch([
             :check_declaration_font
           ], dec)
         end
@@ -73,7 +77,7 @@ module XRay
         # ruleset
         
         def visit_ruleset(ruleset)
-          check([
+          dispatch([
             :check_ruleset_redefine_a_hover_color
           ], ruleset);
         end
@@ -87,7 +91,7 @@ module XRay
 
         # property
         def visit_property(property)
-          check([
+          dispatch([
             :check_property_hack
           ], property)
         end
@@ -101,7 +105,7 @@ module XRay
         # expression
 
         def visit_expression(expr)
-          check([
+          dispatch([
             :check_expression_use_css_expression,
             :check_expression_hack
           ], expr);
@@ -117,17 +121,6 @@ module XRay
           if expr =~ /\\\d$/
             ['合理使用hack', :warn]
           end
-        end
-
-        private
-        
-        def check(items, node)
-          results = []
-          items.each do |item|
-            result = self.send(item, node)
-            result && (results << result)
-          end
-          results
         end
 
       end

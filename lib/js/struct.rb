@@ -23,10 +23,11 @@ module XRay
     end
 
     class Elements < Node
-      attr_reader :elements
+      attr_reader :elements, :type
 
       def initialize(elements, position = nil)
         @elements, @position = elements, position
+        @type = 'elements'
       end
 
       def text

@@ -1,0 +1,1 @@
+(function(d,c){var b=c.diy.Msg;var a={init:function(){this.logDiyChanged();this.ajaxSetup()},logDiyChanged:function(){d(window).bind("diychanged",function(g,f){d.log("diychanged: "+f.type)})},ajaxSetup:function(){var e=function(){d.ajaxSetup({error:function(){b.error("ÍøÂç·±Ã¦£¬ÇëË¢ĞÂºóÖØÊÔ")}})};setTimeout(e,2000)}};c.PageContext.register("~Diy",a)})(jQuery,Platform.winport);

@@ -1,0 +1,1 @@
+(function(c,b){var a={init:function(){this.filterTopNav()},filterTopNav:function(){var d=c("#header li.page-list-manage:first");c(window).bind("boxbeforeedit",function(h,g){var f=c("div.wp-top-nav",g.element);if(f.length){d.click();return false}})}};b.PageContext.register("~EditFilter",a)})(jQuery,Platform.winport);

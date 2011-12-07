@@ -1,4 +1,5 @@
 # encoding: utf-8
+require_relative '../../rule_helper'
 require_relative '../struct'
 require_relative '../query'
 
@@ -7,6 +8,10 @@ module XRay
     module Rule
 
       class CheckTagRule
+
+        include RuleHelper
+
+        alias :check :dispatch
 
         attr_reader :imported_scripts, :imported_css
 
@@ -250,21 +255,7 @@ module XRay
           end
         end
 
-        private
-        def check(items, node)
-          results = []
-          items.each do |item|
-            result = self.send(item, node)
-            result && (results << result.flatten)
-          end
-          results
-        end
-
-
       end
-
-
-
 
     end
   end

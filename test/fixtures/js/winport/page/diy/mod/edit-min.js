@@ -1,0 +1,1 @@
+(function(d,b){var c=b.diy.ModBox;var a={operation:"edit",operate:function(e){return c.edit(e)}};b.diy.BoxOperateHandler.edit=a})(jQuery,Platform.winport);
