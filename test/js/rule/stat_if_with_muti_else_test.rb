@@ -31,7 +31,7 @@ module XRayTest
             }
           '
           message, level = visit js
-          assert_equal :warn, level
+          assert_equal :error, level
         end
 
         def test_fail_2
@@ -43,7 +43,7 @@ module XRayTest
             }
           '
           message, level = visit js
-          assert_equal :warn, level
+          assert_equal :error, level
         end
 
 

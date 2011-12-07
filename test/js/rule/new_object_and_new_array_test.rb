@@ -13,13 +13,13 @@ module XRayTest
             new Object();
           '
           message, level = visit js
-          assert_equal :warn, level
+          assert_equal :error, level
 
           js = '
             new Array();
           '
           message, level = visit js
-          assert_equal :warn, level
+          assert_equal :error, level
         end
         
         private

@@ -20,7 +20,7 @@ module XRayTest
 
         def test_check_functional_a_without_target
           tag = XRay::HTML::Element.new('a', {:href=>'#nogo'})
-          assert_equal [['功能a必须加target="_self"，除非preventDefault过', :info]], @rule.check_tag(tag)
+          assert_equal [['功能a必须加target="_self"，除非preventDefault过', :warn]], @rule.check_tag(tag)
         end
 
       end

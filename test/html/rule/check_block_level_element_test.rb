@@ -30,7 +30,7 @@ module XRayTest
               TextElement.new('good day, commander!')
             ])
           ])
-          assert_equal [["行内标签不得包含块级标签，a标签例外", :warn]], @rule.check_tag(tag)
+          assert_equal [["行内标签不得包含块级标签，a标签例外", :error]], @rule.check_tag(tag)
         end
 
         def test_check_inline_inline_block

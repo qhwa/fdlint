@@ -20,7 +20,7 @@ module XRayTest
 
         def test_check_too_many_classes
           prop = XRay::HTML::Property.new('class', 'info new red bigger')
-          assert_equal [["一个节点上定义的class个数最多不超过3个(不含lib中的class)", :warn]], @rule.check_prop(prop)
+          assert_equal [["一个节点上定义的class个数最多不超过3个(不含lib中的class)", :error]], @rule.check_prop(prop)
         end
 
         def test_check_filter_fdev_classes

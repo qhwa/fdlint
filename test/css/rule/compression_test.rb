@@ -26,7 +26,7 @@ module XRayTest
           file = "#{FIXTURE_PATH}/css/import.css"
           good, results = @validator.check file
 
-          expect_err = XRay::LogEntry.new('发布上线的文件需要压缩，命名规则如a.js->a-min.js，且两者在同一目录下', :warn)
+          expect_err = XRay::LogEntry.new('发布上线的文件需要压缩，命名规则如a.js->a-min.js，且两者在同一目录下', :error)
           assert !good, "同目录下没有对应的min文件，测试不应通过"
           assert_equal [expect_err], results, "同目录下没有对应的min文件，测试不应通过"
         end

@@ -46,17 +46,17 @@ module XRayTest
 
         def test_check_missing_desc
           tag = parse(@head.sub(/<meta name="description".*?\/>/m, ''))
-          assert_equal [["新页面按库中的HTML基本结构模板书写基本页面结构", :info]], @rule.check_tag(tag)
+          assert_equal [["新页面按库中的HTML基本结构模板书写基本页面结构", :warn]], @rule.check_tag(tag)
         end
 
         def test_check_missing_keywords
           tag = parse(@head.sub(/<meta name="keywords".*?\/>/m, ''))
-          assert_equal [["新页面按库中的HTML基本结构模板书写基本页面结构", :info]], @rule.check_tag(tag)
+          assert_equal [["新页面按库中的HTML基本结构模板书写基本页面结构", :warn]], @rule.check_tag(tag)
         end
 
         def test_check_missing_doc
           tag = parse(@body.sub(/<div id="doc"/m, '<div id="_doc"'))
-          assert_equal [["新页面按库中的HTML基本结构模板书写基本页面结构", :info]], @rule.check_tag(tag)
+          assert_equal [["新页面按库中的HTML基本结构模板书写基本页面结构", :warn]], @rule.check_tag(tag)
         end
 
         def test_check_missing_alibar
@@ -64,7 +64,7 @@ module XRayTest
           assert_equal [], @rule.check_tag(tag)
 
           tag = parse(@doc.sub(/<div id="alibar"/m, '<div id="_alibar"'))
-          assert_equal [["新页面按库中的HTML基本结构模板书写基本页面结构", :info]], @rule.check_tag(tag)
+          assert_equal [["新页面按库中的HTML基本结构模板书写基本页面结构", :warn]], @rule.check_tag(tag)
         end
 
         def test_check_missing_content
@@ -72,7 +72,7 @@ module XRayTest
           assert_equal [], @rule.check_tag(tag)
 
           tag = parse(@doc.sub(/<div id="content"/m, '<div id="_content"'))
-          assert_equal [["新页面按库中的HTML基本结构模板书写基本页面结构", :info]], @rule.check_tag(tag)
+          assert_equal [["新页面按库中的HTML基本结构模板书写基本页面结构", :warn]], @rule.check_tag(tag)
         end
 
         def test_check_missing_footer
@@ -80,7 +80,7 @@ module XRayTest
           assert_equal [], @rule.check_tag(tag)
 
           tag = parse(@doc.sub(/<div id="footer"/m, '<div id="_footer"'))
-          assert_equal [["新页面按库中的HTML基本结构模板书写基本页面结构", :info]], @rule.check_tag(tag)
+          assert_equal [["新页面按库中的HTML基本结构模板书写基本页面结构", :warn]], @rule.check_tag(tag)
         end
 
         def test_check_missing_header
@@ -88,7 +88,7 @@ module XRayTest
           assert_equal [], @rule.check_tag(tag)
 
           tag = parse(@doc.sub(/<div id="header"/m, '<div id="_header"'))
-          assert_equal [["新页面按库中的HTML基本结构模板书写基本页面结构", :info]], @rule.check_tag(tag)
+          assert_equal [["新页面按库中的HTML基本结构模板书写基本页面结构", :warn]], @rule.check_tag(tag)
         end
 
         private

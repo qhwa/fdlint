@@ -34,7 +34,7 @@ module XRayTest
             <select></select>)
           XRay::HTML::Parser.parse(src).each do |tag|
             unless tag.is_a? TextElement
-              assert_equal [["text、radio、checkbox、textarea、select必须加name属性", :warn]], @rule.check_tag(tag)
+              assert_equal [["text、radio、checkbox、textarea、select必须加name属性", :error]], @rule.check_tag(tag)
             end
           end
         end

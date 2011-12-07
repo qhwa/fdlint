@@ -12,9 +12,9 @@ module XRay
 
           if expr.type == 'id'
             if expr.text == 'Object'
-              ['使用{}代替new Object()', :warn]
+              ['使用{}代替new Object()', :error]
             elsif expr.text == 'Array'
-              ['使用[]代替new Array()', :warn]
+              ['使用[]代替new Array()', :error]
             end 
           end
         end

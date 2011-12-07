@@ -20,7 +20,7 @@ module XRayTest
 
         def test_check_tag_with_style_prop
           prop = XRay::HTML::Property.new('style', 'nogo')
-          assert_equal [["不能定义内嵌样式style", :warn]], @rule.check_prop(prop)
+          assert_equal [["不能定义内嵌样式style", :error]], @rule.check_prop(prop)
         end
 
       end

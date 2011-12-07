@@ -25,17 +25,17 @@ module XRayTest
       
         def test_check_tag_with_upcase_name
           tag = XRay::HTML::Element.new('DIV', {:class=>'footer'})
-          assert_equal [["标签名必须小写", :warn]], @rule.check_tag(tag)
+          assert_equal [["标签名必须小写", :error]], @rule.check_tag(tag)
         end
 
         def test_check_tag_with_simple_upcase_prop_name
           prop = XRay::HTML::Property.new('Href', 'nogo')
-          assert_equal [["属性名必须小写，连字符用中横线", :warn]], @rule.check_prop(prop)
+          assert_equal [["属性名必须小写，连字符用中横线", :error]], @rule.check_prop(prop)
         end
 
         def test_check_tag_with_style_prop
           prop = XRay::HTML::Property.new('Style', 'nogo')
-          assert_equal [["不能定义内嵌样式style", :warn], ["属性名必须小写，连字符用中横线", :warn]], @rule.check_prop(prop)
+          assert_equal [["不能定义内嵌样式style", :error], ["属性名必须小写，连字符用中横线", :error]], @rule.check_prop(prop)
         end
 
       end

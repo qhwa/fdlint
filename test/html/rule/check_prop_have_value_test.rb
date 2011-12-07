@@ -22,7 +22,7 @@ module XRayTest
 
         def test_check_single_quote
           prop = XRay::HTML::Property.new('checked', nil)
-          assert_equal [["不能仅有属性名", :warn]], @rule.check_prop(prop)
+          assert_equal [["不能仅有属性名", :error]], @rule.check_prop(prop)
         end
 
       end

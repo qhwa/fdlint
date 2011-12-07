@@ -21,7 +21,7 @@ module XRayTest
         def test_check_normal_tag_not_closed
           tag = XRay::HTML::Element.new('div', {:class=>'footer'})
           tag.close_type = :none
-          assert_equal [["标签必须正确闭合", :warn]], @rule.check_tag(tag)
+          assert_equal [["标签必须正确闭合", :error]], @rule.check_tag(tag)
         end
 
         def test_check_normal_tag_self_closed
@@ -38,7 +38,7 @@ module XRayTest
       
         def test_check_self_close_tag_close_after
           tag = XRay::HTML::Element.new('img', {:class=>'footer', :alt=>'image'})
-          assert_equal [["标签必须正确闭合", :warn]], @rule.check_tag(tag)
+          assert_equal [["标签必须正确闭合", :error]], @rule.check_tag(tag)
         end
       
         def test_check_text

@@ -29,7 +29,7 @@ module XRay
         def check_selector_with_id(selector)
           if @options[:scope] == 'page' &&
               selector =~ /#[-\w]+/
-            ['页面级别样式不使用id', :warn]
+            ['页面级别样式不使用id', :error]
           end
         end
 
@@ -43,13 +43,13 @@ module XRay
         def check_selector_level(selector)
           parts = selector.text.split /[>\s]/
           if parts.length > 4
-            ['CSS级联深度不能超过4层', :warn]
+            ['CSS级联深度不能超过4层', :error]
           end
         end
 
         def check_selector_with_star(selector)
           if selector =~ /^\*/
-            ['禁止使用星号选择符', :fatal]
+            ['禁止使用星号选择符', :error]
           end
         end
 
@@ -98,7 +98,7 @@ module XRay
 
         def check_property_hack(property)
           if property =~ /[^-a-z]/
-            ['合理使用hack', :warn]
+            ['合理使用hack', :error]
           end
         end
 
@@ -119,7 +119,7 @@ module XRay
 
         def check_expression_hack(expr)
           if expr =~ /\\\d$/
-            ['合理使用hack', :warn]
+            ['合理使用hack', :error]
           end
         end
 

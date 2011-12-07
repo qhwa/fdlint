@@ -25,7 +25,7 @@ module XRayTest
           selector = Node.new '#mydiv a'
           message, level = @rule.check_selector_with_id selector
 
-          assert_equal :warn, level
+          assert_equal :error, level
           puts message
 
           selector = Node.new 'ul #mydiv dt'
@@ -54,7 +54,7 @@ module XRayTest
           selector = Node.new '.mypart .mysubpart ul li a'
           message, level = @rule.check_selector_level selector
 
-          assert_equal :warn, level
+          assert_equal :error, level
           puts message
           
           selector = Node.new '.mypart ul li a'
@@ -63,7 +63,7 @@ module XRayTest
           
           selector = Node.new 'html>div.mypart ul li a'
           message, level = @rule.check_selector_level selector
-          assert_equal :warn, level
+          assert_equal :error, level
 
           selector = Node.new 'div.mypart ul li a'
           ret = @rule.check_selector_level selector
@@ -74,7 +74,7 @@ module XRayTest
           selector = Node.new '* html'
           message, level = @rule.check_selector_with_star selector
 
-          assert_equal :fatal, level
+          assert_equal :error, level
           puts message
         end
 
@@ -121,7 +121,7 @@ module XRayTest
           props.each do |prop|
             prop = Node.new prop
             message, level = @rule.check_property_hack prop
-            assert_equal :warn, level
+            assert_equal :error, level
           end
         end
 
@@ -137,7 +137,7 @@ module XRayTest
           exprs.each do |expr|
             expr = Node.new expr
             message, level = @rule.check_expression_hack expr
-            assert_equal :warn, level
+            assert_equal :error, level
           end
         end
 

@@ -25,12 +25,12 @@ module XRayTest
 
         def test_check_upcase_id
           prop = XRay::HTML::Property.new('id', 'Nogo')
-          assert_equal [["id名称全部小写，单词分隔使用中横线", :warn]], @rule.check_prop(prop)
+          assert_equal [["id名称全部小写，单词分隔使用中横线", :error]], @rule.check_prop(prop)
         end
 
         def test_check_upcase_class
           prop = XRay::HTML::Property.new('class', 'Nogo')
-          assert_equal [["class名称全部小写，单词分隔使用中横线", :warn]], @rule.check_prop(prop)
+          assert_equal [["class名称全部小写，单词分隔使用中横线", :error]], @rule.check_prop(prop)
         end
 
       end

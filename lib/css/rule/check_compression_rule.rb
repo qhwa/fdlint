@@ -19,7 +19,7 @@ module XRay
 
         def check_has_minified_in_same_folder( name )
           unless is_min_file?(name) or is_merge_file?(name) or File.exist?( name.sub(/\.css$/,'-min.css') )
-            [LogEntry.new('发布上线的文件需要压缩，命名规则如a.js->a-min.js，且两者在同一目录下', :warn)]
+            [LogEntry.new('发布上线的文件需要压缩，命名规则如a.js->a-min.js，且两者在同一目录下', :error)]
           end
         end
 

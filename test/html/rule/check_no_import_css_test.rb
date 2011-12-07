@@ -26,7 +26,7 @@ module XRayTest
           tag = XRay::HTML::Element.new('style', nil, [
             TextElement.new('@import style.css')
           ])
-          assert_equal [["不通过@import在页面上引入CSS", :warn]], @rule.check_tag(tag)
+          assert_equal [["不通过@import在页面上引入CSS", :error]], @rule.check_tag(tag)
         end
 
       end

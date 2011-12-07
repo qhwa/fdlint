@@ -27,7 +27,7 @@ module XRayTest
         def test_check_css_tag_in_body
           tag = css_link('test.css')
           body = XRay::HTML::Element.new('body', nil, [tag])
-          assert_equal [["外链CSS置于head里(例外：应用里的footer样式)", :info]], @rule.check_tag(tag)
+          assert_equal [["外链CSS置于head里(例外：应用里的footer样式)", :warn]], @rule.check_tag(tag)
         end
 
         protected

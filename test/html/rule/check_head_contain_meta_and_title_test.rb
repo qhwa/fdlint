@@ -13,7 +13,7 @@ module XRayTest
 
         def setup
           @rule = XRay::HTML::Rule::CheckTagRule.new
-          @expect = ["head必须包含字符集meta和title", :warn]
+          @expect = ["head必须包含字符集meta和title", :error]
         end
 
         def test_check_right_tag

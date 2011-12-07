@@ -29,7 +29,7 @@ module XRayTest
             a++;
           '
           message, level = visit js, 'var'
-          assert_equal :warn, level
+          assert_equal :error, level
         end
 
         def test_expression
@@ -38,7 +38,7 @@ module XRayTest
             i++
           '
           message, level = visit js, 'expression'
-          assert_equal :warn, level 
+          assert_equal :error, level 
         end
 
         private
