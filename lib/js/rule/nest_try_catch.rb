@@ -9,7 +9,7 @@ module XRay
         def visit_stat_try(stat)
           if contain_try?(stat.try_part) ||
               stat.catch_part && contain_try?(stat.catch_part) ||
-              stat.finally_part && contain_try(stat.finally_part)
+              stat.finally_part && contain_try?(stat.finally_part)
             ['try catch一般不允许嵌套，若嵌套，需要充分的理由', :warn]
           end
         end

@@ -25,7 +25,8 @@ module XRay
         row += 1
         now = @lines_info[row]
       end
-
+      
+      #TODO 下面这句话很慢，待优化
       index = @bytes[row].to_a.slice(0..col).pack('C*').size - 1
       now ? Position.new(pos, row, index) : nil
     end

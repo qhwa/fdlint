@@ -93,6 +93,7 @@ module XRay
     end
 
     def check_js(js)
+      @text = js
       parser = JS::VisitableParser.new(js, @logger)
       rules = JS::Rule::All.new.rules
       rules.each do |rule|
