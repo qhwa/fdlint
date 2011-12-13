@@ -22,7 +22,7 @@ module XRay
       elsif fatal?
         t.white.red_bg
       elsif error?
-        t.red.to_s
+        t.red
       else
         t
       end
