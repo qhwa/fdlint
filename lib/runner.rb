@@ -211,12 +211,6 @@ module XRay
       end
     end
 
-    def valid_file? file
-      is_style = Runner.style_file?(file)
-      type_match = Runner.file_type(file) == @opt[:type] || !@opt[:type]
-      is_style and type_match
-    end
-
     def success?
       @results.each do |r|
         if %w(fatal error warn).include? r.level.to_s
@@ -224,14 +218,6 @@ module XRay
         end
       end
       true
-    end
-
-    def is_html?(text)
-      /^\s*</m =~ text
-    end
-
-    def is_css?(text)
-      /^\s*@/m =~ text or /^\s*([-\*:\.#_\w]+\s*)+\{/ =~ text
     end
 
     def self.file_type( name )
@@ -247,6 +233,27 @@ module XRay
 
     def self.style_file?( name )
       File.extname( name ) =~ /(css|js|html?)$/i
+    end
+
+    def valid_file? file
+      Runner.style_file?(file) and !minified_and_ignored(file) and type_ok?(file)
+    end
+
+    def minified_and_ignored(file)
+      !@opt[:check_min] && file =~ /-min\.(css|js)$/
+    end
+
+    def type_ok?(file)
+      return true if @opt[:type].nil?
+      Runner.file_type(file) == @opt[:type]
+    end
+
+    def is_html?(text)
+      /^\s*</m =~ text
+    end
+
+    def is_css?(text)
+      /^\s*@/m =~ text or /^\s*([-\*:\.#_\w]+\s*)+\{/ =~ text
     end
 
   end

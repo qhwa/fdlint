@@ -20,7 +20,7 @@ module XRay
         :encoding   => 'gb2312',
         :colorful   => true,
         :type       => nil,
-        :paging     => true
+        :check_min  => false
       }
 
       opts = OptionParser.new do |opts|
@@ -40,8 +40,8 @@ module XRay
           options[:list] = true
           options[:colorful] = false
         end
-        opts.on("--onpager", "-P", "no pause on paging") do 
-          options[:paging] = false
+        opts.on("--checkmin", "-m", "check minified files too. (e.g. *-min.js; *-min.css)") do
+          options[:check_min] = true
         end
       end
 
