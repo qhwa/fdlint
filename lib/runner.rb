@@ -240,7 +240,7 @@ module XRay
     end
 
     def minified_and_ignored(file)
-      !@opt[:check_min] && file =~ /-min\.(css|js)$/
+      !@opt[:check_min] && file.to_s =~ /-min\.(css|js)$/
     end
 
     def type_ok?(file)
