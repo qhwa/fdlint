@@ -105,7 +105,7 @@ module XRay
     end
 
     def scanner_pos
-      pos = @scanner.pos
+      pos = @scanner.string.size - @scanner.rest.size
       @pos_info.locate(@scanner.eos? ? pos -1 : pos)
     end
 

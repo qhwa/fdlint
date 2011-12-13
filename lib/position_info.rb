@@ -11,8 +11,7 @@ module XRay
   
     def initialize(text)
       lines = text.split(/\n/)
-      @lines_info = lines.map &:bytesize
-      @bytes = lines.map &:bytes
+      @lines_info = lines.map &:length
     end
 
     def locate(pos)
@@ -25,10 +24,8 @@ module XRay
         row += 1
         now = @lines_info[row]
       end
-      
-      #TODO 下面这句话很慢，待优化
-      index = @bytes[row].to_a.slice(0..col).pack('C*').size - 1
-      now ? Position.new(pos, row, index) : nil
+
+      Position.new(pos, row, col) if now
     end
 
   end
