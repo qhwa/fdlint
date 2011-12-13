@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
 require_relative 'lib/cmd_runner'
+trap("SIGINT") { puts "\nGoodbye!"; exit! }
 XRay::CMDRunner.run
 

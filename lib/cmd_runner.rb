@@ -3,6 +3,11 @@ require 'optparse'
 require 'pathname'
 require_relative 'runner'
 
+if ENV['OS'] =~ /windows/i
+  require 'win32console' 
+  system "chcp 65001"
+end
+
 Version = "0.1"
 
 module XRay
@@ -14,7 +19,8 @@ module XRay
       options = {
         :encoding   => 'gb2312',
         :colorful   => true,
-        :type       => nil
+        :type       => nil,
+        :paging     => true
       }
 
       opts = OptionParser.new do |opts|
@@ -33,6 +39,9 @@ module XRay
         opts.on("--list", "-l", "list results without source") do
           options[:list] = true
           options[:colorful] = false
+        end
+        opts.on("--onpager", "-P", "no pause on paging") do 
+          options[:paging] = false
         end
       end
 
