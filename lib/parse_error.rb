@@ -4,7 +4,7 @@ module XRay
     attr_reader :position
 
     def initialize(msg = nil, position = nil)
-      super(msg)
+      super msg
       @position = position
     end
 

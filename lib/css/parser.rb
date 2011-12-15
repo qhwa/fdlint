@@ -20,7 +20,7 @@ module XRay
           !(inner ? check(/}/) : eos?)
         end
         
-        StyleSheet.new(stats)
+        StyleSheet.new stats
       end
 
       # ruleset or directive
@@ -59,7 +59,7 @@ module XRay
         log "keyword: #{keyword} #{keyword.position}"
         log("expression: #{expr} #{expr.position}") if expr
         log("block: #{block} #{block.position}") if block
-        Directive.new(keyword, expr, block)
+        Directive.new keyword, expr, block
       end
       
       def parse_ruleset
@@ -71,7 +71,7 @@ module XRay
         skip /}/
         
         log "ruleset parsed\n"
-        RuleSet.new(selector, declarations)
+        RuleSet.new selector, declarations
       end
       
       def parse_selector

@@ -40,7 +40,7 @@ module XRay
       end
 
       def method_missing(m, *args, &block)
-        @elements.send(m, *args, &block)
+        @elements.send m, *args, &block
       end
 
     end
@@ -49,7 +49,7 @@ module XRay
       alias :elements :left
 
       def initialize(elements)
-        super('program', elements)
+        super 'program', elements
       end
 
     end
@@ -60,7 +60,7 @@ module XRay
       alias :parameters :right
        
       def initialize(name, parameters, body, pos)
-        super('function', name, parameters, pos)
+        super 'function', name, parameters, pos
         @body = body
       end
     end
@@ -81,7 +81,7 @@ module XRay
       alias :declarations :left
 
       def initialize(declarations, position)
-        super('var', declarations, nil, position)
+        super 'var', declarations, nil, position
       end
     end
 
@@ -89,7 +89,7 @@ module XRay
       alias :elements :left
 
       def initialize(elements, pos)
-        super('block', elements, nil, pos)
+        super 'block', elements, nil, pos
       end
     end
 
@@ -99,7 +99,7 @@ module XRay
       alias :true_part :right
        
       def initialize(condition, true_part, false_part, position)
-        super('if', condition, true_part, position)
+        super 'if', condition, true_part, position
         @false_part = false_part
       end
     end
@@ -109,7 +109,7 @@ module XRay
       alias :case_block :right
        
       def initialize(expression, case_block, position)
-        super('switch', expression, case_block, position)
+        super 'switch', expression, case_block, position
       end
     end
 
@@ -119,7 +119,7 @@ module XRay
       alias :default_clause :right
 
       def initialize(case_clauses, default_clause, bottom_case_clauses, position)
-        super('caseblock', case_clauses, default_clause, position)
+        super 'caseblock', case_clauses, default_clause, position
         @bottom_case_clauses = bottom_case_clauses
       end
     end
@@ -129,7 +129,7 @@ module XRay
       alias :condition :right
 
       def initialize(body, condition, pos)
-        super('dowhile', body, condition, pos)
+        super 'dowhile', body, condition, pos
       end
     end
 
@@ -138,7 +138,7 @@ module XRay
       alias :body :right
 
       def initialize(condition, body, pos)
-        super('while', condition, body, pos)
+        super 'while', condition, body, pos
       end
     end
 
@@ -147,7 +147,7 @@ module XRay
       alias :body :right
 
       def initialize(condition, body, pos)
-        super('for', condition, body, pos)
+        super 'for', condition, body, pos
       end
     end
 
@@ -157,7 +157,7 @@ module XRay
       alias :second :right
 
       def initialize(type, first, second, third, pos)
-        super(type, first, second)
+        super type, first, second
         @third = third
       end
 
@@ -169,7 +169,7 @@ module XRay
       alias :catch_part :right
 
       def initialize(try_part, catch_part, finally_part, pos)
-        super('try', try_part, catch_part, pos)
+        super 'try', try_part, catch_part, pos
         @finally_part = finally_part
       end
     end
@@ -178,7 +178,7 @@ module XRay
       alias :expression :left
 
       def initialize(expression)
-        super('expression', expression)
+        super 'expression', expression
       end 
     end
 
@@ -195,7 +195,7 @@ module XRay
     class PrimaryExpression < Expression
 
       def initialize(type, expr, position = nil)
-        super(type, expr, nil, position)
+        super type, expr, nil, position
       end
 
       def text
@@ -211,7 +211,7 @@ module XRay
       attr_reader :condition
       
       def initialize(condition, left, right)
-        super('?:', left, right, condition.position)
+        super '?:', left, right, condition.position
         @condition = condition
       end
 
@@ -227,7 +227,7 @@ module XRay
       alias :parameters :right
        
       def initialize(func)
-        super('function', func.name, func.parameters, func.position)
+        super 'function', func.name, func.parameters, func.position
         @body = func.body
       end
     end
