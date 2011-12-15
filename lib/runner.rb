@@ -192,10 +192,10 @@ module XRay
         prf = opt[:prefix] || ''
         suf = opt[:suffix] || ''
         @results.each do |r|
-          col = r.column
-          row = r.row
           t = r.send( opt[:colorful] ? :to_color_s : :to_s )
-          if row
+          if r.row && r.row > 0
+            col = r.column - 1
+            row = r.row - 1
             line_t = lines[row]
             left = col - 50
             right = col + 50

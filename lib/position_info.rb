@@ -3,7 +3,7 @@ module XRay
   Position = Struct.new(:pos, :row, :column)
   class Position
     def to_s
-        "[#{row + 1},#{column + 1}]"
+        "[#{row},#{column}]"
     end
   end
 
@@ -25,7 +25,7 @@ module XRay
         now = @lines_info[row]
       end
 
-      Position.new(pos, row, col) if now
+      Position.new(pos, row+1, col+1)
     end
 
   end

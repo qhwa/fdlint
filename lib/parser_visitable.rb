@@ -83,7 +83,7 @@ module XRay
         return
       end
 
-      results = [results] unless results[0].class == Array
+      results = [results] unless Array === results[0]
       results.each { |ret|
         message, level = ret
         result = VisitResult.new(node, message, level || :info)

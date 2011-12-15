@@ -6,7 +6,7 @@ module XRay
   
   class LogEntry
 
-    def initialize(message, level, row = nil, colmn = 0)
+    def initialize(message, level, row = 0, colmn = 0)
       super
     end
 
