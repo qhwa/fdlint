@@ -74,7 +74,7 @@ module XRay
         private
 
         def good_selector?(selector)
-          return /^['"][#\w]/ =~ selector
+          return /^['"][#\w<]/ =~ selector
         end
          
       end
