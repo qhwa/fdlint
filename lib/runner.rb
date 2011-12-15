@@ -14,6 +14,7 @@ require_relative 'html/parser'
 require_relative 'html/rule/check_tag_rule'
 require_relative 'js/parser'
 require_relative 'js/rule/all'
+require_relative 'helper/readfile'
 
 
 module XRay
@@ -114,7 +115,7 @@ module XRay
     def check_js_file(file, opt = {})
       syntax_results, other_results = [], []
       begin
-        source = File.read(file, { :encoding => 'gb2312' }).encode!('utf-8')
+        source, encoding = readfile(file, opt)
         ok, syntax_results = check_js(source)
       rescue  EncodingError => e
         other_results = [LogEntry.new( "File can't be read as #{@opt[:encoding]} charset", :fatal)]
