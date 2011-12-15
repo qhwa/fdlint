@@ -51,9 +51,8 @@ module XRay
 
     def raw_scan(pattern, not_skip_empty = false)
       not_skip_empty || skip_empty
-      pos = @pos_info.locate(@scanner.pos)
       text = @scanner.scan pattern
-      text ? Node.new(text, pos) : parse_error("scan fail: #{pattern}")
+      text ? Node.new(text, scanner_pos) : parse_error("scan fail: #{pattern}")
     end
       
     def batch(name, stop = nil, skip_pattern = nil, not_skip_empty = false, &block)
