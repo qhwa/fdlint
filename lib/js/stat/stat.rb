@@ -13,6 +13,7 @@ module XRay
         include Var, If, Switch, Iter, Try
 
         def parse_statement
+          # 在1.8下map是无序的,所以这里只能用数组来实现
           map = [
             /\{/, 'block',
             /\;/, 'empty',
