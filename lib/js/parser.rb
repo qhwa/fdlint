@@ -20,7 +20,7 @@ module XRay
         @singleline_comments, @mutiline_comments = [], []
       end
 
-      def parse_program(inner = false)
+      def parse_program
         log 'parse program'
         parse_comments
         Program.new parse_source_elements

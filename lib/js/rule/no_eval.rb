@@ -11,7 +11,7 @@ module XRay
         include Helper
         
         def visit_expr_member(expr)
-          expr = find_expr_member(expr) { |expr| expr.type == '.' }
+          expr = find_expr_member(expr) { |expr| expr.type == '(' }
           checks = %w(
             (.,window,eval)
             eval
