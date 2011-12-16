@@ -81,6 +81,15 @@ module XRayTest
 
         # declaration
         
+        def test_check_good_declaration_font
+          sel = Node.new 'font'
+          expr = Node.new 'Arial'
+          dec = Declaration.new(sel, expr)
+
+          message, level = @rule.check_declaration_font dec
+          assert_equal nil, level
+        end
+
         def test_check_declaration_font
           sel = Node.new 'font'
           expr = Node.new '宋体'
