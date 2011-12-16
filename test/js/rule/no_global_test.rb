@@ -15,43 +15,35 @@ module XRayTest
         end
         
         def test_fail
-          jses = []
-
-          jses << '
-            var a;
+          js = '
+            var a = 1;
             a++;
             function hello() {
             }
-          '
+            if (a < 100) {
+              var b;
+              (function() {
+                var c = 123;
 
-          jses << '
-            1 + 1
-            function hello() {
-                
+                function d() {
+                    
+                }
+              })();    
             }
           '
+          
+          ret = parse js 
+          puts ret
 
-          jses.each do |js|
-            ret = parse js 
-          end
+          assert_equal 3, ret.length
+          assert_equal ret[0].node.text, ''
+          assert_equal ret[1].node.text, ''
+          assert_equal ret[2].node.text, ''
+          
         end
 
         def test_ok
-          jses = []
 
-          jses << '
-            (function() {
-              var a;
-              a++
-              function hello() {
-                  
-              }
-            })();
-          '
-
-          jses.each do |js|
-
-          end
         end
         
         def parse(js)

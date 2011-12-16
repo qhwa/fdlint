@@ -21,8 +21,8 @@ module XRay
 
         def initialize(options = {})
           @rules = NAMES.collect do |name|
-            name = name.gsub(/_(\w)/) { |m| m[1].upcase }
-            name = name[0].upcase + name[1..-1]
+            name = name.gsub(/_(\w)/) { |m| $1.upcase }
+            name = name[0..0].upcase + name[1..-1]
             klass = Rule.const_get name
             klass.new
           end
