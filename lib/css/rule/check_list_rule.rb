@@ -27,14 +27,14 @@ module XRay
         end
         
         def check_selector_with_id(selector)
-          if @options[:scope] == 'page' &&
+          if @options[:scope] != 'lib' &&
               selector =~ /#[-\w]+/
             ['页面级别样式不使用id', :error]
           end
         end
 
         def check_selector_with_global_tag(selector)
-          if @options[:scope] == 'page' &&
+          if @options[:scope] != 'lib' &&
               selector =~ /^\w+$/
             ['页面级别样式不能全局定义标签样式', :error]
           end
