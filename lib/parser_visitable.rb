@@ -45,6 +45,7 @@ module XRay
         alias_method old_method, method
 
         define_method(method) do |*args, &block|
+          before method, *args
           node = self.send(old_method, *args, &block)
           node && visit(method, node)
           node
@@ -64,16 +65,25 @@ module XRay
     private 
 
     def visit(name, node)
+      walk(name, 'visit_', node) do |result|
+        result && notify(node, result)
+      end
+    end
+
+    def before(name, *args)
+      walk name, 'before_parse_', *args
+    end
+
+    def walk(name, prefix, *args, &block)
       unless @visitors
         return
       end
 
-      name = name.sub(/^parse_/, '')
+      method = name.sub(/^parse_/, prefix)
       @visitors.each do |visitor|
-        method = 'visit_' + name
         if visitor.respond_to? method
-          results = visitor.send(method, node)
-          results && notify(node, results)
+          result = visitor.send method, *args
+          block && block.call(result)
         end
       end
     end
@@ -86,9 +96,13 @@ module XRay
       results = [results] unless Array === results[0]
       results.each { |ret|
         message, level = ret
-        result = VisitResult.new(node, message, level || :info)
+        
+        result = ret.is_a?(VisitResult) ? ret :
+            VisitResult.new(node, message, level || :info)
+
         @results ||= []
         @results << result
+
         self.changed
         notify_observers(result, self)
       }

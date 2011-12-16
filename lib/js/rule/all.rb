@@ -3,16 +3,17 @@ module XRay
     module Rule
 
       class All
-        NAMES = [
-          'semicolon',
-          'stat_if_with_brace',
-          'stat_if_with_muti_else',
-          'new_object_and_new_array',
-          'no_eval',
-          'use_strict_equal',
-          'nest_try_catch',
-          'jq_check'
-        ]
+        NAMES = %w( 
+          semicolon
+          stat_if_with_brace
+          stat_if_with_muti_else
+          new_object_and_new_array
+          no_eval
+          use_strict_equal
+          nest_try_catch
+          jq_check
+          no_global
+        )
 
         NAMES.each { |name| require_relative name }
 

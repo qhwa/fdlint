@@ -8,7 +8,7 @@ module XRayTest
       
       class NoEvalTest < BaseTest
        
-        def test
+        def test_no_eval
           js = 'eval("a = 1 + 2 + 3")' 
           message, level = visit js
           assert_equal :error, level
