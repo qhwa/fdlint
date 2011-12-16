@@ -64,9 +64,9 @@ module XRay
           end
           
           return unless expr
-
+          
           param = expr.right[0] 
-          if param.type == 'string' && !good_selector?(param.text)
+          if param && param.type == 'string' && !good_selector?(param.text)
             ['使用选择器时，能确定tagName的，必须加上tagName', :warn]
           end
         end
