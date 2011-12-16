@@ -19,13 +19,13 @@ module XRayTest
 
         def test_check_utf8_file_well_written
           check_file "#{FIXTURE_PATH}/css/utf8_good.css" do |results|
-            assert has_encoding_error?(results), "utf-8文件默认不会去检查内容"
+            assert !has_encoding_error?(results), "如果没有指定css文件的编码，utf-8也是合法的"
           end
         end
 
         def test_check_utf8_file_with_errors
           check_file "#{FIXTURE_PATH}/css/utf8_using_star.css" do |results|
-            assert has_encoding_error?(results), "utf-8文件默认不会去检查内容"
+            assert !has_encoding_error?(results), "如果没有指定css文件的编码，utf-8也是合法的"
           end
         end
 
