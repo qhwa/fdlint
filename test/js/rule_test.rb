@@ -1,4 +1,4 @@
-gem 'test-unit'
+gem 'test-unit' if defined? gem
 require 'test/unit'
 require 'test/unit/testsuite'
 require 'test/unit/ui/console/testrunner'
@@ -26,8 +26,8 @@ module XRayTest
         NAMES.each do |name|
           require_relative "rule/#{name}"
 
-          name = name.gsub(/_(\w)/) { |m| m[1].upcase }
-          name = name[0].upcase + name[1..-1]
+          name = name.gsub(/_(\w)/) { |m| m[1].chr.upcase }
+          name = name[0].chr.upcase + name[1..-1]
 
           tests << Rule.const_get(name).suite
         end

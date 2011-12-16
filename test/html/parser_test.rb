@@ -1,4 +1,4 @@
-gem 'test-unit'
+gem 'test-unit' if defined? gem
 require 'test/unit'
 require 'test/unit/testsuite'
 require 'test/unit/ui/console/testrunner'
