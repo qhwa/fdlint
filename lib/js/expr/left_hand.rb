@@ -52,7 +52,7 @@ module XRay
         def parse_arguments_list
           log 'parse arguments list'
           skip /\(/
-          params = batch(:parse_expr_assignment, /\)/, /,/)
+          params = batch :parse_expr_assignment, /\)/, /,/
           skip /\)/
           Elements.new params
         end

@@ -140,7 +140,7 @@ module XRay
 
         def parse_expr_literal_regexp
           log 'parse expr literal regexp'
-          expr = scan %r{/(?:(?:\\.)|[^/\\])+/[a-z]*}
+          expr = scan %r{/(?:(?:\\.)|(?:\[(?:\\.|[^\[\]])+\])|[^/\\])+/[a-z]*}
           create_expression 'regexp', expr
         end
 

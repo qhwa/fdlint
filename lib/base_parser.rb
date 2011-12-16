@@ -31,7 +31,7 @@ module XRay
       unless @scanner.skip pattern
         parse_error "skip fail: #{pattern}"
       end
-      after_skip(pattern)
+      after_skip pattern
       pos
     end
 
@@ -45,7 +45,7 @@ module XRay
       
     def scan(pattern, not_skip_empty = false)
       node = raw_scan pattern, not_skip_empty
-      after_scan(pattern)
+      after_scan pattern
       node
     end
 

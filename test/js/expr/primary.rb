@@ -63,9 +63,11 @@ module XRayTest
           hello this is an mutiline string\\
           hello this is an mutiline string"'
 
-          re = %q{/((?:\((?:\([^()]+\)|[^()]+)+\)|\[(?:\[[^\[\]]*\]|['"][^'"]*['"]|[^\[\]'"]+)+\]|\\.|[^ >+~,(\[\\]+)+|[>+~])(\s*,\s*)?((?:.|\r|\n)*)/g}
+          re1 = %q{/((?:\((?:\([^()]+\)|[^()]+)+\)|\[(?:\[[^\[\]]*\]|['"][^'"]*['"]|[^\[\]'"]+)+\]|\\.|[^ >+~,(\[\\]+)+|[>+~])(\s*,\s*)?((?:.|\r|\n)*)/g}
 
-          jses << str1 << str2 << str3 << re
+          re2 = %q{/\/\*[^*]*\*+([^/][^*]*\*+)*\//gm}
+
+          jses << str1 << str2 << str3 << re1 << re2
 
           exprs = jses.collect do |js|
             parse_js :parse_expr_literal, js
@@ -76,7 +78,7 @@ module XRayTest
             123 .12 0.123 +123e+1 123.123e-1 12345.123e123
             /\\\\/g
           )
-          eqs << str1 << str2 << str3 << re
+          eqs << str1 << str2 << str3 << re1 << re2
           assert_equal eqs, exprs.collect(&:node).collect(&:text)
         end
 

@@ -61,13 +61,17 @@ module XRayTest
             "$('.myclass', div)",
             "$('.myclass')",
             "$('[name=123]')",
-            "$(':first')"    
+            "$(':first')"
           ]
           
           jses.each do |js|
             message, level = visit js, :check_ctor_selector
             assert_equal :warn, level
           end
+
+          js = '$()'
+          ret = visit js, :check_ctor_selector
+          assert_equal nil, ret
         end
 
         private
