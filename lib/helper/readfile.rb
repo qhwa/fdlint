@@ -10,14 +10,14 @@ def readfile(path, opt={})
           text = bin.encode('utf-8', c).force_encoding('utf-8')
         else
           require 'iconv'
-          text = Iconv.new('US-ASCII//IGNORE',c.upcase).iconv(bin)
-          text = Iconv.new("#{c}//IGNORE", 'UTF-8').iconv(text)
+          text = Iconv.new('UTF-8', c).iconv(bin)
         end
         return [text, c] if text =~ /./
       rescue => e
         next
       end
     end
+    [bin, 'ASCII-8BIT']
   else
     raise ArgumentError.new("File is not readable!")
   end
