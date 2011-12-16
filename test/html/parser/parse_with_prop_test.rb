@@ -1,3 +1,4 @@
+require File.expand_path('../../helper', File.dirname(__FILE__))
 require_relative '../../helper'
 
 module XRayTest
@@ -10,8 +11,11 @@ module XRayTest
         
         def test_data_prop
           parse('<div class="info" data-creater="vim">information</div>') do |element|
-            assert_equal Element.new('div', {:class=>'info', :"data-creater" => 'vim' }, [
-              TextElement.new('information')
+            assert_equal Element.new('div', [
+                Property.new(:class, 'info'),
+                Property.new('data-creater', 'vim')
+              ], [
+                TextElement.new('information')
               ]), element
           end
         end
@@ -32,21 +36,22 @@ module XRayTest
 
         def test_prop_without_value
           parse('<input type="checkbox" name="agreement" checked />') do |e|
-            assert_equal Element.new('input', {
-              :type => 'checkbox',
-              :name => 'agreement',
-              :checked => nil
-            }), e
+            assert_equal Element.new('input', [
+              Property.new(:type, 'checkbox'),
+              Property.new(:name, 'agreement'),
+              Property.new(:checked, nil)
+            ]), e
           end
         end
 
         def test_prop_without_value_2
+          # Notice: a space less than last test
           parse('<input type="checkbox" name="agreement" checked/>') do |e|
-            assert_equal Element.new('input', {
-              :type => 'checkbox',
-              :name => 'agreement',
-              :checked => nil
-            }), e
+            assert_equal Element.new('input', [
+              Property.new(:type, 'checkbox'),
+              Property.new(:name, 'agreement'),
+              Property.new(:checked, nil)
+            ]), e
           end
         end
 
@@ -59,11 +64,11 @@ module XRayTest
 
         def test_parse_prop_name_with_colon
           parse('<input ns:name="checkbox" name="agreement" checked/>') do |e|
-            assert_equal Element.new('input', {
-              :'ns:name' => 'checkbox',
-              :name => 'agreement',
-              :checked => nil
-            }), e
+            assert_equal Element.new('input', [
+              Property.new('ns:name', 'checkbox'),
+              Property.new(:name, 'agreement'),
+              Property.new(:checked, nil)
+            ]), e
           end
         end
 
