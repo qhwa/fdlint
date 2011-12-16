@@ -3,6 +3,7 @@ require 'test/unit'
 require 'test/unit/testsuite'
 require 'test/unit/ui/console/testrunner'
 
+require File.expand_path('../helper', File.dirname(__FILE__))
 
 module XRayTest
   

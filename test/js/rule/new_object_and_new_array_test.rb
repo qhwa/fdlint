@@ -8,7 +8,7 @@ module XRayTest
       
       class NewObjectAndNewArrayTest < BaseTest
 
-        def test
+        def test_default
           js = '
             new Object();
           '

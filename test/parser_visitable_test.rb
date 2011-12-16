@@ -81,7 +81,7 @@ module XRayTest
     end
 
 
-    def test
+    def test_default
       parser = MockParser.new
 
       visitor = SimpleVisitor.new

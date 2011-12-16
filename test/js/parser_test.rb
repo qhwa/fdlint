@@ -1,5 +1,5 @@
 # encoding: utf-8
-require_relative '../helper'
+require File.expand_path('../helper', File.dirname(__FILE__))
 
 require 'js/parser'
 
@@ -73,6 +73,7 @@ module XRayTest
 
       def create_parser(js)
         Parser.new(js, Logger.new(STDOUT))
+        
       end
 
       def parse_js(action, js)

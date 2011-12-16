@@ -7,10 +7,10 @@ module XRayTest
           js = '
             switch (a) {
             case 1:
-              i++
+              i++;
               break;
             case 2:
-              i--
+              i--;
               break;
             default:
               break; 

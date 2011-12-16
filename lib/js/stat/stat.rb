@@ -13,26 +13,26 @@ module XRay
         include Var, If, Switch, Iter, Try
 
         def parse_statement
-          map = {
-            /\{/ => 'block',
-            /;/ => 'empty',
-            /var\b/ => 'var',
-            /if\b/ => 'if',
-            /switch\b/ => 'switch',
-            /do\b/ => 'dowhile',
-            /while\b/ => 'while',
-            /for\b/ => 'for',
-            /continue\b/ => 'continue',
-            /break\b/ => 'break',
-            /return\b/ => 'return',
-            /throw\b/ => 'throw',
-            /try\b/ => 'try',
-            /./ => 'expression'
-          }
-          
-          map.each do |k, v|
-            if check(k)
-              return self.send('parse_stat_' + v)
+          map = [
+            /\{/, 'block',
+            /\;/, 'empty',
+            /var\b/, 'var',
+            /if\b/, 'if',
+            /switch\b/, 'switch',
+            /do\b/, 'dowhile',
+            /while\b/, 'while',
+            /for\b/, 'for',
+            /continue\b/, 'continue',
+            /break\b/, 'break',
+            /return\b/, 'return',
+            /throw\b/, 'throw',
+            /try\b/, 'try',
+            /./, 'expression'
+          ] 
+
+          0.upto(map.size / 2 - 1) do |i|
+            if check(map[i * 2])
+              return self.send('parse_stat_' + map[i * 2 + 1])
             end
           end
         end
