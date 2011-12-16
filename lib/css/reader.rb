@@ -1,4 +1,5 @@
 require_relative '../encoding_error'
+require_relative '../helper/readfile'
 
 module XRay
   module CSS
@@ -6,13 +7,12 @@ module XRay
     class Reader
 
       def self.read( file, opt = {} )
-        options = { :encoding => 'utf-8' }.merge opt
-        begin
-          encoding = get_encoding_declaration(file) || options[:encoding].to_s
-          File.read(file, :encoding => encoding).encode! 'utf-8'
-        rescue Encoding::UndefinedConversionError, Encoding::InvalidByteSequenceError
+        source, enc = readfile(file)
+        declare = get_encoding_declaration(file)
+        if declare and enc != declare
           raise EncodingError.new
         end
+        source
       end
 
       def self.get_encoding_declaration( file )

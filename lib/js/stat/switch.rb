@@ -21,7 +21,7 @@ module XRay
           case_clauses = check(/case\b/) ? parse_stat_caseclauses : nil
           default_clause = check(/default\b/) ? parse_stat_defaultclause : nil
           bottom_case_clauses = check(/case\b/) ? parse_stat_caseclauses : nil
-          skip /}/
+          skip /\}/
 
           create_element CaseBlockStatement, case_clauses, default_clause, 
               bottom_case_clauses, pos
@@ -29,7 +29,7 @@ module XRay
 
         def parse_stat_caseclauses
           log 'parse stat caseclauses'
-          stats = batch(:parse_stat_caseclause, /default\b|}/)
+          stats = batch(:parse_stat_caseclause, /default\b|\}/)
           create_element Elements, stats 
         end
 
@@ -54,7 +54,7 @@ module XRay
         private
 
         def parse_statement_list
-          elms = batch(:parse_statement, /case\b|default\b|}/)
+          elms = batch(:parse_statement, /case\b|default\b|\}/)
           Elements.new elms
         end
 

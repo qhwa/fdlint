@@ -42,7 +42,7 @@ module XRay
         params = batch(:parse_expr_identifier, /\)/, /,/)
         skip /\)\s*\{/
         body = parse_source_elements true
-        skip /}/
+        skip /\}/
          
         FunctionDeclaraion.new name, Elements.new(params), body, pos
       end
@@ -83,7 +83,7 @@ module XRay
       def parse_source_elements(inner = false)
         elms = batch(:parse_source_element) do
           skip_empty
-          inner ? !check(/}/) : !eos? 
+          inner ? !check(/\}/) : !eos? 
         end
         Elements.new elms
       end

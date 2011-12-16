@@ -14,7 +14,7 @@ module XRay
 
         def parse_statement
           map = {
-            /{/ => 'block',
+            /\{/ => 'block',
             /;/ => 'empty',
             /var\b/ => 'var',
             /if\b/ => 'if',
@@ -41,8 +41,8 @@ module XRay
           log 'parse stat block'
           
           pos = skip /\{/
-          stats = batch(:parse_statement, /}/)
-          skip /}/ 
+          stats = batch(:parse_statement, /\}/)
+          skip /\}/ 
 
           create_element BlockStatement, Elements.new(stats), pos
         end
@@ -94,7 +94,7 @@ module XRay
           colon = !!check(/;/, true)
           stat.end_with_semicolon = colon
           colon ? skip(/;/, true) :
-              (eos? || check(/}/)) ? nil : skip(/\n/, true)
+              (eos? || check(/\}/)) ? nil : skip(/\n/, true)
           stat
         end
 
