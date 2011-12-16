@@ -22,7 +22,11 @@ module XRayTest
           src = %q(<div class="main"><input type="hidden" name="next_page" value="/dashboard/" ></input></div>)
           XRay::HTML::Parser.parse(src) do |e|
             assert_equal Element.new('div', {:class => 'main'}, [
-              Element.new('input', {:type=>'hidden', :name=>'next_page', :value=>'/dashboard/'})
+              Element.new('input', [
+                Property.new(:type, 'hidden'), 
+                Property.new(:name, 'next_page'), 
+                Property.new(:value, '/dashboard/') 
+              ])
             ]), e
           end
         end

@@ -68,7 +68,7 @@ module XRay
         end
 
         def check_declaration_font(dec)
-          if dec.property =~ /^font/ && 
+          if dec.property =~ /^font(-family)?$/ && 
               dec.expression =~ /[\u4e00-\u9fa5]/
             ['字体名称中的中文必须用ascii字符表示', :error]
           end
