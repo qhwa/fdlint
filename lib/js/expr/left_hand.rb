@@ -30,7 +30,7 @@ module XRay
             elsif check /[\[]/
               skip /\[/
               expr = parse_expression
-              skip /]/
+              skip /\]/
               ['[', expr]
             elsif check /\(/
               ['(', parse_arguments_list]

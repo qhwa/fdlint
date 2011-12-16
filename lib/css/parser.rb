@@ -17,7 +17,7 @@ module XRay
         
         stats = batch(:parse_statement) do 
           skip_empty
-          !(inner ? check(/}/) : eos?)
+          !(inner ? check(/\}/) : eos?)
         end
         
         StyleSheet.new(stats)
@@ -47,7 +47,7 @@ module XRay
         if check /\{/
           skip /\{/
           block = parse_stylesheet true
-          skip /}/
+          skip /\}/
         end
 
         unless block
@@ -68,7 +68,7 @@ module XRay
         selector = parse_selector
         skip /\{/
         declarations = parse_declarations
-        skip /}/
+        skip /\}/
         
         log "ruleset parsed\n"
         RuleSet.new(selector, declarations)
@@ -91,7 +91,7 @@ module XRay
       end
       
       def parse_declarations
-        batch(:parse_declaration, /}/)
+        batch(:parse_declaration, /\}/)
       end
       
       def parse_declaration
@@ -102,7 +102,7 @@ module XRay
         expression = parse_expression
         
         # 可选的分号
-        semicolon = check(/}/) ? /;?/ : /;/
+        semicolon = check(/\}/) ? /;?/ : /;/
         skip semicolon
 
         skip_more_semicolon

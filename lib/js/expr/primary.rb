@@ -53,8 +53,8 @@ module XRay
           log 'parse expr array'
 
           pos = skip /\[/
-          elms = batch(:parse_expr_assignment, /]/, /,/)
-          skip /]/
+          elms = batch(:parse_expr_assignment, /\]/, /,/)
+          skip /\]/
 
           create_expression 'array', Elements.new(elms), pos 
         end
@@ -63,8 +63,8 @@ module XRay
           log 'parse expr object'
 
           pos = skip /\{/
-          elms = batch(:parse_expr_object_item, /}/, /,/)
-          skip /}/
+          elms = batch(:parse_expr_object_item, /\}/, /,/)
+          skip /\}/
 
           create_expression 'object', Elements.new(elms), pos
         end
