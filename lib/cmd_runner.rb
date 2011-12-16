@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require 'optparse'
-require 'pathname'
+require 'find'
 require_relative 'runner'
 
 if ENV['OS'] =~ /windows/i
@@ -78,8 +78,8 @@ module XRay
     def check_file( file, opt)
 
       if File.directory? file
-        Pathname.new( file ).each_child do |f|
-          check_file( f, opt )
+        Find.find(file) do |f|
+          check_file(f, opt) unless File.directory? f
         end
         return
       end
