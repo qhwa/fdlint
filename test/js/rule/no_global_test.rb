@@ -14,7 +14,7 @@ module XRayTest
           include XRay::ParserVisitable 
         end
         
-        def test_fail
+        def test_main
           js = '
             var a = 1;
             a++;
@@ -33,17 +33,10 @@ module XRayTest
           '
           
           ret = parse js 
-          puts ret
-
           assert_equal 3, ret.length
-          assert_equal ret[0].node.text, ''
-          assert_equal ret[1].node.text, ''
-          assert_equal ret[2].node.text, ''
-          
-        end
-
-        def test_ok
-
+          assert_equal '(var=,a,1)', ret[0].node.text
+          assert_equal '(var=,b,)', ret[1].node.text
+          assert_equal '(function,hello,[])', ret[2].node.text
         end
         
         def parse(js)

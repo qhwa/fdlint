@@ -12,6 +12,7 @@ module XRay
           use_strict_equal
           nest_try_catch
           jq_check
+          no_global
         )
 
         NAMES.each { |name| require_relative name }
