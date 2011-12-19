@@ -143,13 +143,6 @@ module XRay
 
         private
 
-        def check_expr_literal
-          check R_THIS_NULL_BOOLEAN or 
-              check R_NUMBERIC or
-              check R_STRING or
-              check R_REGEXP
-        end
-
         def create_expression(*args)
           expr = PrimaryExpression.new *args
           log "  #{expr}"
