@@ -42,12 +42,13 @@ module XRay
 
       klass.instance_eval do
         old_method = "#{method}_without_visit"
+        name = method.sub /^parse_/, ''
         alias_method old_method, method
 
         define_method(method) do |*args, &block|
-          before method, *args
+          before name, *args
           node = self.send(old_method, *args, &block)
-          node && visit(method, node)
+          node && visit(name, node)
           node
         end
       end
@@ -79,7 +80,7 @@ module XRay
         return
       end
 
-      method = name.sub(/^parse_/, prefix)
+      method = prefix + name 
       @visitors.each do |visitor|
         if visitor.respond_to? method
           result = visitor.send method, *args

@@ -13,7 +13,6 @@ module XRay
     def initialize(text, log = nil)
       @log = log
       text = filter_text(prepare_text(text))
-      @text_size = text.size
       @pos_info = PositionInfo.new text
       @scanner = StringScanner.new text
     end
@@ -107,8 +106,7 @@ module XRay
     end
 
     def scanner_pos
-      pos = @text_size - @scanner.rest.size
-      #pos = @scanner.pos
+      pos = @scanner.pos
       @pos_info.locate(@scanner.eos? ? pos -1 : pos)
     end
 
