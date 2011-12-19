@@ -16,7 +16,7 @@ module XRay
       attr_reader :singleline_comments, :mutiline_comments
 
       def initialize(js, logger)
-        super(js, logger)
+        super js, logger
         @singleline_comments, @mutiline_comments = [], []
       end
 

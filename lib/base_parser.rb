@@ -11,7 +11,6 @@ module XRay
     attr_reader :log
 
     def initialize(text, log = nil)
-
       @log = log
       text = filter_text(prepare_text(text))
       @pos_info = PositionInfo.new text
@@ -19,7 +18,7 @@ module XRay
     end
 
     def skip_empty
-      pos = scanner_pos
+      pos = @pos || scanner_pos
       @scanner.skip /\s*/
       pos
     end
@@ -50,8 +49,9 @@ module XRay
 
     def raw_scan(pattern, not_skip_empty = false)
       not_skip_empty || skip_empty
+      pos = scanner_pos
       text = @scanner.scan pattern
-      text ? Node.new(text, scanner_pos) : parse_error("scan fail: #{pattern}")
+      text ? Node.new(text, pos) : parse_error("scan fail: #{pattern}")
     end
       
     def batch(name, stop = nil, skip_pattern = nil, not_skip_empty = false, &block)
@@ -99,12 +99,13 @@ module XRay
     end
       
     def log(message, level = :info)
-      @log && @log.send(level, self.to_s + ': ' + message)
+      @log && @log.send("#{level}?") &&
+          @log.send(level, self.to_s + ': ' + message)
     end
 
     def scanner_pos
       pos = @scanner.string.size - @scanner.rest.size
-      @pos_info.locate(@scanner.eos? ? pos -1 : pos)
+      @pos = @pos_info.locate(@scanner.eos? ? pos -1 : pos)
     end
 
     private
