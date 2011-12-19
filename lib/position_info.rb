@@ -25,7 +25,7 @@ module XRay
         now = @lines_info[row]
       end
 
-      Position.new(pos, row+1, col+1)
+      Position.new(pos, row + 1, col + 1)
     end
 
   end
