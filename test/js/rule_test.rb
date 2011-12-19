@@ -20,7 +20,6 @@ module XRayTest
         new_object_and_new_array_test
         nest_try_catch_test
         jq_check_test
-        no_global_test
       )
         
       def self.suite
