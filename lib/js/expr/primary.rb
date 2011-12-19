@@ -30,10 +30,21 @@ module XRay
 
           elsif check /\{/
             parse_expr_object
+        
+          # literal 
+          elsif check R_THIS_NULL_BOOLEAN 
+            parse_expr_literal_this_null_boolean
 
-          elsif check_expr_literal
-            parse_expr_literal
+          elsif check R_NUMBERIC
+            parse_expr_literal_number
 
+          elsif check R_STRING
+            parse_expr_literal_string
+
+          elsif check R_REGEXP
+            parse_expr_literal_regexp
+          #~
+          
           else
             parse_expr_identifier
           end
@@ -94,20 +105,6 @@ module XRay
               parse_error("identifier can not be reserved word: #{id}") : id
         
           create_expression 'id', id
-        end
-
-        def parse_expr_literal
-          if check R_THIS_NULL_BOOLEAN 
-            parse_expr_literal_this_null_boolean
-          elsif check R_NUMBERIC
-            parse_expr_literal_number
-          elsif check R_STRING
-            parse_expr_literal_string
-          elsif check R_REGEXP
-            parse_expr_literal_regexp
-          else
-            raise 'assert false'
-          end
         end
 
         def parse_expr_literal_this_null_boolean

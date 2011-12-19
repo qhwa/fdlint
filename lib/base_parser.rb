@@ -18,9 +18,7 @@ module XRay
     end
 
     def skip_empty
-      pos = @pos || scanner_pos
       @scanner.skip /\s*/
-      pos
     end
       
     def skip(pattern, not_skip_empty = false)
@@ -55,10 +53,14 @@ module XRay
     end
       
     def batch(name, stop = nil, skip_pattern = nil, not_skip_empty = false, &block)
-      block = stop ? create_batch_default_block(stop, skip_pattern, not_skip_empty) : block
+      first = true
       result = []
-      while !@scanner.eos? && (block ? block.call : true) && item = send(name)
+      while !@scanner.eos? && 
+          (stop ? batch_check(stop, skip_pattern, not_skip_empty, first) : 
+              block ? block.call : true) && 
+          item = send(name)
         result << item
+        first = false
       end
       result
     end
@@ -105,7 +107,7 @@ module XRay
 
     def scanner_pos
       pos = @scanner.string.size - @scanner.rest.size
-      @pos = @pos_info.locate(@scanner.eos? ? pos -1 : pos)
+      @pos_info.locate(@scanner.eos? ? pos -1 : pos)
     end
 
     private
@@ -113,18 +115,14 @@ module XRay
     def prepare_text(text)
       text.gsub(/\r\n/, "\n").gsub(/\r/, "\n")
     end
-
-    def create_batch_default_block(stop, skip_pattern, not_skip_empty)
-      not_first_time = false
-      lambda {
-        if check(stop, not_skip_empty)
-          false
-        else
-          not_first_time  && skip_pattern && skip(skip_pattern)
-          not_first_time = true
-          true
-        end
-      }
+    
+    def batch_check(stop, skip_pattern, not_skip_empty, first)
+      if check stop, not_skip_empty
+        false
+      else
+        !first && skip_pattern && skip(skip_pattern) 
+        true
+      end
     end
 
   end

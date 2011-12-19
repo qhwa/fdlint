@@ -70,7 +70,7 @@ module XRayTest
           jses << str1 << str2 << str3 << re1 << re2
 
           exprs = jses.collect do |js|
-            parse_js :parse_expr_literal, js
+            parse_js :parse_expr_primary, js
           end
 
           eqs = %w(
