@@ -93,7 +93,6 @@ module XRay
         return
       end
       
-      puts results[0].class
       results = [results] unless results[0].is_a?(Array) || 
           results[0].is_a?(VisitResult)
       

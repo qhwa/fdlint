@@ -11,7 +11,6 @@ module XRay
     attr_reader :log
 
     def initialize(text, log = nil)
-      super()
 
       @log = log
       text = filter_text(prepare_text(text))
@@ -67,7 +66,7 @@ module XRay
     def to_s
       self.class.to_s
     end
-
+    
     def reset
       @scanner.reset
     end
