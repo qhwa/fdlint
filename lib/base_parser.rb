@@ -18,7 +18,7 @@ module XRay
     end
 
     def skip_empty
-      @scanner.skip /\s*/
+      @scanner.check(/\s+/) && @scanner.skip(/\s+/)
     end
       
     def skip(pattern, not_skip_empty = false)
@@ -32,10 +32,12 @@ module XRay
     end
 
     def check(pattern, not_skip_empty = false)
-      last_pos = @scanner.pos
-      not_skip_empty || skip_empty
+      unless not_skip_empty && @scanner.check(/\s+/)
+        last_pos = @scanner.pos
+        @scanner.skip /\s+/
+      end
       ret = @scanner.check pattern
-      @scanner.pos = last_pos
+      @scanner.pos = last_pos if last_pos
       ret
     end
       
