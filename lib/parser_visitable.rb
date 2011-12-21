@@ -67,7 +67,7 @@ module XRay
 
     def visit(name, node)
       walk(name, 'visit_', node) do |result|
-        result && self.count_observers > 0 && notify(node, result)
+        result && notify(node, result)
       end
     end
 
