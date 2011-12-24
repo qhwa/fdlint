@@ -55,8 +55,16 @@ module XRay
     end
 
     def add_visitor(visitor)
-      @visitors ||= []
-      @visitors << visitor
+      @visitors ||= {}
+      
+      visitor.class.public_instance_methods(true).each do |method|
+        method = method.to_s
+        if method.index('visit_') == 0 || 
+            method.index('before_parse_') == 0
+          cache = @visitors[method] ||= []
+          cache << visitor
+        end 
+      end
     end
 
     def results
@@ -81,11 +89,10 @@ module XRay
       end
 
       method = prefix + name 
-      @visitors.each do |visitor|
-        if visitor.respond_to? method
-          result = visitor.send method, *args
-          block && block.call(result)
-        end
+      visitors = @visitors[method]
+      visitors && visitors.each do |visitor|
+        result = visitor.send method, *args
+        block && block.call(result)
       end
     end
 
