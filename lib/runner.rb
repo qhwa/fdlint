@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require 'profile'
+#require 'profile'
 
 require 'logger'
 require_relative 'base_parser'
