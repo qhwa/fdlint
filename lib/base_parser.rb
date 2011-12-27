@@ -15,10 +15,11 @@ module XRay
       text = filter_text(prepare_text(text))
       @pos_info = PositionInfo.new text
       @scanner = StringScanner.new text
+      @text_size = text.size
     end
 
     def skip_empty
-      @scanner.check(/\s+/) && @scanner.skip(/\s+/)
+      @scanner.skip(/\s*/)
     end
       
     def skip(pattern, not_skip_empty = false)
@@ -108,7 +109,7 @@ module XRay
     end
 
     def scanner_pos
-      pos = @scanner.string.size - @scanner.rest.size
+      pos = @text_size - @scanner.rest.size
       @pos_info.locate pos    
     end
 
