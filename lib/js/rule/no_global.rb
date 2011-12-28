@@ -7,37 +7,40 @@ module XRay
       class NoGlobal
 
         def visit_program(prog)
-          ret = []
-          @global_vars && @global_vars.each do |var|
-            ret << VisitResult.new(var, '不允许使用全局变量', :error)
+          @scopes ||= []
+          global_scope = @scopes[0] || []
+          
+          global_scope.collect do |elm|
+            message = elm.type == 'var' ? '不允许使用全局变量' :
+                elm.type == 'function' ? '不允许申明全局函数' : 'assert fail' 
+            VisitResult.new(elm, message, :error)
           end
-
-          @global_funs && @global_funs.each do |fun|
-            ret << VisitResult.new(fun, '不允许申明全局函数', :error)
-          end
-
-          ret
         end
         
         def visit_stat_var(stat)
-          @all_vars ||= []
-          @global_vars ||= [] 
+          scope = current_scope
           stat.declarations.each do |dec|
-            @all_vars << dec
-            @global_vars << dec unless @closure && @closure > 0
+            scope << dec
           end
           nil
         end
 
         def before_parse_function_declaration(*args)
-          @closure = (@closure || 0) + 1
+          @scope_index = (@scope_index || 0) + 1
         end
 
         def visit_function_declaration(fun)
-          @closure -= 1
-          @global_funs ||= []
-          @global_funs << fun if fun.name && @closure == 0
+          @scope_index -= 1
+          current_scope << fun if fun.name
           nil
+        end
+
+        private
+
+        def current_scope
+          @scopes ||= []
+          @scope_index ||= 0
+          @scopes[@scope_index] ||= []
         end
 
       end
