@@ -7,7 +7,7 @@ module XRay
           while expr.is_a?(Expression) && !yield(expr) 
             expr = expr.left
           end
-          return expr && expr.is_a?(Expression) && yield(expr) ? expr : nil
+          expr && expr.is_a?(Expression) && yield(expr) ? expr : nil
         end
       end
 
