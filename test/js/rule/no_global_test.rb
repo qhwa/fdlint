@@ -22,12 +22,14 @@ module XRayTest
             }
             if (a < 100) {
               var b;
-              (function() {
+              (function(k) {
                 var c = 123;
 
-                function d() {
+                function d(j) {
                   a = 1000;
                   z = 200; 
+                  k = 300;
+                  j = 400
                 }
               })();    
             }
@@ -36,7 +38,7 @@ module XRayTest
           ret = parse js 
           assert_equal 4, ret.length
           assert_equal '(var,[(var=,a,1)],)', ret[0].node.text
-          assert_equal '(function,hello,[])', ret[1].node.text
+          assert_equal 'hello', ret[1].node.text
           assert_equal '(var,[(var=,b,)],)', ret[2].node.text
           assert_equal '(=,z,200)', ret[3].node.text
         end

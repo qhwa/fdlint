@@ -66,7 +66,7 @@ module XRayTest
 
       def visit_node_c(node)
         puts "visit node c: #{node}"
-        'visit node c'
+        ['visit node c', :warn]
       end
     end
 

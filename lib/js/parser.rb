@@ -37,14 +37,22 @@ module XRay
 
         pos = skip /function/
 
-        name = (skip_name && check(/\(/)) ? nil : parse_expr_identifier
+        name = (skip_name && check(/\(/)) ? nil : parse_function_name
         skip /\(/
-        params = batch(:parse_expr_identifier, /\)/, /,/)
+        params = parse_function_parameters
         skip /\)\s*\{/
         body = parse_source_elements true
         skip /\}/
          
-        FunctionDeclaraion.new name, Elements.new(params), body, pos
+        FunctionDeclaraion.new name, params, body, pos
+      end
+
+      def parse_function_name
+         parse_expr_identifier
+      end
+
+      def parse_function_parameters
+        Elements.new batch(:parse_expr_identifier, /\)/, /,/)
       end
 
       def parse_singleline_comment
