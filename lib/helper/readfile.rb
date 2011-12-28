@@ -4,7 +4,7 @@
 def readfile(path, opt={})
   if File.readable?(path)
     bin = File.read(path)
-    %w(utf-8 gb18030 gbk gb2312 cp936).any? do |c|
+    %w(ascii-8bit utf-8 ucs-bom shift-jis gb18030 gbk gb2312 cp936).any? do |c|
       begin
         if bin.respond_to? :encode
           text = bin.encode('utf-8', c).force_encoding('utf-8')
