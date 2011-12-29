@@ -26,7 +26,7 @@ module XRay
       not_skip_empty || skip_empty
       pos = scanner_pos
       unless @scanner.skip pattern
-        parse_error "skip fail: #{pattern}"
+        parse_error pattern
       end
       after_skip pattern
       pos
@@ -52,7 +52,7 @@ module XRay
       not_skip_empty || skip_empty
       pos = scanner_pos
       text = @scanner.scan pattern
-      text ? Node.new(text, pos) : parse_error("scan fail: #{pattern}")
+      text ? Node.new(text, pos) : parse_error(pattern)
     end
       
     def batch(name, stop = nil, skip_pattern = nil, not_skip_empty = false, &block)
@@ -97,9 +97,14 @@ module XRay
       log "#{message}#{pos}", :warn
     end
 
-    def parse_error(message)
+    def parse_error(pattern)
+      if pattern.respond_to?(:source)
+        message = "should be #{pattern.source} here"
+      else
+        message = pattern.to_s
+      end
       pos = scanner_pos
-      log "#{message}#{pos}", :error
+      log "#{message} #{pos}", :error
       raise ParseError.new(message, pos)
     end
       

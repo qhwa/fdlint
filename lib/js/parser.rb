@@ -26,6 +26,8 @@ module XRay
         Program.new parse_source_elements
       end
 
+      alias_method :parse, :parse_program
+
       def parse_source_element
         log 'parse source_element'
 

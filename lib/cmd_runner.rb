@@ -86,21 +86,64 @@ module XRay
 
       if @core_runner.valid_file? file
         f = file.to_s
-        good, results = @core_runner.check_file( f )
+        results = @core_runner.check_file( f )
 
-        if good
+        if results.empty?
           print "[OK]".white.green_bg << " #{f}" << "\n"
         elsif opt[:list]
           puts "[EE]".white.red_bg << " #{f}"
-          @core_runner.print_results :prefix => ' ' * 5
+          print_results(
+            results, 
+            opt.merge(:prefix => ' ' * 5)
+          )
         else
           puts ""
           puts "[EE] #{f}".white.magenta_bg
-          @core_runner.print_results_with_source :prefix => '    > '
+          print_results_with_source(
+            results, 
+            @core_runner.source, 
+            opt.merge(:prefix => '    > ')
+          )
           puts ""
         end
       end
     end
+
+    def print_results( results, opt={} )
+      prf = opt[:prefix] || ''
+      suf = opt[:suffix] || ''
+      results.each do |r|
+        t = r.send( opt[:colorful] ? :to_color_s : :to_s )
+        puts prf + t + suf
+      end
+    end
+
+    def print_results_with_source( results, source, opt={} )
+      if source
+        lines = source.split(/\r\n|\n|\r/)
+        prf = opt[:prefix] || ''
+        suf = opt[:suffix] || ''
+        results.each do |r|
+          t = r.send( opt[:colorful] ? :to_color_s : :to_s )
+          if r.row && r.row > 0
+            col = r.column - 1
+            row = r.row - 1
+            line_t = lines[row]
+            left = col - 50
+            right = col + 50
+            left = 0 if left < 0
+            puts prf + lines[row][left..right].gsub(/\t/, ' ')
+            puts prf + ' ' * (col - left) << '^ ' << t
+            puts "\n"
+          else
+            puts t + suf + "\n"
+          end
+        end
+      else
+        print_results
+      end
+    end
+
 
   end
 

@@ -23,6 +23,8 @@ module XRay
         StyleSheet.new stats
       end
 
+      alias_method :parse, :parse_stylesheet
+
       # ruleset or directive
       def parse_statement
         log 'parse statement'

@@ -25,6 +25,8 @@ module XRay
         wrap(klass, method)
       end
 
+      wrap_strong_parse(klass) if klass.method_defined? :parse
+
       def klass.method_added(method)
         unless @flag
           @flag = true
@@ -52,6 +54,23 @@ module XRay
           node
         end
       end
+    end
+
+    def self.wrap_strong_parse(klass)
+      klass.instance_eval do
+        alias_method :parse_not_strong, :parse
+        
+        define_method(:parse) do 
+          begin
+            self.send(:parse_not_strong)
+          rescue ParseError => e
+            @results ||= []
+            @results << LogEntry.new( e.to_s, :fatal, e.position.row, e.position.column )
+          end
+        end
+
+      end
+      
     end
 
     def add_visitor(visitor)
