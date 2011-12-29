@@ -9,7 +9,7 @@ module XRay
     def print(out=STDOUT)
       prf = @opt[:file]
       @results.each do |r|
-        out.puts "#{prf}:#{r.row},#{r.column}:#{r.message}"
+        out.puts "#{prf}:[#{r.level}]:#{r.row},#{r.column}:#{r.message}"
       end
       
     end
