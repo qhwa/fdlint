@@ -128,7 +128,6 @@ module XRay
           if r.row && r.row > 0
             col = r.column - 1
             row = r.row - 1
-            line_t = lines[row]
             left = col - 50
             right = col + 50
             left = 0 if left < 0
@@ -143,7 +142,6 @@ module XRay
         print_results
       end
     end
-
 
   end
 
