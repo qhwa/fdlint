@@ -274,6 +274,19 @@ module XRayTest
         assert_equal 3, sheet.statements.length
       end
 
+      def test_complicated_font_family
+        css = %q[
+          .base {
+            font-family: "Lucida Sans", Arial, "\6587\6CC9\9A7F\5FAE\7C73\9ED1"; 
+          }
+        ]
+
+        parser = create_parser css
+        sheet = parser.parse_stylesheet
+        assert_equal '"Lucida Sans", Arial, "\6587\6CC9\9A7F\5FAE\7C73\9ED1"', sheet.rulesets.first.declarations.first.expression.to_s
+        
+      end
+
       def create_parser(css)
         Parser.new(css, Logger.new(STDOUT))
       end

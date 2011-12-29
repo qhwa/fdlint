@@ -9,7 +9,7 @@ module XRay
       TERM = %q([^;{}'"])
       QUOT_EXPR = "#{TERM}*'[^']*'#{TERM}*"
       DQUOT_EXPR = %Q(#{TERM}*"[^"]*"#{TERM}*)
-      R_EXPR = %r"(?:#{QUOT_EXPR})|(?:#{DQUOT_EXPR})|(?:#{TERM}+)"
+      R_EXPR = %r"(?:#{QUOT_EXPR})+|(?:#{DQUOT_EXPR})+|(?:#{TERM}+)"
 
 
       def parse_stylesheet(inner = false)
