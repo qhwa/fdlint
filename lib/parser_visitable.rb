@@ -97,25 +97,25 @@ module XRay
     end
 
     def notify(node, results)
-      if results.empty?
-        return
+      @results ||= []
+      if results.is_a?(Array) && results.size > 0
+        if results[0].is_a? Array
+          results.each do |ret|
+            do_notify node, ret, ret.is_a?(VisitResult)
+          end
+        else
+          do_notify node, results
+        end
+      elsif results.is_a? VisitResult
+        do_notify node, results, true 
       end
-      
-      results = [results] unless results[0].is_a?(Array) || 
-          results[0].is_a?(VisitResult)
-      
-      results.each { |ret|
-        message, level = ret
-        
-        result = ret.is_a?(VisitResult) ? ret :
-            VisitResult.new(node, message, level || :info)
+    end
 
-        @results ||= []
-        @results << result
-
-        self.changed
-        notify_observers(result, self)
-      }
+    def do_notify(node, ret, flag = false)
+      ret = VisitResult.new(node, ret[0], ret[1]) unless flag
+      @results << ret
+      self.changed
+      notify_observers ret, self
     end
 
   end

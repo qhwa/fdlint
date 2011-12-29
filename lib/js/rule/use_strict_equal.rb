@@ -13,7 +13,7 @@ module XRay
         end
          
       end
-    
+
     end
   end
 end
