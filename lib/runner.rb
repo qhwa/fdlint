@@ -16,7 +16,7 @@ require_relative 'html/parser'
 require_relative 'html/rule/check_tag_rule'
 require_relative 'js/parser'
 require_relative 'js/rule/all'
-require_relative 'helper/readfile'
+require_relative 'helper/file_reader'
 require_relative 'helper/code_type'
 
 
@@ -42,6 +42,8 @@ module XRay
 
 
   class Runner
+    
+    include Helper::FileReader
 
     attr_reader :source
   

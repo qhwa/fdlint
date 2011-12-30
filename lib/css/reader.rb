@@ -1,13 +1,15 @@
 require_relative '../encoding_error'
-require_relative '../helper/readfile'
+require_relative '../helper/file_reader'
 
 module XRay
   module CSS
     
     class Reader
+      
+      include XRay::Helper
 
       def self.read( file, opt = {} )
-        source, enc = readfile(file)
+        source, enc = FileReader::readfile(file)
         declare = get_encoding_declaration(file)
         if declare and enc != declare
           raise EncodingError.new
