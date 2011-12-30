@@ -70,7 +70,8 @@ module XRay
       begin
         file_val = FileValidator.new @opt.merge(opt)
         file_val.add_validator XRay::CSS::Rule::FileNameChecker.new( @opt.merge opt )
-        file_val.add_validator XRay::CSS::Rule::CompressionChecker.new( @opt.merge opt )
+        #css文件暂时不需要压缩
+        #file_val.add_validator XRay::CSS::Rule::CompressionChecker.new( @opt.merge opt )
         results.concat file_val.validate(file)
 
         source = XRay::CSS::Reader.read( file, @opt )
