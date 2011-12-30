@@ -82,6 +82,8 @@ module XRayTest
 
         assert_equal 'div, #header .mypart, .div ul li', rs[0].selector.text
         assert_equal 3, rs[0].selector.simple_selectors.length
+
+        assert_equal 'ul, body a, .part ul:first', rs[1].selector.text
         
         assert_equal 'a[name="helloworld"]', rs[2].selector.simple_selectors[0].text
       end
