@@ -5,16 +5,27 @@ module XRay
   module CSS
     
     class Parser < XRay::BaseParser
-
       TERM = %q([^;{}'"])
-      QUOT_EXPR = "#{TERM}*'[^']*'#{TERM}*"
-      DQUOT_EXPR = %Q(#{TERM}*"[^"]*"#{TERM}*)
-      R_EXPR = %r"(?:#{QUOT_EXPR})|(?:#{DQUOT_EXPR})|(?:#{TERM}+)"
+      TERM2 = %q([^;{}'",])
+      QUOT_EXPR = "'[^']*'"
+      DQUOT_EXPR = '"[^"]*"'
 
+      R_IDENT = /-?[_a-z][_a-z0-9-]*/
+      R_ANY = %r"((?:#{TERM})|(?:#{QUOT_EXPR})|(?:#{DQUOT_EXPR}))+"
+      R_SELECTOR = %r"((?:#{TERM2})|(?:#{QUOT_EXPR})|(?:#{DQUOT_EXPR}))+"
+
+      attr_reader :comments
+
+      def initialize(css, logger)
+        super
+        @comments = []
+      end
 
       def parse_stylesheet(inner = false)
         log 'parse stylesheet'
         
+        do_parse_comment
+
         stats = batch(:parse_statement) do 
           skip_empty
           !(inner ? check(/\}/) : eos?)
@@ -38,10 +49,11 @@ module XRay
         log 'parse directive'
 
         skip /@/
-        keyword = scan /\w+/
+        keyword = scan R_IDENT 
         skip_empty
-
-        expr = check(R_EXPR) ? scan(R_EXPR) : nil
+        
+        expr = check(/\{/) || check(/;/) ? nil : 
+            scan(R_ANY)
 
         block = nil
         if check /\{/
@@ -54,44 +66,47 @@ module XRay
           skip /;/ 
         end
 
-        skip_more_semicolon
-
-        log "keyword: #{keyword} #{keyword.position}"
-        log("expression: #{expr} #{expr.position}") if expr
-        log("block: #{block} #{block.position}") if block
+        log "  keyword: #{keyword} #{keyword.position}"
+        log("  expression: #{expr} #{expr.position}") if expr
+        log("  block:\n#{block}\n#{block.position}") if block
         Directive.new keyword, expr, block
       end
       
       def parse_ruleset
         log 'parse ruleset'
 
-        selector = parse_selector
+        selector = check(/\{/) ? nil : parse_selector
         skip /\{/
         declarations = parse_declarations
         skip /\}/
         
-        log "ruleset parsed\n"
         RuleSet.new selector, declarations
       end
       
       def parse_selector
         log ' parse selector'
-        simple_selectors = batch(:parse_simple_selector, /\{/)
+        simple_selectors = batch(:parse_simple_selector, /\{/, /,/)
         Selector.new simple_selectors
       end
 
       def parse_simple_selector
-        log '   parse simple selector'
-        selector = scan /[^,\{]+/
-
-        check(/,/) && skip(/,/)
-
-        log " [#{selector}] #{selector.position}"
+        log '  parse simple selector'
+        selector = scan R_SELECTOR 
+        log "   #{selector} #{selector.position}"
         selector
       end
       
       def parse_declarations
-        batch(:parse_declaration, /\}/)
+        first = true
+        batch(:parse_declaration) do
+          if check /\}/
+            false
+          else 
+            skip(first ? /[;\s]*/ : /[;\s]+/)
+            first = false
+            !check /\}/
+          end
+        end
       end
       
       def parse_declaration
@@ -99,59 +114,56 @@ module XRay
         
         property = parse_property
         skip /:/
-        expression = parse_expression
+        value = parse_value
         
-        # 可选的分号
-        semicolon = check(/\}/) ? /;?/ : /;/
-        skip semicolon
-
-        skip_more_semicolon
-
-        Declaration.new(property, expression)
+        Declaration.new(property, value)
       end
       
       def parse_property
-        log '     parse property'
-        property = scan /[^:]+/
-        log "     [#{property}] #{property.position}"
+        log '    parse property'
+        property = scan R_IDENT 
+        log "     #{property} #{property.position}"
         property
       end
       
-      def parse_expression
-        log '     parse expression'
+      def parse_value
+        log '    parse value'
 
-        expr = scan R_EXPR
-        log "     [#{expr}] #{expr.position}"
-        expr
+        value = scan R_ANY 
+        log "     #{value} #{value.position}"
+        value 
+      end
+
+      def parse_comment
+        log 'pare comment'
+        comment =  raw_scan /\/\*[^*]*\*+([^\/*][^*]*\*+)*\//
+        log "  #{comment}" 
+        comment
       end
      
       protected 
 
-      def filter_text(css)
-        filter_css css
+      #override
+      def after_scan(pattern)
+        do_parse_comment
+      end
+
+      def after_skip(pattern)
+        do_parse_comment
       end
 
       private
-      
-      def filter_css(css)
-        filter_comment css
-      end
-      
-      def filter_comment(css)
-        re_comment = /\/\*[^*]*\*+([^\/*][^*]*\*+)*\//
-        css.gsub(re_comment) do |m| 
-          log "ignore comments: \n#{m}"
-          m.gsub /\S/, ' '
+
+      def do_parse_comment
+        while true
+          if check /\/\*/
+            @comments << parse_comment
+          else
+            break
+          end
         end
       end
-
-      def skip_more_semicolon
-        if check /;/
-          skip /\s*;/
-          parse_warn 'more than one semicolon'
-        end
-      end
-
+      
     end
     
   end

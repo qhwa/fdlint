@@ -69,7 +69,7 @@ module XRay
 
         def check_declaration_font(dec)
           if dec.property =~ /^font(-family)?$/ && 
-              dec.expression.to_s.each_byte.any? {|b| b>127}
+              dec.value.to_s.each_byte.any? {|b| b>127}
             ['字体名称中的中文必须用ascii字符表示', :error]
           end
         end
@@ -102,23 +102,23 @@ module XRay
           end
         end
 
-        # expression
+        # value
 
-        def visit_expression(expr)
+        def visit_value(value)
           dispatch([
-            :check_expression_use_css_expression,
-            :check_expression_hack
-          ], expr);
+            :check_value_use_css_expression,
+            :check_value_use_hack
+          ], value);
         end
 
-        def check_expression_use_css_expression(expr)
-          if expr =~ /^expression\(/
+        def check_value_use_css_expression(value)
+          if value =~ /^expression\(/
             ['禁止使用CSS表达式', :error]
           end
         end
 
-        def check_expression_hack(expr)
-          if expr =~ /\\\d$/
+        def check_value_use_hack(value)
+          if value =~ /\\\d$/
             ['合理使用hack', :error]
           end
         end

@@ -6,7 +6,7 @@ module XRay
     
     class StyleSheet < Node
       attr_reader :statements
-      
+
       def initialize(statements)
         @statements = statements
       end
@@ -20,12 +20,14 @@ module XRay
       end
 
       def directives
-        statements.select { |elm| elm.class == Directive }
+        statements.select { |elm| elm.is_a? Directive }
       end
 
       def rulesets
-        statements.select { |elm| elm.class == RuleSet }
+        statements.select { |elm| elm.is_a? RuleSet }
       end
+
+      alias :at_rules :directives
     end
 
     class Directive < Node
@@ -90,14 +92,14 @@ module XRay
     end
 
     class Declaration < Node
-      attr_reader :property, :expression
+      attr_reader :property, :value
 
-      def initialize(property, expression)
-        @property, @expression = property, expression
+      def initialize(property, value)
+        @property, @value = property, value
       end
 
       def text
-        "#{property}: #{expression}"
+        "#{property}: #{value}"
       end
 
       def position

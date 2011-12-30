@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require_relative '../helper'
 
 require 'css/parser'
@@ -8,274 +10,194 @@ module XRayTest
     class ParserTest < Test::Unit::TestCase 
       ParseError = XRay::ParseError
       include XRay::CSS
-      
-      def test_parse_empty
-        css = "  \n ";
-        parser = create_parser css
-        sheet = parser.parse_stylesheet
 
-        assert_equal 0, sheet.rulesets.size, 'test empty css text'
-      end
-      
-      def test_parse_simple
-          css = '
-            body {
-              color: #333;
-              background: #ffffff url(img/bg.png) no-repeat left top; 
-            }
-            #content {
-              font-size: 12px;
-            }
-            a:hover {
-              color: #ff7300;
-            }'
-            
-          parser = create_parser css
-          sheet = parser.parse_stylesheet
-          check_parse_simple sheet
-      end
-      
-      def check_parse_simple(sheet)
-        rulesets = sheet.rulesets
-        assert_equal 3, rulesets.length
-        
-        # body
-        rs = rulesets[0]
-        assert_equal 'body', rs.selector.text
-        
-        decs = rs.declarations
-        assert_equal 2, decs.length
-        
-        dec = decs[0];
-        assert_equal 'color', dec.property.text
-        assert_equal '#333', dec.expression.text
-        
-        dec = decs[1];
-        assert_equal 'background', dec.property.text
-        assert_equal '#ffffff url(img/bg.png) no-repeat left top', dec.expression.text
-        
-        # #content
-        rs = rulesets[1]
-        assert_equal '#content', rs.selector.text
-        
-        decs = rs.declarations
-        assert_equal 1, decs.length
-        
-        dec = decs[0];
-        assert_equal 'font-size', dec.property.text
-        assert_equal '12px', dec.expression.text
-        
-        # a:hover
-        rs = rulesets[2]
-        assert_equal 'a:hover', rs.selector.text
-      end
-      
-      def test_parse_with_doc_comment
-        css = '
-            body {
-              color: #333;
-              background: #ffffff url(img/bg.png) no-repeat left top; 
-            }
-            
-            /**
-             * div a.open
-             */
-            div a.open {
-              font-size: 12px;
-            }
-            
-            a:hover {
-              color: #ff7300;
-            }'
-            
-        parser = create_parser css
-        sheet = parser.parse_stylesheet
+      def test_parse_stylesheet_empty
+        puts 'test_parse_stylesheet_empty'
 
-        assert_equal 3, sheet.rulesets.length
-        rs = sheet.rulesets[1]
-        assert_equal 'div a.open', rs.selector.text
+        css = "  \n "
+        sheet = parse_css css
+        assert_equal 0, sheet.statements.size
       end
-      
-      def test_parse_with_inline_comment
+
+      def test_parse_directive
+        puts 'test_parse_directive'
+
         css = '
-            a {
-              color: #333;
-              text-decoration: none;
-            }
-            a:hover {
-              color: #f7300; /* this is inline comment */
-              text-decoration: underline;
-            }
-          '
-        parser = create_parser css
-        sheet = parser.parse_stylesheet
+          @import "subs.css";
+          @import "print-main.css" print;
+          @-moz-border-radius print {
+            body { font-size: 10pt }
+          }
+          h1 { color: blue } 
+
+          @import url(http://style.china.alibaba.com/css/fdevlib2/grid/grid-min.css);
+        '
+        sheet = parse_css css
         
-        assert_equal 2, sheet.rulesets.length
-        
-        rs = sheet.rulesets[1]
-        dec = rs.declarations[0]
-        
-        assert_equal 'color', dec.property.text
-        assert_equal '#f7300', dec.expression.text
+        at_rules = sheet.at_rules 
+        assert_equal 4, at_rules.size
+       
+        assert_equal 'import', at_rules[1].keyword.text
+        assert_equal '"print-main.css" print', at_rules[1].expression.text
+        assert_equal '-moz-border-radius', at_rules[2].keyword.text 
+        assert_equal 'url(http://style.china.alibaba.com/css/fdevlib2/grid/grid-min.css)', 
+            at_rules[3].expression.text 
       end
-      
-      def test_parse_expression_with_special
-        css = %q[url("http://alibaba.com/{123}456")]
-        parser = create_parser css
-        
-        expr = parser.parse_expression
-        assert_equal css, expr.text
+
+      def test_parse_ruleset
+        puts 'test_parse_ruleset'
+
+        css = '
+          a { font-size: 12px }
+          { color: #fff } /* no selector */
+        '
+
+        sheet = parse_css css
+        rs = sheet.rulesets
+        assert_equal 2, rs.size
+
+        assert_equal 'a', rs[0].selector.text
+        assert_equal nil, rs[1].selector
       end
-      
-      def test_parse_with_special
-        css = %q[
-            div ul>li:first {
-              content: '{123}hello"';
-              background: url("http://alibaba.com/{123}456")
-            }]
-            
-        parser = create_parser css
-        sheet = parser.parse_stylesheet
+
+      def test_parse_selector
+        puts 'test_parse_selector' 
+
+        css = '
+          div, #header .mypart, .div ul li {
+              font-size: 12px;
+          }
+          ul, body a, .part ul:first {
+            background: #f00;
+          }
+
+          a[name="helloworld"], a {
+            color: #fff;
+          }
+        '
+
+        sheet = parse_css css
+        rs = sheet.rulesets
+        assert_equal 3, rs.length
+
+        assert_equal 'div, #header .mypart, .div ul li', rs[0].selector.text
+        assert_equal 3, rs[0].selector.simple_selectors.length
         
+        assert_equal 'a[name="helloworld"]', rs[2].selector.simple_selectors[0].text
+      end
+
+      def test_parse_declarations
+        puts 'text_parse_declarations'
+
+        css = '
+          body {
+            ;;
+            color: #333;
+            ; 
+            font-size: 12px   
+          }
+
+          a:hover {
+            color: #ff7300    
+          }
+
+          #content {
+            font-size: 12px;
+            width: 952px;
+            background: #ffffff url(img/bg.png) no-repeat left top;
+          }
+        '
+
+        sheet = parse_css css
+        rs = sheet.rulesets
+        assert_equal 3, rs.size
+
+        decs = rs[0].declarations
+        assert_equal 2, decs.size
+        assert_equal 'color', decs[0].property.text
+        assert_equal '#333', decs[0].value.text
+        assert_equal 'font-size', decs[1].property.text
+        assert_equal '12px', decs[1].value.text
+
+        assert_equal 1, rs[1].declarations.size
+        
+        decs = rs[2].declarations
+        assert_equal 3, decs.size
+        assert_equal 'font-size', decs[0].property.text
+        assert_equal '12px', decs[0].value.text
+        assert_equal 'width', decs[1].property.text
+        assert_equal '952px', decs[1].value.text
+        assert_equal '#ffffff url(img/bg.png) no-repeat left top', decs[2].value.text
+      end
+
+      def test_parse_value
+        css = %q[  
+          div ul>li:first {
+            content: '{123}hello"';
+            background: url("http://alibaba.com/{123}456")         
+          }
+        ]
+
+        sheet = parse_css css
         rs = sheet.rulesets[0]
-        assert_equal 'div ul>li:first', rs.selector.text
-        
         decs = rs.declarations
-        assert_equal 2, decs.length
-        
-        dec = decs[0]
-        assert_equal 'content', dec.property.text
-        assert_equal %q['{123}hello"'], dec.expression.text
-        
-        dec = decs[1]
-        assert_equal 'background', dec.property.text
-        assert_equal %q[url("http://alibaba.com/{123}456")], dec.expression.text
+
+        assert_equal 'div ul>li:first', rs.selector.text
+        assert_equal %q/'{123}hello"'/, decs[0].value.text
+        assert_equal 'url("http://alibaba.com/{123}456")', decs[1].value.text
       end
-
-      def test_simple_selector
-         css = %q[
-            div, #header .mypart, .div ul li {
-                font-size: 12px;
-            }
-            ul, body a, .part ul:first {
-              background: #f00;
-            }]
-
-            
-        parser = create_parser css
-        sheet = parser.parse_stylesheet
-
-        rs = sheet.rulesets[0];
-        s_selectors = rs.selector.simple_selectors
-        assert_equal 3, s_selectors.length
-        
-        assert_equal 'div', s_selectors[0].text
-        assert_equal '#header .mypart', s_selectors[1].text
-        assert_equal '.div ul li', s_selectors[2].text
-
-        rs = sheet.rulesets[1]
-        s_selectors = rs.selector.simple_selectors
-        assert_equal 3, s_selectors.length
-
-        assert_equal 'ul', s_selectors[0].text
-        assert_equal 'body a', s_selectors[1].text
-        assert_equal '.part ul:first', s_selectors[2].text
-      end
-
-      def test_bloken_css_01
+      
+      def test_parse_stylesheet_broken_01
         css = 'body {'
-        parser = create_parser css
 
         assert_raise(ParseError) {
-          parser.parse_stylesheet 
+          parse_css css
         }
 
-        parser.reset
-
         begin
-          parser.parse_stylesheet
+          parse_css css
         rescue ParseError => e
-          puts "#{e.message}#{e.position}"
+          pos = e.position
+          assert_equal 1, pos.row
+          assert_equal 7, pos.column
+          puts "#{e.message}#{pos}"
         end
       end
 
-      def test_directive_with_expression
-        css = %q[
-            @import url(http://style.china.alibaba.com/css/fdevlib2/reset/reset-min.css);
-            @import url(http://style.china.alibaba.com/css/fdevlib2/grid/grid-min.css);
-            @import url("http://style.china.alibaba.com/css/lib/fdev-v3/fdev.css");
-          ]
+      def test_parse_comment
+        puts 'test_parse_comment'
+
+        css = '
+          /**
+           * this is comment
+           */
+          body {
+            font-size: 12px;
+            /**/
+            /**这个是中文注释*/ 
+          }
+          /*this is comment 2*/
+          
+          a { font-size: 14px; }
+        '
 
         parser = create_parser css
-        sheet = parser.parse_stylesheet
+        parser.parse_stylesheet
 
-        directives = sheet.directives
-        assert_equal 3, directives.length
-
-        directive = directives[0]
-        assert_equal 'import', directive.keyword.text
-        assert_equal 'url(http://style.china.alibaba.com/css/fdevlib2/reset/reset-min.css)', directive.expression.text
-
-        directive = directives[2]
-        assert_equal 'import', directive.keyword.text
-        assert_equal 'url("http://style.china.alibaba.com/css/lib/fdev-v3/fdev.css")', directive.expression.text
+        comments = parser.comments
+        assert_equal 4, comments.size
+        assert_equal '/**这个是中文注释*/', comments[2].text
       end
 
-      def test_directive_with_expression_2
-        css = %q[
-            @import "subs.css";
-            h1 { color: #ff0000 }
-          ]
-
-        parser = create_parser css
-        sheet = parser.parse_stylesheet
-        directives = sheet.directives
-
-        assert_equal 1, directives.length
-        directive = directives[0]
-        assert_equal 'import', directive.keyword.text
-        assert_equal '"subs.css"', directive.expression.text
-      end
-
-      def test_directive_with_block
-        css = %q[
-            @import "subs.css";
-            @media print {
-              @import "print-main.css";
-              body { font-size: 10pt }
-            }
-            h1 { color: blue }
-          ]
-
-        parser = create_parser css
-        sheet = parser.parse_stylesheet
-        directives = sheet.directives
-        assert_equal 2, directives.length
-
-        rulesets = sheet.rulesets
-        assert_equal 1, rulesets.length
-      end
-
-      def test_expression_with_more_semicolon
-        css = %q[
-            body {
-              font-size: 12px;;
-            }
-            @import "subs.css";;
-            @import print {
-              body {
-                font-size: 14px;
-              }
-            };
-          ]
-
-        parser = create_parser css
-        sheet = parser.parse_stylesheet
-        assert_equal 3, sheet.statements.length
-      end
+      private
 
       def create_parser(css)
-        Parser.new(css, Logger.new(STDOUT))
+        Parser.new css, Logger.new(STDOUT)
+      end
+
+      def parse_css(css, name = 'stylesheet')
+        parser = create_parser css
+        parser.send "parse_#{name}"
       end
       
     end

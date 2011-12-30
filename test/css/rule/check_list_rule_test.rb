@@ -134,18 +134,18 @@ module XRayTest
           end
         end
 
-        def test_check_css_expression
+        def test_check_value_use_css_expression
           expr = Node.new 'expression(onfocus=this.blur())'
-          message, level = @rule.check_expression_use_css_expression expr
+          message, level = @rule.check_value_use_css_expression expr
           assert_equal :error, level
           puts message
         end
 
-        def test_check_css_expression_hack
+        def test_check_value_use_hack
           exprs = %w(9px\0 #000\9)
           exprs.each do |expr|
             expr = Node.new expr
-            message, level = @rule.check_expression_hack expr
+            message, level = @rule.check_value_use_hack expr
             assert_equal :error, level
           end
         end
