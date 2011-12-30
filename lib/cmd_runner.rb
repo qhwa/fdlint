@@ -3,14 +3,9 @@ require 'optparse'
 require 'find'
 require_relative 'runner'
 
-if ENV['OS'] =~ /windows/i
-  require 'win32console' 
-  system "chcp 65001"
-end
-
-Version = "0.1"
-
 module XRay
+
+  Version = "0.1"
 
   class CMDOptions
 
@@ -20,7 +15,8 @@ module XRay
         :encoding   => 'gb2312',
         :colorful   => true,
         :type       => nil,
-        :check_min  => false
+        :check_min  => false,
+        :format     => :console
       }
 
       opts = OptionParser.new do |opts|
@@ -42,6 +38,9 @@ module XRay
         end
         opts.on("--checkmin", "-m", "check minified files too. (e.g. *-min.js; *-min.css)") do
           options[:check_min] = true
+        end
+        opts.on("--format [type]", [:console, :nocolor, :vim], "output format. Can be 'vim', 'console' or 'nocolor'. Default is 'console'") do |f|
+          options[:format] = f.intern
         end
       end
 
@@ -86,20 +85,26 @@ module XRay
 
       if @core_runner.valid_file? file
         f = file.to_s
-        good, results = @core_runner.check_file( f )
+        results = @core_runner.check_file( f )
 
-        if good
-          print "[OK]".white.green_bg << " #{f}" << "\n"
-        elsif opt[:list]
-          puts "[EE]".white.red_bg << " #{f}"
-          @core_runner.print_results :prefix => ' ' * 5
-        else
-          puts ""
-          puts "[EE] #{f}".white.magenta_bg
-          @core_runner.print_results_with_source :prefix => '    > '
-          puts ""
-        end
+        print_results(
+          results, 
+          opt.merge({
+            :prefix   => ' ' * 5,
+            :file     => f,
+            :source   => @core_runner.source
+          })
+        )
       end
+    end
+
+    def print_results( results, opt={} )
+      require_relative "printer/#{print_type(opt[:format])}_printer"
+      XRay.printer.new( results, opt ).print
+    end
+
+    def print_type(format)
+      format || 'base'
     end
 
   end

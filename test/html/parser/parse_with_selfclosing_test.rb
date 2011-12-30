@@ -9,18 +9,18 @@ module XRayTest
         include XRay::HTML
         
         def test_self_close
-          XRay::HTML::Parser.new('<div class="info" />') do |e|
+          XRay::HTML::Parser.parse('<div class="info" />') do |e|
             assert_equal Element.new('div', {:class=>"info"}), e
           end
         end
 
         def test_close_outside
-          XRay::HTML::Parser.new('<div class="info" ></div>') do |e|
+          XRay::HTML::Parser.parse('<div class="info" ></div>') do |e|
             assert_equal Element.new('div', {:class=>"info"}), e
           end
         end
         def test_center_tag
-          XRay::HTML::Parser.new('<center></center>') do |e|
+          XRay::HTML::Parser.parse('<center></center>') do |e|
             assert_equal Element.new('center'), e
           end
         end

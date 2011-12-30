@@ -13,7 +13,7 @@ module XRay
       R_IDENT = /-?[_a-z][_a-z0-9-]*/
       R_ANY = %r"((?:#{TERM})|(?:#{QUOT_EXPR})|(?:#{DQUOT_EXPR}))+"
       R_SELECTOR = %r"((?:#{TERM2})|(?:#{QUOT_EXPR})|(?:#{DQUOT_EXPR}))+"
-
+      
       attr_reader :comments
 
       def initialize(css, logger)
@@ -33,6 +33,8 @@ module XRay
         
         StyleSheet.new stats
       end
+
+      alias_method :parse, :parse_stylesheet
 
       # ruleset or directive
       def parse_statement

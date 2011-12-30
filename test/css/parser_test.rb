@@ -136,7 +136,8 @@ module XRayTest
         css = %q[  
           div ul>li:first {
             content: '{123}hello"';
-            background: url("http://alibaba.com/{123}456")         
+            background: url("http://alibaba.com/{123}456");       
+            font-family: "Lucida Sans", Arial, "\6587\6CC9\9A7F\5FAE\7C73\9ED1";
           }
         ]
 
@@ -147,6 +148,8 @@ module XRayTest
         assert_equal 'div ul>li:first', rs.selector.text
         assert_equal %q/'{123}hello"'/, decs[0].value.text
         assert_equal 'url("http://alibaba.com/{123}456")', decs[1].value.text
+        assert_equal '"Lucida Sans", Arial, "\6587\6CC9\9A7F\5FAE\7C73\9ED1"', 
+            decs[2].value.text
       end
       
       def test_parse_stylesheet_broken_01
@@ -201,7 +204,9 @@ module XRayTest
         parser = create_parser css
         parser.send "parse_#{name}"
       end
-      
+
+
+
     end
   end
 end

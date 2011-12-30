@@ -16,7 +16,7 @@ module XRay
         val_results = val.check( file )
         results.concat( val_results ) unless val_results.nil? or val_results.empty?
       end
-      [results.empty? , results]
+      results
     end
 
     alias_method :validate, :check

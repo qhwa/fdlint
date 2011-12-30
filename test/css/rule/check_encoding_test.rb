@@ -36,7 +36,7 @@ module XRayTest
         end
 
         def test_check_gb2312_file_well_written
-          check_file "#{FIXTURE_PATH}/css/gb_good.css" do |results|
+          check_file "#{FIXTURE_PATH}/css/gb-good.css" do |results|
             assert !has_encoding_error?(results), "GB2312的文件应该可以被正常读取"
           end
         end
@@ -50,7 +50,7 @@ module XRayTest
         
         private
         def check_file( file )
-          good, results = @runner.check_css_file file
+          results = @runner.check_css_file file
           yield results
         end
 
