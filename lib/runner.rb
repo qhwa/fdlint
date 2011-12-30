@@ -22,31 +22,21 @@ require_relative 'helper/code_type'
 
 module XRay
 
-  module ParseAndChecker
-    def parse_and_check
-      parse
-      results
-    end
-  end
-
   module CSS
     class VisitableParser < Parser
       include XRay::ParserVisitable
-      include XRay::ParseAndChecker
     end
   end
 
   module HTML 
     class VisitableParser < Parser
       include XRay::ParserVisitable
-      include XRay::ParseAndChecker
     end
   end
 
   module JS
     class VisitableParser < Parser
       include XRay::ParserVisitable
-      include XRay::ParseAndChecker
     end
   end
 
@@ -70,7 +60,7 @@ module XRay
       parser = XRay::CSS::VisitableParser.new(css, @logger)
       visitor = XRay::CSS::Rule::CheckListRule.new( opt )
       parser.add_visitor visitor
-      parser.parse_and_check
+      run_parser parser
     end
 
     def check_css_file( file, opt={} )
@@ -98,7 +88,7 @@ module XRay
       rules.each do |rule|
         parser.add_visitor rule
       end
-      parser.parse_and_check
+      run_parser parser
     end
 
     def check_js_file(file, opt = {})
@@ -123,7 +113,7 @@ module XRay
       parser = HTML::VisitableParser.new(text, @logger)
       visitor = HTML::Rule::CheckTagRule.new( opt )
       parser.add_visitor visitor
-      parser.parse_and_check
+      run_parser parser
     end
 
     def check_html_file(file, opt={})
@@ -152,6 +142,11 @@ module XRay
     def type_ok?(file)
       return true if @opt[:type].nil?
       CodeType.guess_by_name(file) == @opt[:type]
+    end
+
+    def run_parser(parser)
+      parser.parse_no_throw
+      parser.results
     end
 
   end

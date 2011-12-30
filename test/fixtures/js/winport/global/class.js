@@ -30,5 +30,7 @@ WP.Class = function(parent, o) {
 	return klass;
 };
 
+function(name
+
 
 })(jQuery, Platform.winport);
