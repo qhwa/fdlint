@@ -132,12 +132,38 @@ module XRayTest
         assert_equal '#ffffff url(img/bg.png) no-repeat left top', decs[2].value.text
       end
 
+      def test_parse_property
+        puts 'test_parse_property'
+
+        css = %q[
+          body {
+            color: #f00;
+            _color: #0ff;
+            *font-size: 12px;
+            background: '';
+            -moz-border-radius: ''
+          }
+        ]
+
+        sheet = parse_css css
+        decs = sheet.rulesets[0].declarations
+        assert_equal 'color', decs[0].property.text
+        assert_equal '_color', decs[1].property.text
+        assert_equal '*font-size', decs[2].property.text
+        assert_equal 'background', decs[3].property.text
+        assert_equal '-moz-border-radius', decs[4].property.text
+      end
+
       def test_parse_value
+        puts 'test_parse_value'
+        
         css = %q[  
           div ul>li:first {
             content: '{123}hello"';
             background: url("http://alibaba.com/{123}456");       
             font-family: "Lucida Sans", Arial, "\6587\6CC9\9A7F\5FAE\7C73\9ED1";
+            font-size: ' ';
+            content: ''
           }
         ]
 
@@ -150,9 +176,13 @@ module XRayTest
         assert_equal 'url("http://alibaba.com/{123}456")', decs[1].value.text
         assert_equal '"Lucida Sans", Arial, "\6587\6CC9\9A7F\5FAE\7C73\9ED1"', 
             decs[2].value.text
+        assert_equal "' '", decs[3].value.text
+        assert_equal "''", decs[4].value.text
       end
       
       def test_parse_stylesheet_broken_01
+        puts 'test_parse_stylesheet_broken_01'
+
         css = 'body {'
 
         assert_raise(ParseError) {
@@ -192,6 +222,61 @@ module XRayTest
         comments = parser.comments
         assert_equal 4, comments.size
         assert_equal '/**这个是中文注释*/', comments[2].text
+      end
+
+      def test_parse_stylesheet_css3
+        puts 'test_parse_stylesheet_css3'
+        
+        css = <<END
+@charset: "utf-8";
+
+/** animation **/
+@-webkit-keyframes greenPulse {
+    from { background-color: #749a02; -webkit-box-shadow: 0 0 9px #333; }
+    50% { background-color: #91bd09; -webkit-box-shadow: 0 0 18px #91bd09; }
+    to { background-color: #749a02; -webkit-box-shadow: 0 0 9px #333; }
+}
+
+.green.button {
+    -webkit-animation-name: greenPulse;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
+}
+
+/** media query import **/
+@import url(color.css) screen and (color);
+
+/** media query **/
+@media all and (min-width:500px) {
+    .big {
+      font-size:120%;
+    }
+}
+
+@media screen and (color), projection and (color) {
+    .big {
+        font-size:120%;
+    }
+}
+END
+        sheet = parse_css css
+        assert_equal 6, sheet.statements.size
+        rule = sheet.at_rules[1]
+        
+        assert_equal '-webkit-keyframes', rule.keyword.text
+        rs = rule.block.rulesets
+        assert_equal 3, rs.size
+
+        assert_equal '50%', rs[1].selector.text
+        assert_equal '-webkit-box-shadow', rs[1].declarations[1].property.text
+        assert_equal '0 0 18px #91bd09', rs[1].declarations[1].value.text
+
+        rule = sheet.at_rules.last
+        assert_equal 'screen and (color), projection and (color)', rule.expression.text
+        
+        rs = rule.block.rulesets[0]
+        assert_equal '.big', rs.selector.text 
+        assert_equal 'font-size: 120%', rs.declarations[0].text
       end
 
       private
