@@ -87,16 +87,17 @@ module XRay
     def check_js(js)
       @source = js
       parser = JS::VisitableParser.new(js, @logger)
-      rules = JS::Rule::All.new.rules
-      rules.each do |rule|
-        parser.add_visitor rule
-      end
+      parser.add_visitors JS::Rule::All.new
       run_parser parser
     end
 
     def check_js_file(file, opt = {})
       results = []
       begin
+        file_val = FileValidator.new @opt.merge(opt)
+        file_val.add_validators JS::Rule::All.new
+        results.concat file_val.validate(file)
+
         source, encoding = readfile(file, opt)
         results.concat check_js(source)
       rescue  EncodingError => e

@@ -10,6 +10,10 @@ module XRay
       @validators << val
     end
 
+    def add_validators( vals)
+      vals.each { |val| add_validator val }
+    end
+
     def check( file )
       results = []
       @validators.each do |val|

@@ -21,6 +21,7 @@ module XRayTest
         nest_try_catch_test
         jq_check_test
         no_global_test
+        all_test
       )
         
       def self.suite

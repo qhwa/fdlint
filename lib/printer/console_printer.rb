@@ -28,7 +28,7 @@ module XRay
           out.puts "[EE] #{@opt[:file]}".white.magenta_bg
 
           @results.each do |r|
-            out.puts "#{prf}#{t.to_color_s}#{suf}"
+            out.puts "#{prf}#{r.to_color_s}#{suf}"
           end
         end
       end

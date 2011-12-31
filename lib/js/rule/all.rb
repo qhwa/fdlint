@@ -1,8 +1,12 @@
+require 'delegate'
+
+
 module XRay
   module JS
     module Rule
 
-      class All
+      class All < SimpleDelegator
+
         NAMES = %w( 
           semicolon
           stat_if_with_brace
@@ -28,6 +32,8 @@ module XRay
             klass.method(:initialize).arity >= 1 ? klass.new(options) :
                 klass.new
           end
+
+          super @rules
         end
 
       end

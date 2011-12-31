@@ -76,6 +76,10 @@ module XRay
       end
     end
 
+    def add_visitors(visitors)
+      visitors.each { |visitor| add_visitor visitor }
+    end
+
     def results
       @results || []
     end
