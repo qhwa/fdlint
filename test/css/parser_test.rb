@@ -282,7 +282,7 @@ END
       private
 
       def create_parser(css)
-        Parser.new css, Logger.new(STDOUT)
+        Parser.new css, XRayTest::Logger.new
       end
 
       def parse_css(css, name = 'stylesheet')

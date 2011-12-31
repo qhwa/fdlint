@@ -13,7 +13,7 @@ module XRay
           @opt = opt.dup
         end
         
-        def check( name )
+        def check_file( name )
           check_items([
             :ad,
             :underscore,

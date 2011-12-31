@@ -20,3 +20,13 @@ FIXTURE_REL_PATH = Pathname.new(FIXTURE_ABS_PATH).relative_path_from(Pathname.ne
 FIXTURE_PATH = FIXTURE_REL_PATH
 
 
+module XRayTest
+  class Logger < ::Logger
+    def initialize
+      super(STDOUT)
+      debug = ARGV.include? '-d'
+      self.level = debug ? Logger::INFO : Logger::WARN
+    end 
+  end
+end
+

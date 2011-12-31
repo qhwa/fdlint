@@ -11,7 +11,7 @@ module XRay
           @opt = opt.dup
         end
         
-        def check( name )
+        def check_file( name )
           check_items([
             :has_minified_in_same_folder
           ], name)

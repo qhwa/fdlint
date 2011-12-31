@@ -13,6 +13,7 @@ module XRay
           nest_try_catch
           jq_check
           no_global
+          merge_file
         )
 
         NAMES.each { |name| require_relative name }
@@ -24,7 +25,8 @@ module XRay
             name = name.gsub(/_(\w)/) { |m| $1.upcase }
             name = name[0..0].upcase + name[1..-1]
             klass = Rule.const_get name
-            klass.new
+            klass.method(:initialize).arity >= 1 ? klass.new(options) :
+                klass.new
           end
         end
 

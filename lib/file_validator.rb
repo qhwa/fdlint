@@ -13,8 +13,10 @@ module XRay
     def check( file )
       results = []
       @validators.each do |val|
-        val_results = val.check( file )
-        results.concat( val_results ) unless val_results.nil? or val_results.empty?
+        if val.respond_to? :check_file
+          val_results = val.check_file(file)
+          results.concat( val_results ) unless val_results.nil? or val_results.empty?
+        end
       end
       results
     end

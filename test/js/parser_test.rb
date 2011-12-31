@@ -72,7 +72,7 @@ module XRayTest
 
 
       def create_parser(js)
-        Parser.new(js, Logger.new(STDOUT))
+        Parser.new js, XRayTest::Logger.new
         
       end
 

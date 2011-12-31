@@ -2,8 +2,6 @@ require_relative 'base_test'
 
 require 'js/rule/no_global'
 
-require 'parser_visitable'
-
 module XRayTest
   module JS
     module Rule
@@ -44,10 +42,7 @@ module XRayTest
         end
         
         def parse(js)
-          parser = Parser.new js, Logger.new(STDOUT)
-          parser.add_visitor XRay::JS::Rule::NoGlobal.new
-          parser.parse_program
-          parser.results
+          parse_with_rule js, XRay::JS::Rule::NoGlobal
         end
 
       end
