@@ -22,6 +22,7 @@ module XRayTest
         jq_check_test
         no_global_test
         all_test
+        file_checker_test
       )
         
       def self.suite

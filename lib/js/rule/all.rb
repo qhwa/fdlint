@@ -17,7 +17,7 @@ module XRay
           nest_try_catch
           jq_check
           no_global
-          merge_file
+          file_checker 
         )
 
         NAMES.each { |name| require_relative name }

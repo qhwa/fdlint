@@ -36,7 +36,7 @@ module XRay
         def visit_expr_assignment(expr)
           if expr.type == '='
             id = find_assignment_id(expr.left)
-            if id && use_id_global?(id)
+            if id && use_id_global?(id.text)
               ['禁止使用未定义的变量(或全局变量)', :error] 
             end
           end
@@ -57,15 +57,14 @@ module XRay
         end
 
         def use_id_global?(id)
-          unless @scopes && @scope_index
-            return true
-          end
+          white_list = %w(ImportJavscript)
 
-          text = id.text
+          return false if white_list.include? id
+          return true unless @scopes && @scope_index
 
           @scope_index.downto(0) do |index|
             scope = @scopes[index]
-            return false if scope && scope.find { |name| name == text }
+            return false if scope && scope.find { |name| name == id}
           end 
           true
         end

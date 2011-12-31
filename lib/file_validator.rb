@@ -19,7 +19,13 @@ module XRay
       @validators.each do |val|
         if val.respond_to? :check_file
           val_results = val.check_file(file)
-          results.concat( val_results ) unless val_results.nil? or val_results.empty?
+          if val_results
+            if val_results.is_a? Array
+              results.concat val_results
+            else
+              results << val_results
+            end
+          end
         end
       end
       results
