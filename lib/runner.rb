@@ -53,8 +53,10 @@ module XRay
         :debug    => false
       }.merge opt
 
-      @logger = Logger.new(STDOUT)
-      @logger.level = @opt[:debug] ? Logger::INFO : Logger::WARN
+      if @opt[:debug]
+        @logger = Logger.new(STDOUT)
+        @logger.level = Logger::INFO
+      end
     end
 
     def check_css(css, opt={})
@@ -144,8 +146,11 @@ module XRay
     end
 
     def type_ok?(file)
-      return true if @opt[:type].nil?
-      CodeType.guess_by_name(file) == @opt[:type]
+      if @opt[:type]
+        CodeType.guess_by_name(file) == @opt[:type]
+      else
+        true
+      end
     end
 
     def run_parser(parser)
