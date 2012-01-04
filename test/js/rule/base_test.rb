@@ -21,7 +21,7 @@ module XRayTest
 
         def parse_with_rule(js, rule, options = {})
           parser = VisitableParser.new js, XRayTest::Logger.new
-          rule = rule.new options if rule.is_a? Class
+          rule = rule.new if rule.is_a? Class
           parser.add_visitor rule 
           parser.parse_program
           parser.results

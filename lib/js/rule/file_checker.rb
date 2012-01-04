@@ -49,19 +49,16 @@ module XRay
 
         def grep_import_js_path(body)
           lines = body.split /\n/
-          pattern = /ImportJavscript\s*\.\s*url\s*\(\s*['"]?([^'"]+)['"]?\s*\)\s*;?/
+          pattern = /(ImportJavscript\s*\.\s*url\s*\(\s*['"]?([^'"]+)['"]?\s*\)\s*;?)/
 
           pathes = []
           lines.each_with_index do |line, index|
-            pos = 0
-            while m = pattern.match(line, pos)
-              pos = m.begin(0) + 1
-
-              pathes << { 
-                :text => m[0],
-                :url => m[1],
+            line.scan(pattern) do |text, url|
+              pathes << {
+                :text => text,
+                :url => url,
                 :row => index + 1,
-                :col => pos
+                :col => Regexp.last_match.begin(0) + 1 
               }
             end
           end

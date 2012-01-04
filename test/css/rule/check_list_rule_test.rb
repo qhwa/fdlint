@@ -78,6 +78,9 @@ module XRayTest
           puts message
         end
 
+        def test_check_declarations_sequence
+          
+        end
 
         # declaration
         
