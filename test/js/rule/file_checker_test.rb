@@ -87,11 +87,11 @@ module XRayTest
         end
 
         def test_check_import_js_scope
-          #not complete
+          #not implements
         end
 
         def test_check_import_js_exist_and_min
-          # not complete
+          # not implements
         end
 
         def fixture_01

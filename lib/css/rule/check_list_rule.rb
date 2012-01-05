@@ -78,7 +78,8 @@ module XRay
         
         def visit_ruleset(ruleset)
           dispatch([
-            :check_ruleset_redefine_a_hover_color
+            :check_ruleset_redefine_a_hover_color,
+            #:check_declarations_sequence
           ], ruleset);
         end
 
@@ -87,6 +88,29 @@ module XRay
               ruleset.declarations.find { |dec| dec.property.text == 'color' }
             ['禁止重写reset中定义的a标签的hover色（现为#ff7300）', :error]
           end
+        end
+
+        def check_declarations_sequence(ruleset)
+          list = [
+            %w(position display visible z-index overflow float clear),
+            %w(width height top right bottom left margin padding border),
+            %w(background opacity),
+            %w(font color text line-height vertical-align)
+          ] 
+
+          now = 0
+          ruleset.declarations.each do |dec|
+            prop_text = dec.property.text
+            index = list.find_index do |bag| 
+              bag.any? { |field| prop_text.index field }
+            end 
+
+            next unless index
+            return ['建议使用Mozilla推荐CSS书写顺序'\
+                'http://wd.alibaba-inc.com/doc/page/regulations/css', :warn] if index < now
+            now = index
+          end
+          nil
         end
 
         # property
