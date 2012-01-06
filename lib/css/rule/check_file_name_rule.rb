@@ -35,7 +35,8 @@ module XRay
         end
 
         def check_letters( name )
-          [LogEntry.new('文件夹和文件命名必须用小写字母', :error)] if name =~ /[A-Z]/
+          win_disk = /^[a-zA-Z]:/
+          [LogEntry.new('文件夹和文件命名必须用小写字母', :error)] if name.sub( win_disk, '') =~ /[A-Z]/
         end
 
         protected
