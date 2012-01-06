@@ -2,7 +2,6 @@ require_relative 'base_printer'
 
 if ENV['OS'] =~ /windows/i
   require 'win32console' 
-  system "chcp 65001"
 end
 
 

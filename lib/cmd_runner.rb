@@ -2,6 +2,9 @@
 require 'optparse'
 require 'find'
 require_relative 'runner'
+require_relative 'printer/vim_printer'
+require_relative 'printer/console_printer'
+require_relative 'printer/nocolor_printer'
 
 module XRay
 
@@ -32,9 +35,8 @@ module XRay
         opts.on("--debug", "-d", "print debug info") do
           options[:debug] = true
         end
-        opts.on("--list", "-l", "list results without source") do
-          options[:list] = true
-          options[:colorful] = false
+        opts.on("--list", "-l", "list results without source, the same as '--format=nocolor'") do
+          options[:format] = :nocolor
         end
         opts.on("--checkmin", "-m", "check minified files too. (e.g. *-min.js; *-min.css)") do
           options[:check_min] = true
@@ -99,7 +101,16 @@ module XRay
     end
 
     def print_results( results, opt={} )
-      require_relative "printer/#{print_type(opt[:format])}_printer"
+      IO.popen "chcp 65001" if ENV['OS'] =~ /windows/i
+      print_class = case opt[:format]
+        when :vim
+          'VimPrinter'
+        when :nocolor
+          'NoColorPrinter'
+        else 
+          'ConsolePrinter'
+      end
+      XRay.register_printer XRay.const_get( print_class )
       XRay.printer.new( results, opt ).print
     end
 
