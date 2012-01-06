@@ -15,19 +15,17 @@ module XRay
       if @opt[:source]
         print_with_source
       else
-        out = @opt[:out]
         if @results.empty?
-          out.puts "[OK]".white.green_bg << " #{@opt[:file]}"
+          puts "[OK]".white.green_bg << " #{@opt[:file]}"
         else
           prf = @opt[:prefix]
           suf = @opt[:suffix]
-          out = @opt[:out]
 
-          out.puts ""
-          out.puts "[EE] #{@opt[:file]}".white.magenta_bg
+          puts ""
+          puts "[EE] #{@opt[:file]}".white.magenta_bg
 
           @results.each do |r|
-            out.puts "#{prf}#{r.to_color_s}#{suf}"
+            puts "#{prf}#{r.to_color_s}#{suf}"
           end
         end
       end
@@ -35,16 +33,15 @@ module XRay
 
 
     def print_with_source
-      out = @opt[:out]
       if @results.empty?
-        out.puts "[OK]".white.green_bg << " #{@opt[:file]}"
+        puts "[OK]".white.green_bg << " #{@opt[:file]}"
       else
         source = @opt[:source]
         lines = source.split(/\r\n|\n|\r/)
         prf = @opt[:prefix]
         suf = @opt[:suffix]
 
-        out.puts "[EE] #{@opt[:file]}".white.magenta_bg
+        puts "[EE] #{@opt[:file]}".white.magenta_bg
 
         @results.each do |r|
           if r.row && r.row > 0
@@ -54,11 +51,11 @@ module XRay
             right = col + 50
             left = 0 if left < 0
 
-            out.puts "#{prf}#{lines[row][left..right].gsub(/\t/, ' ')}"
-            out.puts "#{prf}#{' ' * (col - left)}^ #{r.to_color_s}"
-            out.puts "\n"
+            puts "#{prf}#{lines[row][left..right].gsub(/\t/, ' ')}"
+            puts "#{prf}#{' ' * (col - left)}^ #{r.to_color_s}"
+            puts "\n"
           else
-            out.puts "#{r.to_color_s}#{suf}\n"
+            puts "#{r.to_color_s}#{suf}\n"
           end
         end
       end

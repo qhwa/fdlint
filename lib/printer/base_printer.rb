@@ -14,7 +14,6 @@ module XRay
 
     def initialize(results, opt)
       @results, @opt = results, opt
-      @opt[:out] ||= STDOUT
     end
 
     def print

@@ -6,10 +6,10 @@ module XRay
 
     XRay.register_printer self
 
-    def print(out=STDOUT)
+    def print
       prf = @opt[:file].utf8!
       @results.each do |r|
-        out.puts "#{prf}:[#{r.level}]:#{r.row},#{r.column}:#{r.message}"
+        puts "#{prf}:[#{r.level}]:#{r.row},#{r.column}:#{r.message}"
       end
       
     end
