@@ -26,6 +26,14 @@ module XRayTest
           end
         end
 
+        def test_check_with_inline_script
+          tag = XRay::HTML::Element.new('script')
+          assert_equal [], @rule.check_tag(tag)
+          (1..10).each do 
+            assert_equal [], @rule.check_tag(tag)
+          end
+        end
+
         def test_check_normal_style
           tag = XRay::HTML::Element.new('link', {:rel => 'stylesheet', :href=>'http://style.china.alibaba.com/css/lib/fdev-v4/core/fdev-min.css'}, [], :self)
           assert_equal [], @rule.check_tag(tag)

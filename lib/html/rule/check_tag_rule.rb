@@ -105,11 +105,13 @@ module XRay
         def check_unique_script_import(tag)
           if tag.tag_name_equal? 'script'
             src = tag.prop_value(:src).to_s
-            if @imported_scripts.include? src
-              ["避免重复引用同一或相同功能文件", :error]
-            else
-              @imported_scripts << src
-              nil
+            unless src.empty?
+              if @imported_scripts.include? src
+                ["避免重复引用同一或相同功能文件", :error]
+              else
+                @imported_scripts << src
+                nil
+              end
             end
           end
         end
