@@ -46,23 +46,26 @@ module XRay
     include Helper::FileReader
 
     attr_reader :source
+    attr_reader :rules
   
     def initialize(opt={})
       @opt = {
         :encoding => 'utf-8',
         :debug    => false
       }.merge opt
+      @rules = []
 
       if @opt[:debug]
         @logger = Logger.new(STDOUT)
         @logger.level = Logger::INFO
       end
+
     end
 
-    def check_css(css, opt={})
-      @source = css
-      parser = XRay::CSS::VisitableParser.new(css, @logger)
-      visitor = XRay::CSS::Rule::CheckListRule.new( opt )
+    def check_css(css, opt = {})
+      @source              = css
+      parser               = XRay::CSS::VisitableParser.new(css, @logger)
+      visitor              = XRay::CSS::Rule::CheckListRule.new( opt )
       parser.add_visitor visitor
       run_parser parser
     end

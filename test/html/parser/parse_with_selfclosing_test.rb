@@ -14,6 +14,12 @@ module XRayTest
           end
         end
 
+        def test_br_tag_closed_without_space
+          XRay::HTML::Parser.parse('<br/>') do |e|
+            assert_equal Element.new('br'), e
+          end
+        end
+
         def test_close_outside
           XRay::HTML::Parser.parse('<div class="info" ></div>') do |e|
             assert_equal Element.new('div', {:class=>"info"}), e

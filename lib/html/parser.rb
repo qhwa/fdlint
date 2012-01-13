@@ -16,7 +16,7 @@ module XRay; module HTML
     PROP_NAME       = %r/\w[-:\w]*/m
     PROP_VALUE      = %r/'([^']*)'|"([^"]*)"|([^\s>]+)/m
     PROP            = %r/#{PROP_NAME}\s*(?:=\s*#{PROP_VALUE})?/m
-    TAG_NAME        = /\w[^>\s]*/ 
+    TAG_NAME        = /\w[^>\/\s]*/ 
     TAG_START       = %r/<(#{TAG_NAME})/m
     TAG_END         = %r/<\/#{TAG_NAME}\s*>/m
     TAG             = %r/#{TAG_START}(\s+#{PROP})*\s*>/m
@@ -182,4 +182,5 @@ if __FILE__ == $0
   XRay::HTML::Parser.parse(%q(<center><div><div><center>text</center></div></div></center>)) { |e| puts e.outer_html }
   XRay::HTML::Parser.parse(%q(<center ns:name="value"><div><div><center>text</center></div></div></center>)) { |e| puts e.outer_html }
   begin; XRay::HTML::Parser.parse(%q(<center><div></center></div>)) { |e| puts e.outer_html }; rescue; end
+  XRay::HTML::Parser.parse('<br/>') { |e| puts e.outer_html }
 end
