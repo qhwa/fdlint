@@ -4,6 +4,7 @@
 
 require 'logger'
 require_relative 'base_parser'
+require_relative 'rule'
 require_relative 'parser_visitable'
 require_relative 'file_validator'
 require_relative 'log_entry'
@@ -44,6 +45,8 @@ module XRay
   class Runner
     
     include Helper::FileReader
+
+    Rule.import_all
 
     attr_reader :source
     attr_reader :rules

@@ -1,0 +1,92 @@
+# encoding: utf-8
+# vi: filetype=ruby
+css
+
+check_selector_with_id do |selector|
+  if !selector.context.lib? &&
+      selector =~ /#[-\w]+/
+    ['页面级别样式不使用id', :error]
+  end
+end
+
+check_selector_with_global_tag do |selector|
+  if !selector.context.lib? &&
+      selector =~ /^\w+$/
+    ['页面级别样式不能全局定义标签样式', :error]
+  end
+end
+
+check_selector_level do |selector|
+  if selector.text.split(/[>\s]/).length > 4
+    ['CSS级联深度不能超过4层', :error]
+  end
+end
+
+check_selector_with_star do |selector|
+  if selector =~ /^\*/
+    ['禁止使用星号选择符', :error]
+  end
+end
+
+check_selector_redefine_lib_css do |selector|
+  if !selector.context.lib? &&
+      selector =~ /^\.fd-\w+$/
+    ['禁止修改或重载type中的样式', :error]
+  end
+end
+
+check_declaration_font do |dec|
+  if dec.property =~ /^font(-family)?$/ && 
+      dec.value.to_s.each_byte.any? {|b| b>127}
+    ['字体名称中的中文必须用ascii字符表示', :error]
+  end
+end
+
+check_ruleset_redefine_a_hover_color do |ruleset|
+  if ruleset.selector.text == 'a:hover' &&
+      ruleset.declarations.find { |dec| dec.property.text == 'color' }
+    ['禁止重写reset中定义的a标签的hover色（现为#ff7300）', :error]
+  end
+end
+
+check_declarations_sequence do |ruleset|
+  list = [
+    %w(position display visible z-index overflow float clear),
+    %w(width height top right bottom left margin padding border),
+    %w(background opacity),
+    %w(font color text line-height vertical-align)
+  ] 
+
+  now = 0
+  ruleset.declarations.each do |dec|
+    prop_text = dec.property.text
+    index = list.find_index do |bag| 
+      bag.any? { |field| prop_text.index field }
+    end 
+
+    next unless index
+    return ['建议使用Mozilla推荐CSS书写顺序'\
+        'http://wd.alibaba-inc.com/doc/page/regulations/css', :warn] if index < now
+    now = index
+  end
+  nil
+end
+
+check_property_hack do |property|
+  if property =~ /[^-a-z]/
+    ['合理使用hack', :error]
+  end
+end
+
+check_value_use_css_expression do |value|
+  if value =~ /^expression\(/
+    ['禁止使用CSS表达式', :error]
+  end
+end
+
+check_value_use_hack do |value|
+  if value =~ /\\\d$/
+    ['合理使用hack', :error]
+  end
+end
+

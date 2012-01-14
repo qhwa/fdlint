@@ -1,3 +1,6 @@
+require 'find'
+require_relative 'helper/file_reader'
+
 STYLE_TYPES ||= [:css, :js, :html]
 
 module XRay
@@ -16,9 +19,8 @@ module XRay
 
   module Rule
 
-    KEYWORDS = [
-      :file
-    ]
+    RULE_PATH = 'rules.d'
+    KEYWORDS = %w(file selector ruleset declaration property value)
 
     class << self
 
@@ -113,6 +115,7 @@ module XRay
         rules.inject([]) do |results, r|
           result = r[:block].call(*args)
           results << result if result
+          results
         end
       end
 
@@ -125,7 +128,6 @@ module XRay
                 block.call(*tar)
               else
                 send(cmd, name, &b )
-                puts "add check rule, #{name}, #{tar}"
               end
             end
           end
@@ -153,9 +155,34 @@ module XRay
       end
 
       alias :add_rule :add_common_rule
+      @@imported = []
 
       def import( name )
-        load_relative
+        if name.is_a? Symbol
+          path = File.join(RULE_PATH, "#{name}.rule")
+        else
+          path = name
+        end
+        path = File.expand_path path
+        unless imported? path
+          @@imported << path
+          src, enc = ::XRay::Helper::FileReader.readfile path
+          class_eval src
+        end
+      end
+
+      def import_all
+        Find.find( RULE_PATH ) do |rule|
+          import rule if rule.end_with? '.rule'
+        end
+      end
+
+      def imported?(path)
+        @@imported.include? path
+      end
+
+      def imported
+        @@imported
       end
 
     end
@@ -187,10 +214,12 @@ if __FILE__ == $0
   }
 
   ## Test
+  import :css
   puts file_rules
   puts css_file_rules
 
   puts check_file_without_min('test-min.css').inspect
   puts check_css_file('test_a-min.css').inspect
+  puts check_css_value('expression(test)\0').inspect
 
 end

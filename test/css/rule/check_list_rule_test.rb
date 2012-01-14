@@ -26,7 +26,6 @@ module XRayTest
           message, level = @rule.check_selector_with_id selector
 
           assert_equal :error, level
-          puts message
 
           selector = Node.new 'ul #mydiv dt'
           ret = @rule.check_selector_with_id selector
@@ -42,7 +41,6 @@ module XRayTest
           message, level = @rule.check_selector_with_global_tag selector
 
           assert_equal :error, level
-          puts message
 
           selector = Node.new 'body'
           message, level = @rule.check_selector_with_global_tag selector
@@ -55,7 +53,6 @@ module XRayTest
           message, level = @rule.check_selector_level selector
 
           assert_equal :error, level
-          puts message
           
           selector = Node.new '.mypart ul li a'
           ret = @rule.check_selector_level selector
@@ -75,7 +72,6 @@ module XRayTest
           message, level = @rule.check_selector_with_star selector
 
           assert_equal :error, level
-          puts message
         end
 
         def test_check_declarations_sequence
@@ -100,7 +96,6 @@ module XRayTest
 
           message, level = @rule.check_declaration_font dec
           assert_equal :error, level
-          puts message
         end
 
         def test_check_redefine_a_hover_color
@@ -114,17 +109,15 @@ module XRayTest
 
           message, level = @rule.check_ruleset_redefine_a_hover_color ruleset
           assert_equal :error, level
-          puts message
         end
 
         def test_check_redefine_lib_css
           selector = Node.new '.fd-hide'
           message, level = @rule.check_selector_redefine_lib_css selector
           assert_equal :error, level
-          puts message
 
-          rule = CheckListRule.new :scope => 'lib'
-          ret = rule.check_selector_redefine_lib_css selector
+          selector.context.scope = :lib
+          ret = @rule.check_selector_redefine_lib_css selector
           assert_nil ret 
         end
         
@@ -141,7 +134,6 @@ module XRayTest
           expr = Node.new 'expression(onfocus=this.blur())'
           message, level = @rule.check_value_use_css_expression expr
           assert_equal :error, level
-          puts message
         end
 
         def test_check_value_use_hack
