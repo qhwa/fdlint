@@ -26,9 +26,8 @@ module XRay
           @imported_css.include? src
         end
 
-        def visit_html(html)
-          ["必须存在文档类型声明", :error] unless @have_dtd
-          #check_html_doc html
+        def visit_doc(html)
+          check_html_doc html
         end
 
         def visit_dtd(dtd)
@@ -62,6 +61,10 @@ module XRay
               @imported_css << src
             end
           end
+        end
+
+        def has_dtd?
+          @have_dtd
         end
 
       end

@@ -12,7 +12,7 @@ module XRayTest
       
       class CheckListRuleTest < Test::Unit::TestCase
 
-        include XRay::CSS, XRay::CSS::Rule, XRay::Rule
+        include XRay::CSS, XRay::CSS::Rule, XRay::Rule, XRay::Context
 
         XRay::Rule.import_all
        
@@ -118,7 +118,7 @@ module XRayTest
           message, level = check_selector_redefine_lib_css selector
           assert_equal :error, level
 
-          selector.context.scope = :lib
+          @scope = :lib
           ret = check_selector_redefine_lib_css selector
           assert_nil ret 
         end

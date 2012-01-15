@@ -34,7 +34,7 @@ end
 check_tag_unique_script_import do |tag|
   if tag.tag_name_equal? 'script'
     src = tag.prop_value(:src).to_s
-    if !src.empty? and tag.context.script_used? src
+    if !src.empty? and context.script_used? src
       ["避免重复引用同一或相同功能文件", :error]
     end
   end
@@ -43,7 +43,7 @@ end
 check_tag_unique_style_import do |tag|
   if tag.tag_name_equal? 'link' and tag.prop_value(:rel) =~ /stylesheet/i
     src = tag.prop_value(:href).to_s
-    if !src.empty? and tag.context.style_used? src
+    if !src.empty? and context.style_used? src
       ["避免重复引用同一或相同功能文件", :error]
     end
   end

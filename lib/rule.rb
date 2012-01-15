@@ -14,6 +14,7 @@ module XRay
     )
 
     @@common_rules = []
+    @@context = nil
 
     def syntax(*type)
       if type.empty?
@@ -102,15 +103,17 @@ module XRay
     end
 
     def do_check( *args , rules )
+      @@context = self
       target = args.first
-      if target && target.is_a?(XRay::Node)
-        target.context = self 
-      end
       rules.inject([]) do |results, r|
         result = r[:block].call(*args)
         results << result if result
         results
       end
+    end
+
+    def context
+      @@context
     end
 
     def method_missing( name , *args, &block )
@@ -120,6 +123,7 @@ module XRay
           XRay::Rule.instance_eval do 
             define_method(name) do |*tar, &b|
               if tar.size > 0
+                @@context = self
                 block.call(*tar)
               else
                 send(cmd, name, &b )

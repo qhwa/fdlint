@@ -24,14 +24,14 @@ check_file_name_downcase do |name|
 end
 
 check_selector_with_id do |selector|
-  if !selector.context.lib? &&
+  if !context.lib? &&
       selector =~ /#[-\w]+/
     ['页面级别样式不使用id', :error]
   end
 end
 
 check_selector_with_global_tag do |selector|
-  if !selector.context.lib? &&
+  if !context.lib? &&
       selector =~ /^\w+$/
     ['页面级别样式不能全局定义标签样式', :error]
   end
@@ -50,7 +50,7 @@ check_selector_with_star do |selector|
 end
 
 check_selector_redefine_lib_css do |selector|
-  if !selector.context.lib? &&
+  if !context.lib? &&
       selector =~ /^\.fd-\w+$/
     ['禁止修改或重载type中的样式', :error]
   end

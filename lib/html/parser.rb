@@ -24,7 +24,7 @@ module XRay; module HTML
     DTD             = /\s*<!(doctype)\s+(.*?)>/im
     COMMENT         = /<!--(.*?)-->/m
 
-    def parse_html
+    def parse_doc
       nodes = batch(:parse_element)
       case nodes.size
         when 0 then nil
@@ -39,7 +39,7 @@ module XRay; module HTML
       end
     end
 
-    alias_method :parse, :parse_html
+    alias_method :parse, :parse_doc
 
     def parse_element
       if @scanner.check(DTD) and !@dtd_checked
