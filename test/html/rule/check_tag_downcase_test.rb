@@ -15,7 +15,7 @@ module XRayTest
 
         def test_check_normal_prop_name
           prop = XRay::HTML::Property.new('href', '#nogo')
-          assert_equal [], @rule.check_prop(prop)
+          assert_equal [], @rule.check_html_property(prop)
         end
 
         def test_check_normal_tag_name
@@ -30,12 +30,12 @@ module XRayTest
 
         def test_check_tag_with_simple_upcase_prop_name
           prop = XRay::HTML::Property.new('Href', 'nogo')
-          assert_equal [["属性名必须小写，连字符用中横线", :error]], @rule.check_prop(prop)
+          assert_equal [["属性名必须小写，连字符用中横线", :error]], @rule.check_html_property(prop)
         end
 
         def test_check_tag_with_style_prop
           prop = XRay::HTML::Property.new('Style', 'nogo')
-          assert_equal [["不能定义内嵌样式style", :error], ["属性名必须小写，连字符用中横线", :error]], @rule.check_prop(prop)
+          assert_equal [["不能定义内嵌样式style", :error], ["属性名必须小写，连字符用中横线", :error]], @rule.check_html_property(prop)
         end
 
       end

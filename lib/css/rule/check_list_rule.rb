@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 require_relative '../../rule'
+require_relative '../../context'
 
 module XRay
   module CSS
@@ -10,7 +11,7 @@ module XRay
 
         attr_reader :options
 
-        include ::XRay::Rule
+        include ::XRay::Rule, Context
 
         def initialize(options = {}) 
           @options = options

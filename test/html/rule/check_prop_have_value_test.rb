@@ -17,12 +17,12 @@ module XRayTest
 
         def test_check_double_quote
           prop = XRay::HTML::Property.new('checked', 'true')
-          assert_equal [], @rule.check_prop(prop)
+          assert_equal [], @rule.check_html_property(prop)
         end
 
         def test_check_single_quote
           prop = XRay::HTML::Property.new('checked', nil)
-          assert_equal [["不能仅有属性名", :error]], @rule.check_prop(prop)
+          assert_equal [["不能仅有属性名", :error]], @rule.check_html_property(prop)
         end
 
       end

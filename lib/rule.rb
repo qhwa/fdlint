@@ -1,5 +1,6 @@
 require 'find'
 require_relative 'helper/file_reader'
+require_relative 'node'
 
 STYLE_TYPES ||= [:css, :js, :html]
 
@@ -101,6 +102,10 @@ module XRay
     end
 
     def do_check( *args , rules )
+      target = args.first
+      if target && target.is_a?(XRay::Node)
+        target.context = self 
+      end
       rules.inject([]) do |results, r|
         result = r[:block].call(*args)
         results << result if result

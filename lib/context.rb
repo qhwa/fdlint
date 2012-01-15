@@ -1,10 +1,8 @@
 module XRay
 
-  class Context
+  module Context
 
     attr_accessor :scope
-
-    @scope = :page
 
     def lib?
       scope == :lib
@@ -15,5 +13,15 @@ module XRay
     end
 
   end
+
+  class DefaultContext
+
+    include Context
+
+    def initialize
+      @scope = :page
+    end
+  end
+
 
 end

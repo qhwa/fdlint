@@ -9,7 +9,7 @@ module XRay
     def initialize(text = '', position = nil)
       #TODO: use shared context for better performance
       # and set real context here
-      @context = Context.new
+      @context = DefaultContext.new
 
       if text.is_a? Node
         @text, @position = text.text, text.position

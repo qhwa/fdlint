@@ -15,17 +15,18 @@ module XRayTest
 
         def test_check_normal
           prop = XRay::HTML::Property.new('class', 'info')
-          assert_equal [], @rule.check_prop(prop)
+          assert_equal [], @rule.check_html_property(prop)
         end
 
         def test_check_too_many_classes
           prop = XRay::HTML::Property.new('class', 'info new red bigger')
-          assert_equal [["一个节点上定义的class个数最多不超过3个(不含lib中的class)", :error]], @rule.check_prop(prop)
+          expected = ["一个节点上定义的class个数最多不超过3个(不含lib中的class)", :error]
+          assert_equal [expected], @rule.check_html_property(prop)
         end
 
         def test_check_filter_fdev_classes
           prop = XRay::HTML::Property.new('class', 'info new red fd-main w952 layout grid layout- grid-')
-          assert_equal [], @rule.check_prop(prop)
+          assert_equal [], @rule.check_html_property(prop)
         end
 
       end

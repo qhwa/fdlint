@@ -17,12 +17,12 @@ module XRayTest
 
         def test_check_double_quote
           prop = XRay::HTML::Property.new('id', 'info', "\"")
-          assert_equal [], @rule.check_prop(prop)
+          assert_equal [], @rule.check_html_property(prop)
         end
 
         def test_check_single_quote
           prop = XRay::HTML::Property.new('id', 'info', "\'")
-          assert_equal [["属性值必须使用双引号", :error]], @rule.check_prop(prop)
+          assert_equal [["属性值必须使用双引号", :error]], @rule.check_html_property(prop)
         end
 
       end

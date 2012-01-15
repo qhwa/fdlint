@@ -3,7 +3,7 @@
 html
 
 check_dtd_type_must_be_html5 do |dtd|
-  unless dtd =~ /^html$/i
+  unless dtd.type =~ /^html$/i
     ['新页面统一使用HTML 5 DTD', :warn]
   end
 end
