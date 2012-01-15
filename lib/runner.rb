@@ -11,8 +11,6 @@ require_relative 'log_entry'
 require_relative 'css/reader'
 require_relative 'css/parser'
 require_relative 'css/rule/check_list_rule'
-require_relative 'css/rule/check_file_name_rule'
-require_relative 'css/rule/check_compression_rule'
 require_relative 'html/parser'
 require_relative 'html/rule/check_tag_rule'
 require_relative 'js/parser'
@@ -77,11 +75,9 @@ module XRay
     def check_css_file( file, opt={} )
       results = []
       begin
-        file_val = FileValidator.new @opt.merge(opt)
-        file_val.add_validator XRay::CSS::Rule::FileNameChecker.new( @opt.merge opt )
-        #css文件暂时不需要压缩
-        #file_val.add_validator XRay::CSS::Rule::CompressionChecker.new( @opt.merge opt )
-        results.concat file_val.validate(file)
+        "".extend(XRay::Rule).check_css_file(file).each do |msg, level|
+          results << LogEntry.new( msg, level )
+        end
 
         source = XRay::CSS::Reader.read( file, @opt )
         results.concat check_css( source, opt.merge({

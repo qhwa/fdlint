@@ -1,8 +1,10 @@
 # encoding: utf-8
+
 require_relative '../../helper'
 
-require 'file_validator'
-require 'css/rule/check_file_name_rule'
+require 'node'
+require 'css/struct'
+require 'css/rule/check_list_rule'
 
 module XRayTest
   module CSS
@@ -10,63 +12,61 @@ module XRayTest
       
       class CheckFileNameTest < Test::Unit::TestCase
 
+        include XRay::Rule
+
         def setup
-          @validator = XRay::FileValidator.new( :encoding => 'gb2312' )
-          @validator.add_validator XRay::CSS::Rule::FileNameChecker.new
         end
 
         def test_file_name_with_ad
-          file = 'css/ad.css'
-          results = @validator.check file
-
-          expect_err = XRay::LogEntry.new("路径和文件名中不应该出现ad", :error) 
-          assert_equal [expect_err], results, "文件名中不应出现ad"
+          check 'css/ad.css' do |results|
+            expect_err = ["路径和文件名中不应该出现ad", :error]
+            assert_equal [expect_err], results, "文件名中不应出现ad"
+          end
         end
 
         def test_path_name_with_ad
-          file = "/css/adver/test.css"
-          results = @validator.check file
-
-          expect_err = XRay::LogEntry.new("路径和文件名中不应该出现ad", :error) 
-          assert_equal [expect_err], results, "文件路径中不应出现ad"
+          check "/css/adver/test.css" do |results|
+            expect_err = ["路径和文件名中不应该出现ad", :error] 
+            assert_equal [expect_err], results, "文件路径中不应出现ad"
+          end
         end
 
         def test_file_name_without_ad
-          file = 'not-exsiting-file.css'
-          results = @validator.check file
-
-          assert results.empty?, "文件名中不应出现ad,包括路径"
+          check 'not-exsiting-file.css' do |results|
+            assert results.empty?, "文件名中不应出现ad,包括路径"
+          end
         end
 
         def test_file_name_with_underscore
-          file = 'not_exsiting_file.css'
-          results = @validator.check file
-
-          expect_err = XRay::LogEntry.new("文件名中单词的分隔符应该使用中横线“-”", :error) 
-          assert_equal [expect_err], results, "文件名中单词的分隔符应该使用中横线“-”"
+          check 'not_exsiting_file.css' do |results|
+            expect_err = ["文件名中单词的分隔符应该使用中横线“-”", :error] 
+            assert_equal [expect_err], results, "文件名中单词的分隔符应该使用中横线“-”"
+          end
         end
 
         def test_file_name_with_upcase
-          file = 'someFile.css'
-          results = @validator.check file
-
-          expect_err = XRay::LogEntry.new("文件夹和文件命名必须用小写字母", :error) 
-          assert_equal [expect_err], results, "文件夹和文件命名必须用小写字母"
+          check 'someFile.css' do |results|
+            expect_err = ["文件夹和文件命名必须用小写字母", :error] 
+            assert_equal [expect_err], results, "文件夹和文件命名必须用小写字母"
+          end
         end
 
         def test_dir_name_with_minus
-          file = 'test-post-offer/main.css'
-          results = @validator.check file
-
-          expect_err = XRay::LogEntry.new("文件夹只有需要版本区分时才可用中横线分隔，如fdev-v3", :error) 
-          assert_equal [expect_err], results, "文件夹只有需要版本区分时才可用中横线分隔"
+          check 'test-post-offer/main.css' do |results|
+            expect_err = ["文件夹只有需要版本区分时才可用中横线分隔，如fdev-v3", :error] 
+            assert_equal [expect_err], results, "文件夹只有需要版本区分时才可用中横线分隔"
+          end
         end
 
         def test_dir_name_with_version_minus
-          file = 'test-2/main.css'
-          results = @validator.check file
+          check 'test-2/main.css' do |results|
+            assert results.empty?, "目录名字中带有版本号时可以用中横线"
+          end
+        end
 
-          assert results.empty?, "目录名字中带有版本号时可以用中横线"
+        protected
+        def check(file, &block)
+          yield check_css_file(file)
         end
 
       end
@@ -74,4 +74,3 @@ module XRayTest
     end
   end
 end
-
