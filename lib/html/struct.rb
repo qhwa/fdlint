@@ -187,7 +187,6 @@ module XRay
       attr_accessor :type
 
       def initialize(type, pre="DOCTYPE", pos=nil)
-        
         @type, @pre = type, pre
         @position   = pos || Position.new(0,0,0)
       end

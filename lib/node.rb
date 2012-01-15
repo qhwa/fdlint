@@ -4,12 +4,9 @@ module XRay
 
   class Node
 
-    attr_accessor :text, :position, :context
+    attr_accessor :text, :position
 
     def initialize(text = '', position = nil)
-      #TODO: use shared context for better performance
-      # and set real context here
-      @context = DefaultContext.new
 
       if text.is_a? Node
         @text, @position = text.text, text.position
