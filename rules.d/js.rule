@@ -1,0 +1,70 @@
+# encoding: utf-8
+# vi: filetype=ruby
+
+js
+
+check_statement do |stat|
+  ary = %w(empty var continue break return throw expression)
+  if ary.include?(stat.type) && !stat.end_with_semicolon?
+    ['所有语句结束带上分号', :error] 
+  end
+end
+
+check_stat_if do |stat|
+  if stat.true_part.type != 'block' ||
+      stat.false_part && stat.false_part.type != 'if' && stat.false_part.type != 'block'
+    
+    ['所有条件区域必须用花括号括起来', :error]
+  end
+end
+ 
+check_stat_if do |stat|
+  count = 0;
+  while stat.false_part && stat.false_part.type == 'if'
+    count += 1
+    stat = stat.false_part
+  end
+  count += 1 if stat.false_part
+  if count >= 3
+    ['3个条件及以上的条件语句用switch代替if else', :error] 
+  end
+end
+
+check_expr_new do |expr|
+  expr = expr.left 
+  expr = expr.left if expr.type == '('
+
+  if expr.type == 'id'
+    if expr.text == 'Object'
+      ['使用{}代替new Object()', :error]
+    elsif expr.text == 'Array'
+      ['使用[]代替new Array()', :error]
+    end 
+  end
+end
+
+check_expr_member do |expr|
+  expr = context.find_expr_member(expr) { |expr| expr.type == '(' }
+  checks = %w(
+    (.,window,eval)
+    eval
+  )
+  if expr && checks.include?(expr.left.text)
+    ['不允许使用eval', :error] 
+  end
+end
+ 
+check_expr_equal do |expr|
+  if expr.type == '==' || expr.type == '!='
+    ['避免使用==和!=操作符', :warn]
+  end
+end
+
+check_stat_try do |stat|
+  if stat.try_part.contains?('try') ||
+      stat.catch_part && (stat.catch_part.contains? 'try') ||
+      stat.finally_part && (stat.finally_part.contain? 'try')
+    ['try catch一般不允许嵌套，若嵌套，需要充分的理由', :warn]
+  end
+end
+
