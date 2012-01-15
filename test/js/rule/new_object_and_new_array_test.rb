@@ -1,7 +1,7 @@
 # encoding: utf-8
 require_relative 'base_test'
 
-require 'js/rule/new_object_and_new_array'
+require 'js/rule/checklist'
 
 module XRayTest
   module JS
@@ -27,7 +27,7 @@ module XRayTest
 
         def visit(js)
           expr = parse js, 'expr_new'
-          rule = XRay::JS::Rule::NewObjectAndNewArray.new
+          rule = XRay::JS::Rule::Checklist.new
           rule.visit_expr_new expr
         end
 

@@ -1,7 +1,7 @@
 # encoding: utf-8
 require_relative 'base_test'
 
-require 'js/rule/use_strict_equal'
+require 'js/rule/checklist'
 
 module XRayTest
   module JS
@@ -33,7 +33,7 @@ module XRayTest
 
         def visit(js)
           expr = parse js, 'expr_equal'
-          rule = XRay::JS::Rule::UseStrictEqual.new
+          rule = XRay::JS::Rule::Checklist.new
           rule.visit_expr_equal expr
         end
 

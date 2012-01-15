@@ -1,7 +1,7 @@
 # encoding: utf-8
 require_relative 'base_test'
 
-require 'js/rule/semicolon'
+require 'js/rule/checklist'
 
 module XRayTest
   module JS
@@ -52,7 +52,7 @@ module XRayTest
           stat = parse js, :statement
           assert_equal type, stat.type
 
-          rule = XRay::JS::Rule::Semicolon.new
+          rule = XRay::JS::Rule::Checklist.new
           rule.visit_statement stat
         end
 

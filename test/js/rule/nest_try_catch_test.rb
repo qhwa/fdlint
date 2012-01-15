@@ -1,7 +1,7 @@
 # encoding: utf-8
 require_relative 'base_test'
 
-require 'js/rule/nest_try_catch'
+require 'js/rule/checklist'
 
 module XRayTest
   module JS
@@ -43,7 +43,7 @@ module XRayTest
 
         def visit(js)
           stat = parse js, 'stat_try'
-          rule = XRay::JS::Rule::NestTryCatch.new
+          rule = XRay::JS::Rule::Checklist.new
           rule.visit_stat_try stat
         end
 

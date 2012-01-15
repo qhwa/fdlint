@@ -1,7 +1,7 @@
 # encoding: utf-8
 require_relative 'base_test'
 
-require 'js/rule/no_eval'
+require 'js/rule/checklist'
 
 module XRayTest
   module JS
@@ -23,7 +23,7 @@ module XRayTest
 
         def visit(js)
           expr = parse js, 'expr_member'
-          rule = XRay::JS::Rule::NoEval.new
+          rule = XRay::JS::Rule::Checklist.new
           rule.visit_expr_member expr
         end
 
