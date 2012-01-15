@@ -4,7 +4,7 @@ require_relative '../../helper'
 
 require 'node'
 require 'css/struct'
-require 'css/rule/check_list_rule'
+require 'css/rule/checklist'
 
 module XRayTest
   module CSS
