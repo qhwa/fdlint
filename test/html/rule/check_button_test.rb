@@ -20,7 +20,7 @@ module XRayTest
             <button type="submit" name="male" />
             <button type="reset" name="food" />)
           XRay::HTML::Parser.parse(src).each do |tag|
-            assert_equal [], @rule.check_tag(tag)
+            assert_equal [], @rule.check_html_tag(tag)
           end
         end
 
@@ -30,7 +30,7 @@ module XRayTest
             <input type="reset" />)
           XRay::HTML::Parser.parse(src).each do |tag|
             unless tag.is_a? TextElement
-              assert_equal [["所有按钮必须用button（button/submit/reset）", :error]], @rule.check_tag(tag)
+              assert_equal [["所有按钮必须用button（button/submit/reset）", :error]], @rule.check_html_tag(tag)
             end
           end
         end

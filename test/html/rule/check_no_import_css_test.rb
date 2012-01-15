@@ -19,14 +19,14 @@ module XRayTest
           tag = XRay::HTML::Element.new('style', nil, [
             TextElement.new('body { background-color:#fff; }')
           ])
-          assert_equal [], @rule.check_tag(tag)
+          assert_equal [], @rule.check_html_tag(tag)
         end
 
         def test_check_style_with_import
           tag = XRay::HTML::Element.new('style', nil, [
             TextElement.new('@import style.css')
           ])
-          assert_equal [["不通过@import在页面上引入CSS", :error]], @rule.check_tag(tag)
+          assert_equal [["不通过@import在页面上引入CSS", :error]], @rule.check_html_tag(tag)
         end
 
       end

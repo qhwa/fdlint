@@ -20,12 +20,12 @@ module XRayTest
 
         def test_check_normal_tag_name
           tag = XRay::HTML::Element.new('div', {:class=>'footer'})
-          assert_equal [], @rule.check_tag(tag)
+          assert_equal [], @rule.check_html_tag(tag)
         end
       
         def test_check_tag_with_upcase_name
           tag = XRay::HTML::Element.new('DIV', {:class=>'footer'})
-          assert_equal [["标签名必须小写", :error]], @rule.check_tag(tag)
+          assert_equal [["标签名必须小写", :error]], @rule.check_html_tag(tag)
         end
 
         def test_check_tag_with_simple_upcase_prop_name

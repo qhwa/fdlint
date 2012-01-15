@@ -8,7 +8,9 @@ module XRay
   module Rule
 
     RULE_PATH = 'rules.d'
-    KEYWORDS = %w(file selector ruleset declaration property value)
+    KEYWORDS = %w(file selector ruleset declaration property value
+      dtd tag doc
+    )
 
     @@common_rules = []
 

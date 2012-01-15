@@ -204,6 +204,10 @@ module XRay
         other.is_a?(DTDElement) and other.type == type
       end
 
+      def =~(other)
+        to_s =~ other
+      end
+
     end
 
     class Property < Node

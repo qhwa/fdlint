@@ -15,12 +15,12 @@ module XRayTest
 
         def test_check_img_with_alt
           tag = XRay::HTML::Element.new('img', {:src=>'http://pnq.cc/icon.png', :alt=>'图片'}, [], :self)
-          assert_equal [], @rule.check_tag(tag)
+          assert_equal [], @rule.check_html_tag(tag)
         end
 
         def test_check_img_without_alt
           tag = XRay::HTML::Element.new('img', {:src=>'http://pnq.cc/icon.png'}, [], :self)
-          assert_equal [["img标签必须加上alt属性", :error]], @rule.check_tag(tag)
+          assert_equal [["img标签必须加上alt属性", :error]], @rule.check_html_tag(tag)
         end
 
       end

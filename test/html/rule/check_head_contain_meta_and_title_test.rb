@@ -23,26 +23,26 @@ module XRayTest
             Element.new('meta', {:name => 'description'}),
             Element.new('meta', {:name => 'keywords'})
           ])
-          assert_equal [], @rule.check_tag(tag)
+          assert_equal [], @rule.check_html_tag(tag)
         end
 
         def test_check_simple_head
           tag = XRay::HTML::Element.new('head')
-          assert @rule.check_tag(tag).include?(@expect)
+          assert @rule.check_html_tag(tag).include?(@expect)
         end
 
         def test_check_head_without_meta
           tag = XRay::HTML::Element.new('head',nil, [
             Element.new('title', nil, [TextElement.new('hello world!')])
           ])
-          assert @rule.check_tag(tag).include?(@expect)
+          assert @rule.check_html_tag(tag).include?(@expect)
         end
 
         def test_check_head_without_title
           tag = XRay::HTML::Element.new('head',nil, [
             Element.new('meta', {:charset => 'utf-8'})
           ])
-          assert @rule.check_tag(tag).include?(@expect)
+          assert @rule.check_html_tag(tag).include?(@expect)
         end
 
       end
