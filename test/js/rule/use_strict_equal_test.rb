@@ -1,3 +1,4 @@
+# encoding: utf-8
 require_relative 'base_test'
 
 require 'js/rule/use_strict_equal'
@@ -11,21 +12,21 @@ module XRayTest
         def test_ok
           js = 'i === 1 + 1 / 2'
           ret = visit js
-          assert_equal nil, ret 
+          assert_equal [], ret 
 
           js = 'i !== hello()'
           ret = visit js
-          assert_equal nil, ret
+          assert_equal [], ret
         end
 
         def test_fail
           js = 'i == 1 + 1 / 2'
-          message, level = visit js
-          assert_equal :warn, level
+          ret = visit js
+          assert_equal [['避免使用==和!=操作符', :warn]], ret
 
           js = 'i != hello()'
-          message, level = visit js
-          assert_equal :warn, level
+          ret = visit js
+          assert_equal [['避免使用==和!=操作符', :warn]], ret
         end
         
         private

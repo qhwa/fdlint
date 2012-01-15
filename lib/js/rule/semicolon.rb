@@ -1,16 +1,16 @@
 # encoding: utf-8
+require_relative '../../rule'
 
 module XRay
   module JS
     module Rule
      
       class Semicolon
+
+        include XRay::Rule
         
         def visit_statement(stat)
-          ary = %w(empty var continue break return throw expression)
-          if ary.include?(stat.type) && !stat.end_with_semicolon?
-            ['所有语句结束带上分号', :error] 
-          end
+          check_js_statement stat
         end
          
       end

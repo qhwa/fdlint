@@ -11,6 +11,9 @@ module XRay
     RULE_PATH = 'rules.d'
     KEYWORDS = %w(file selector ruleset declaration property value
       dtd tag doc property text
+
+      statement stat_if stat_try 
+      expression expr_new expr_member expr_equal
     )
 
     @@common_rules = []

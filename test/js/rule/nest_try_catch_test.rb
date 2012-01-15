@@ -1,3 +1,4 @@
+# encoding: utf-8
 require_relative 'base_test'
 
 require 'js/rule/nest_try_catch'
@@ -17,7 +18,7 @@ module XRayTest
             }
           '
           ret = visit js
-          assert_equal nil, ret
+          assert_equal [], ret
         end
 
         def test_fail
@@ -34,8 +35,8 @@ module XRayTest
                 
             }
           '
-          message, level = visit js
-          assert_equal :warn, level
+          ret = visit js
+          assert_equal [['try catch一般不允许嵌套，若嵌套，需要充分的理由', :warn]], ret
         end
         
         private

@@ -8,13 +8,7 @@ module XRay
       class All < SimpleDelegator
 
         NAMES = %w( 
-          semicolon
-          stat_if_with_brace
-          stat_if_with_muti_else
-          new_object_and_new_array
-          no_eval
-          use_strict_equal
-          nest_try_catch
+          checklist
           jq_check
           no_global
           file_checker 

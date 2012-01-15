@@ -1,15 +1,16 @@
 # encoding: utf-8
+require_relative '../../rule'
 
 module XRay
   module JS
     module Rule
      
       class UseStrictEqual 
+        
+        include XRay::Rule
 
         def visit_expr_equal(expr)
-          if expr.type == '==' || expr.type == '!='
-            ['避免使用==和!=操作符', :warn]
-          end
+          check_js_expr_equal expr
         end
          
       end

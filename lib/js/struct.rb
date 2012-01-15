@@ -20,6 +20,13 @@ module XRay
             left ? left.position : 
             right ? right.position : nil
       end
+
+      def contains?(target)
+        return true if target == @type
+        left && left.respond_to?(:contains?) && left.contains?(target) or 
+          right && right.respond_to?(:contains?) && right.contains?(target)
+      end
+
     end
 
     class Elements < Node
@@ -43,6 +50,9 @@ module XRay
         @elements.send m, *args, &block
       end
 
+      def contains?( target )
+        @elements.any? {|elm| elm.contains? target }
+      end
     end
 
     class Program < Element

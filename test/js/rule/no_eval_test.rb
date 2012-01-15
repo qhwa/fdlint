@@ -1,3 +1,4 @@
+# encoding: utf-8
 require_relative 'base_test'
 
 require 'js/rule/no_eval'
@@ -10,12 +11,12 @@ module XRayTest
        
         def test_no_eval
           js = 'eval("a = 1 + 2 + 3")' 
-          message, level = visit js
-          assert_equal :error, level
+          ret = visit js
+          assert_equal [['不允许使用eval', :error]], ret
 
           js = 'window.eval("1 + 2 + 3")'
-          message, level = visit js
-          assert_equal :error, level
+          ret = visit js
+          assert_equal [['不允许使用eval', :error]], ret
         end 
 
         private

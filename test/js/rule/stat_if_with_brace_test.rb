@@ -1,3 +1,4 @@
+# encoding: utf-8
 require_relative 'base_test'
 
 require 'js/rule/stat_if_with_brace'
@@ -7,6 +8,10 @@ module XRayTest
     module Rule
       
       class StatIfWithBraceTest < BaseTest
+
+        def setup
+          @msg = '所有条件区域必须用花括号括起来'
+        end
         
         def test_ok
           js = '
@@ -17,7 +22,7 @@ module XRayTest
             }
           '
           ret = visit js
-          assert_equal nil, ret
+          assert_equal [], ret
         end
 
         def test_fail_1
@@ -26,8 +31,8 @@ module XRayTest
               i--
             hello();
           '
-          message, level = visit js
-          assert_equal :error, level
+          ret = visit js
+          assert_equal [[@msg, :error]], ret
         end
 
         def test_fail_2
@@ -37,15 +42,15 @@ module XRayTest
             } else i++;
 
           '
-          message, level = visit js
-          assert_equal :error, level
+          ret = visit js
+          assert_equal [[@msg, :error]], ret
         end
 
         def test_fail_3
           js = 'if (i) i--; else i++;'
 
-          message, level = visit js
-          assert_equal :error, level
+          ret = visit js
+          assert_equal [[@msg, :error]], ret
         end
 
         private

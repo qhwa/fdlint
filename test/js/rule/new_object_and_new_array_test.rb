@@ -1,3 +1,4 @@
+# encoding: utf-8
 require_relative 'base_test'
 
 require 'js/rule/new_object_and_new_array'
@@ -12,14 +13,14 @@ module XRayTest
           js = '
             new Object();
           '
-          message, level = visit js
-          assert_equal :error, level
+          ret = visit js
+          assert_equal [['使用{}代替new Object()', :error]], ret
 
           js = '
             new Array();
           '
-          message, level = visit js
-          assert_equal :error, level
+          ret = visit js
+          assert_equal [['使用[]代替new Array()', :error]], ret
         end
         
         private

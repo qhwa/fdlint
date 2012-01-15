@@ -1,3 +1,4 @@
+# encoding: utf-8
 require_relative 'base_test'
 
 require 'js/rule/stat_if_with_muti_else'
@@ -7,6 +8,10 @@ module XRayTest
     module Rule
       
       class StatIfWithMutiElseTest < BaseTest
+
+        def setup
+          @msg = '3个条件及以上的条件语句用switch代替if else'
+        end
         
         def test_ok
           js = '
@@ -19,7 +24,7 @@ module XRayTest
             }
           '
           ret = visit js
-          assert_equal nil, ret
+          assert_equal [], ret
         end
 
         def test_fail_1
@@ -30,8 +35,8 @@ module XRayTest
             } else {
             }
           '
-          message, level = visit js
-          assert_equal :error, level
+          ret = visit js
+          assert_equal [[@msg, :error]], ret
         end
 
         def test_fail_2
@@ -42,8 +47,8 @@ module XRayTest
             } else if (a > 60) {
             }
           '
-          message, level = visit js
-          assert_equal :error, level
+          ret = visit js
+          assert_equal [[@msg, :error]], ret
         end
 
 
