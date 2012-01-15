@@ -46,8 +46,6 @@ module XRay
     
     include Helper::FileReader
 
-    Rule.import_all
-
     attr_reader :source
     attr_reader :rules
   
@@ -62,6 +60,9 @@ module XRay
         @logger = Logger.new(STDOUT)
         @logger.level = Logger::INFO
       end
+
+      Rule.import_all
+
 
     end
 

@@ -10,7 +10,7 @@ module XRay
 
         attr_reader :options
 
-        include ::XRay::RuleHelper
+        include ::XRay::Rule
 
         def initialize(options = {}) 
           @options = options

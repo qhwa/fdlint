@@ -8,7 +8,7 @@ module XRayTest
   
     class DSLBasicTest < Test::Unit::TestCase
 
-      include ::XRay::RuleHelper
+      include ::XRay::Rule
 
       def setup
         @rule = Proc.new do |file|

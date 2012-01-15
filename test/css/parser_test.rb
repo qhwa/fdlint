@@ -12,16 +12,12 @@ module XRayTest
       include XRay::CSS
 
       def test_parse_stylesheet_empty
-        puts 'test_parse_stylesheet_empty'
-
         css = "  \n "
         sheet = parse_css css
         assert_equal 0, sheet.statements.size
       end
 
       def test_parse_directive
-        puts 'test_parse_directive'
-
         css = '
           @import "subs.css";
           @import "print-main.css" print;
@@ -45,8 +41,6 @@ module XRayTest
       end
 
       def test_parse_ruleset
-        puts 'test_parse_ruleset'
-
         css = '
           a { font-size: 12px }
           { color: #fff } /* no selector */
@@ -61,8 +55,6 @@ module XRayTest
       end
 
       def test_parse_selector
-        puts 'test_parse_selector' 
-
         css = '
           div, #header .mypart, .div ul li {
               font-size: 12px;
@@ -89,8 +81,6 @@ module XRayTest
       end
 
       def test_parse_declarations
-        puts 'text_parse_declarations'
-
         css = '
           body {
             ;;
@@ -133,8 +123,6 @@ module XRayTest
       end
 
       def test_parse_property
-        puts 'test_parse_property'
-
         css = %q[
           body {
             color: #f00;
@@ -155,8 +143,6 @@ module XRayTest
       end
 
       def test_parse_value
-        puts 'test_parse_value'
-        
         css = %q[  
           div ul>li:first {
             content: '{123}hello"';
@@ -181,8 +167,6 @@ module XRayTest
       end
       
       def test_parse_stylesheet_broken_01
-        puts 'test_parse_stylesheet_broken_01'
-
         css = 'body {'
 
         assert_raise(ParseError) {
@@ -195,13 +179,10 @@ module XRayTest
           pos = e.position
           assert_equal 1, pos.row
           assert_equal 7, pos.column
-          puts "#{e.message}#{pos}"
         end
       end
 
       def test_parse_comment
-        puts 'test_parse_comment'
-
         css = '
           /**
            * this is comment
@@ -225,8 +206,6 @@ module XRayTest
       end
 
       def test_parse_stylesheet_css3
-        puts 'test_parse_stylesheet_css3'
-        
         css = <<END
 @charset: "utf-8";
 

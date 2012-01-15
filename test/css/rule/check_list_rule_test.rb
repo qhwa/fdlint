@@ -11,65 +11,67 @@ module XRayTest
     module Rule
       
       class CheckListRuleTest < Test::Unit::TestCase
-        include XRay::CSS, XRay::CSS::Rule
+
+        include XRay::CSS, XRay::CSS::Rule, XRay::Rule
+
+        XRay::Rule.import_all
        
         Node = XRay::Node
 
         def setup
-          @rule = CheckListRule.new :scope => 'page'
         end
 
         # selector
 
         def test_check_selector_with_id
           selector = Node.new '#mydiv a'
-          message, level = @rule.check_selector_with_id selector
+          message, level = check_selector_with_id selector
 
           assert_equal :error, level
 
           selector = Node.new 'ul #mydiv dt'
-          ret = @rule.check_selector_with_id selector
+          ret = check_selector_with_id selector
           assert_not_nil ret
 
           selector = Node.new '.guide-part ul li'
-          ret = @rule.check_selector_with_id selector
+          ret = check_selector_with_id selector
           assert_nil ret
         end
 
         def test_check_selector_with_global_tag 
           selector = Node.new 'a'
-          message, level = @rule.check_selector_with_global_tag selector
+          message, level = check_selector_with_global_tag selector
 
           assert_equal :error, level
 
           selector = Node.new 'body'
-          message, level = @rule.check_selector_with_global_tag selector
+          message, level = check_selector_with_global_tag selector
 
           assert_equal :error, level
         end
 
         def test_check_selector_level
           selector = Node.new '.mypart .mysubpart ul li a'
-          message, level = @rule.check_selector_level selector
+          message, level = check_selector_level selector
 
           assert_equal :error, level
           
           selector = Node.new '.mypart ul li a'
-          ret = @rule.check_selector_level selector
+          ret = check_selector_level selector
           assert_nil ret
           
           selector = Node.new 'html>div.mypart ul li a'
-          message, level = @rule.check_selector_level selector
+          message, level = check_selector_level selector
           assert_equal :error, level
 
           selector = Node.new 'div.mypart ul li a'
-          ret = @rule.check_selector_level selector
+          ret = check_selector_level selector
           assert_nil ret
         end
 
         def test_check_selector_with_star
           selector = Node.new '* html'
-          message, level = @rule.check_selector_with_star selector
+          message, level = check_selector_with_star selector
 
           assert_equal :error, level
         end
@@ -85,7 +87,7 @@ module XRayTest
           expr = Node.new 'Arial'
           dec = Declaration.new(sel, expr)
 
-          message, level = @rule.check_declaration_font dec
+          message, level = check_declaration_font dec
           assert_equal nil, level
         end
 
@@ -94,7 +96,7 @@ module XRayTest
           expr = Node.new '宋体'
           dec = Declaration.new(sel, expr)
 
-          message, level = @rule.check_declaration_font dec
+          message, level = check_declaration_font dec
           assert_equal :error, level
         end
 
@@ -107,17 +109,17 @@ module XRayTest
 
           ruleset = RuleSet.new(selector, [dec])
 
-          message, level = @rule.check_ruleset_redefine_a_hover_color ruleset
+          message, level = check_ruleset_redefine_a_hover_color ruleset
           assert_equal :error, level
         end
 
         def test_check_redefine_lib_css
           selector = Node.new '.fd-hide'
-          message, level = @rule.check_selector_redefine_lib_css selector
+          message, level = check_selector_redefine_lib_css selector
           assert_equal :error, level
 
           selector.context.scope = :lib
-          ret = @rule.check_selector_redefine_lib_css selector
+          ret = check_selector_redefine_lib_css selector
           assert_nil ret 
         end
         
@@ -125,14 +127,14 @@ module XRayTest
           props = %w(_background +font-size *color)
           props.each do |prop|
             prop = Node.new prop
-            message, level = @rule.check_property_hack prop
+            message, level = check_property_hack prop
             assert_equal :error, level
           end
         end
 
         def test_check_value_use_css_expression
           expr = Node.new 'expression(onfocus=this.blur())'
-          message, level = @rule.check_value_use_css_expression expr
+          message, level = check_value_use_css_expression expr
           assert_equal :error, level
         end
 
@@ -140,7 +142,7 @@ module XRayTest
           exprs = %w(9px\0 #000\9)
           exprs.each do |expr|
             expr = Node.new expr
-            message, level = @rule.check_value_use_hack expr
+            message, level = check_value_use_hack expr
             assert_equal :error, level
           end
         end
