@@ -86,6 +86,12 @@ module XRay
         }))
       rescue EncodingError => e
         results << LogEntry.new( "File can't be read as #{@opt[:encoding]} charset", :fatal)
+      rescue => e
+        if @opt[:debug]
+          puts e
+          puts e.backtrace 
+        end
+        results << LogEntry.new( e.to_s, :fatal)
       end
       results
     end

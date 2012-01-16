@@ -34,7 +34,7 @@ class String
         end
         if self =~ /./
           $enc = c
-          return self
+          break
         end
       rescue
       end
