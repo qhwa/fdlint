@@ -14,6 +14,7 @@ module XRay
 
       statement stat_if stat_try 
       expression expr_new expr_member expr_equal
+      merge_file merge_importing
     )
 
     @@common_rules = []

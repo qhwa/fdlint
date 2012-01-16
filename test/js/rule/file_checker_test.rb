@@ -49,14 +49,18 @@ module XRayTest
 
         def test_check_one_line_one_import
           pathes = @checker.grep_import_js_path fixture_01
-          ret = @checker.check_one_line_one_import pathes
-          assert_equal 1, ret.length
-        end
-
-        def test_check_strict_import_js
-          pathes = @checker.grep_import_js_path fixture_01
-          ret = @checker.check_strict_import_js pathes
-          assert_equal 2, ret.length
+          ret = []
+          pathes.each { |import| 
+            r = @checker.check_js_merge_importing import, pathes, "" 
+            ret.concat r 
+          }
+          assert_equal [
+              ["merge文件需要引用压缩版的js, 如a-min.js", :warn, 12, 63],
+              ["merge文件需要引用压缩版的js, 如a-min.js", :warn, 13, 62],
+              ["一行只能有一个import文件", :error, 18, 96], 
+              ["merge文件格式不正确", :error, 19, 1], 
+              ["merge文件格式不正确", :error, 20, 1]
+            ], ret
         end
 
         def test_has_doc_comment

@@ -11,7 +11,6 @@ module XRay
           checklist
           jq_check
           no_global
-          file_checker 
         )
 
         NAMES.each { |name| require_relative name }

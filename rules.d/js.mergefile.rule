@@ -1,0 +1,71 @@
+# encoding: utf-8
+# vi: filetype=ruby
+
+js
+
+check_merge_importing_one_line_one_import do |import, pathes, file|
+  same_line = pathes.select { |path| path[:row] == import[:row] }
+  if same_line.size > 1 and same_line.index(import) > 0
+    ['一行只能有一个import文件', :error, import[:row], import[:col]]
+  end
+end
+
+check_merge_importing_strict_import_js do |import, pathes, file|
+  url = import[:url]
+  if context.lib_scope?(url) or context.relative?(url)
+    break 
+  end
+
+  unless /ImportJavscript\.url\(['"]?([^'"]+)['"]?\);/ =~ import[:text]
+    ['merge文件格式不正确', :error, import[:row], import[:col]]
+  end
+end
+
+check_merge_importing_global_cannot_import_page do |import, pathes, file|
+  url = import[:url]
+  if context.lib_scope?(url) or context.relative?(url)
+    break 
+  end
+
+  if context.global_scope? file and context.page_scope?(url)
+    ['产品线merge文件不能引用page文件', :error, import[:row], import[:col]]
+  end
+end
+
+check_merge_importing_can_only_import_from_same_app do |import, pathes, file|
+  url = import[:url]
+  if context.lib_scope?(url) or context.relative?(url)
+    break 
+  end
+
+  app = context.app(file) 
+  if app && app != context.app(url)
+    ['merge文件引用非该产品线文件', :error, import[:row], import[:col]]
+  end
+end
+
+check_merge_importing_page_can_only_import_same_page do |import, pathes, file|
+  if context.page_scope?(file)
+    path         = file.sub /\\/, '/'
+    url          = import[:url]
+    prefix       = File.basename(path).sub /-merge([-_]\d+)?\.js/, ''
+    page_pattern = %r"/page/#{prefix}(-min|(/.+))?\.js"
+    if context.page_scope?(file) && context.page_scope?(url) && url !~ page_pattern
+      ['页面级别merge文件只允许merge当前页面所属js文件', :error, import[:row], import[:col]]
+    end
+  end
+end
+
+##Style 拆分之后可能merge的文件已经不存在
+##stop checking this rule
+#check_merge_importing_exist do |import, pathes, file|
+#end
+
+check_merge_importing_must_be_minified do |import, pathes, file|
+  if !context.min_file?(import[:url])
+    ['merge文件需要引用压缩版的js, 如a-min.js', :warn, 
+      import[:row], 
+      import[:col] + import[:text].rindex(/\/|\\/) + 1
+    ]
+  end
+end

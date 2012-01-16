@@ -15,6 +15,7 @@ require_relative 'html/parser'
 require_relative 'html/rule/check_tag_rule'
 require_relative 'js/parser'
 require_relative 'js/rule/all'
+require_relative 'js/rule/file_checker'
 require_relative 'helper/file_reader'
 require_relative 'helper/code_type'
 
@@ -75,8 +76,8 @@ module XRay
     def check_css_file( file, opt={} )
       results = []
       begin
-        "".extend(XRay::Rule).check_css_file(file).each do |msg, level|
-          results << LogEntry.new( msg, level )
+        "".extend(XRay::Rule).check_css_file(file).each do |msg, level, row=0, column=0|
+          results << LogEntry.new( msg, level, row, column )
         end
 
         source = XRay::CSS::Reader.read( file, @opt )
@@ -99,9 +100,7 @@ module XRay
     def check_js_file(file, opt = {})
       results = []
       begin
-        file_val = FileValidator.new @opt.merge(opt)
-        file_val.add_validators JS::Rule::All.new
-        results.concat file_val.validate(file)
+        results.concat JS::Rule::FileChecker.new.check_file(file)
 
         source, encoding = readfile(file, opt)
         results.concat check_js(source)
