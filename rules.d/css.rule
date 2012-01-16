@@ -64,8 +64,9 @@ check_declaration_font do |dec|
 end
 
 check_ruleset_redefine_a_hover_color do |ruleset|
-  if ruleset.selector.text == 'a:hover' &&
-      ruleset.declarations.find { |dec| dec.property.text == 'color' }
+  if ruleset.selector &&
+      ruleset.selector.text == 'a:hover' &&
+        ruleset.declarations.find { |dec| dec.property.text == 'color' }
     ['禁止重写reset中定义的a标签的hover色（现为#ff7300）', :error]
   end
 end
