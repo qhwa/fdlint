@@ -39,6 +39,23 @@ module XRayTest
           assert_equal [['try catch一般不允许嵌套，若嵌套，需要充分的理由', :warn]], ret
         end
         
+        def test_nest_in_finnally_part
+          js = '
+            try {
+              if (a > 0) {
+              }   
+            } finally {
+              try {
+                  
+              } catch (e) {
+                  
+              }    
+            }
+          '
+          ret = visit js
+          assert_equal [['try catch一般不允许嵌套，若嵌套，需要充分的理由', :warn]], ret
+        end
+        
         private
 
         def visit(js)

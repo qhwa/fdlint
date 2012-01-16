@@ -63,7 +63,7 @@ end
 check_stat_try do |stat|
   if stat.try_part.contains?('try') ||
       stat.catch_part && (stat.catch_part.contains? 'try') ||
-      stat.finally_part && (stat.finally_part.contain? 'try')
+      stat.finally_part && (stat.finally_part.contains? 'try')
     ['try catch一般不允许嵌套，若嵌套，需要充分的理由', :warn]
   end
 end

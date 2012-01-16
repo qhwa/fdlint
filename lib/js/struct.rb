@@ -53,6 +53,8 @@ module XRay
       def contains?( target )
         @elements.any? {|elm| elm.contains? target }
       end
+
+      alias :contain? :contains?
     end
 
     class Program < Element
