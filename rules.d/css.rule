@@ -2,14 +2,17 @@
 # vi: filetype=ruby
 css
 
-
 check_file_name_without_ad do |name|
   ADVERTISMENT ||= /(?:[^a-z0-9%_-]|^)ad(?:[sv][^a-z\r=\?]+|banner|click|ver|name|x|log|[^a-z\r_-]*[\.\/]|bot|c_|client|council|gifs|graph|images|img|fshow|pic|vert|view|info|click|sponsor)/
-  ['路径和文件名中不应该出现ad', :error] if name =~ ADVERTISMENT
+  if name =~ ADVERTISMENT
+    ['路径和文件名中不应该出现ad', :error]
+  end
 end
 
 check_file_name_without_underscore do |name|
-  ['文件名中单词的分隔符应该使用中横线“-”', :error] if File.basename(name) =~ /_/
+  if File.basename(name) =~ /_/
+    ['文件名中单词的分隔符应该使用中横线“-”', :error] 
+  end
 end
 
 check_file_name_seperator do |name|
@@ -20,7 +23,9 @@ end
 
 check_file_name_downcase do |name|
   win_disk = /^[a-zA-Z]:/
-  ['文件夹和文件命名必须用小写字母', :error] if name.sub( win_disk, '') =~ /[A-Z]/
+  if name.sub( win_disk, '') =~ /[A-Z]/
+    ['文件夹和文件命名必须用小写字母', :error] 
+  end
 end
 
 check_selector_with_id do |selector|
