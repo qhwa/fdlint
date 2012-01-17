@@ -1,4 +1,7 @@
 require 'find'
+require_relative 'js/parser'
+require_relative 'html/parser'
+require_relative 'css/parser'
 require_relative 'helper/file_reader'
 require_relative 'node'
 
@@ -8,14 +11,16 @@ module XRay
 
   module Rule
 
-    RULE_PATH = 'rules.d'
-    KEYWORDS = %w(file selector ruleset declaration property value
-      dtd tag doc property text
+    def self.methods_to_kw(klass)
+      klass.instance_methods.grep( /^parse_/ ).map {|m| m[/^parse_(.*)/,1]}
+    end
 
-      statement stat_if stat_try 
-      expression expr_new expr_member expr_equal
-      merge_file merge_importing
-    )
+    RULE_PATH = 'rules.d'
+    KEYWORDS = %w(file merge_importing)
+
+    KEYWORDS.concat methods_to_kw(XRay::JS::Parser)
+    KEYWORDS.concat methods_to_kw(XRay::CSS::Parser)
+    KEYWORDS.concat methods_to_kw(XRay::HTML::Parser)
 
     @@common_rules = []
     @@context = nil
