@@ -9,7 +9,6 @@ module XRay
 
         NAMES = %w( 
           checklist
-          jq_check
           no_global
         )
 

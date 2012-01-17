@@ -1,0 +1,56 @@
+# encoding: utf-8
+# vi: filetype=ruby
+
+js
+
+JQ_IDS = %w(jQuery $ jQ jq)
+
+check_expr_member_direct_jquery_call do |expr|
+  expr = context.find_expr_member(expr) do |expr| 
+    ['.', '(', '['].include?(expr.type) && expr.left.text == 'jQuery'
+  end
+
+  if expr
+    unless expr.type == '.' && expr.right.text == 'namespace'
+      ['禁止直接使用jQuery变量，使用全局闭包写法"(function($, NS){....})(jQuery,Namespace);"，jQuery.namespace例外', :error]
+    end
+  end
+end
+
+check_expr_member_forbit_method_call do |expr|
+  methods = %w(sub noConflict)
+  expr = context.find_expr_member(expr) do |expr|
+    expr.type == '.' && JQ_IDS.include?(expr.left.text) && 
+      methods.include?(expr.right.text) 
+  end
+
+  ['禁止使用jQuery.sub()和jQuery.noConflict方法', :error] if expr
+end
+
+check_expr_member_data_call_param do |expr|
+  expr = context.find_expr_member(expr) do |expr| 
+    if expr.type == '('
+      name = expr.left
+      if name.is_a?(XRay::JS::Expression) && name.type == '.' && 
+          name.right.text == 'data'
+        param = expr.right[0]
+        param && param.text =~ /[-_]/
+      end
+    end  
+  end
+  
+  ['使用".data()"读写自定义属性时需要转化成驼峰形式', :error] if expr
+end
+
+check_expr_member_ctor_selector do |expr|
+  expr = context.find_expr_member(expr) do |expr|
+    expr.type == '(' && JQ_IDS.include?(expr.left.text)
+  end
+  
+  if expr
+    param = expr.right[0] 
+    if param && param.type == 'string' && param.text !~ /^['"][#\w<]/
+      ['使用选择器时，能确定tagName的，必须加上tagName', :warn]
+    end
+  end
+end
