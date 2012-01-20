@@ -1,7 +1,7 @@
 fdlint -- 让前端code review更轻松
 =================================
 
-fdlint (开发代号xray) 是根据[中国站前端开发checklist](http://wd.alibaba-inc.com/doc/page/work/cbu-regulations/checklist)开发的自动代码扫描工具。
+fdlint (开发代号xray) 是根据阿里巴巴前端开发checklist开发的自动代码扫描工具。
 可以扫描出前端程序中不符合开发规范的地方。
 
 ## 语言支持
