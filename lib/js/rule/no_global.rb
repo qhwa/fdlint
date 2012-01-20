@@ -4,7 +4,7 @@ module XRay
   module JS
     module Rule
       
-      class NoGlobal
+      class NoGlobalRule
         
         def visit_stat_var(stat)
           scope = current_scope

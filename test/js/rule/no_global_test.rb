@@ -42,7 +42,7 @@ module XRayTest
         end
         
         def parse(js)
-          parse_with_rule js, XRay::JS::Rule::NoGlobal
+          parse_with_rule js, XRay::JS::Rule::NoGlobalRule
         end
 
       end
