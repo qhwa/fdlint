@@ -4,7 +4,7 @@ class CodeType
 
     public
     def guess(text, filename=nil)
-      if filename
+      if filename && !filename.empty?
         guess_by_name filename
       else
         guess_by_content text

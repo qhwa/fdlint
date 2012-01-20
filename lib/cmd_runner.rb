@@ -49,7 +49,14 @@ module XRay
       begin
         rest = opts.parse! args
         files.concat rest
-        raise ArgumentError.new("") if files.empty?
+
+        if $stdin.tty?
+          raise ArgumentError.new("") if files.empty?
+        else
+          str = ARGF.read
+          options[:text] = str
+        end
+
       rescue => e
         puts e.message.capitalize + "\n\n"
         puts opts
@@ -70,8 +77,14 @@ module XRay
     def run
       options, files = XRay::CMDOptions.parse ARGV
       @core_runner = XRay::Runner.new(options)
-      files.each do |file|
-        check_file file, options
+
+      unless files.empty?
+        files.each do |file|
+          check_file file, options
+        end
+      else
+        method = options[:type] ? :"check_#{options[:type]}" : :check
+        print @core_runner.send(method, options[:text]), options
       end
     end
 
@@ -86,18 +99,18 @@ module XRay
       end
 
       if @core_runner.valid_file? file
-        f = file.to_s
-        results = @core_runner.check_file( f )
-
-        print_results(
-          results, 
-          opt.merge({
-            :prefix   => ' ' * 5,
-            :file     => f,
-            :source   => @core_runner.source
-          })
-        )
+        print @core_runner.check_file( f ), :file => file.to_s
       end
+    end
+
+    def print( results, opt={} )
+      print_results(
+        results, 
+        opt.merge({
+          :prefix   => ' ' * 5,
+          :source   => @core_runner.source
+        })
+      )
     end
 
     def print_results( results, opt={} )
