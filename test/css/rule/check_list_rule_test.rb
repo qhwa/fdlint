@@ -132,6 +132,18 @@ module XRayTest
           end
         end
 
+        def test_check_property_slash_hack
+          prop = Node.new 'd\isplay'
+          message, level = check_property_hack prop
+          assert_equal :error, level
+        end
+
+        def test_check_selector_using_hack
+          selector = Node.new 'html*'
+          message, level = check_selector_using_hack selector
+          assert_equal :error, level
+        end
+
         def test_check_value_use_css_expression
           expr = Node.new 'expression(onfocus=this.blur())'
           message, level = check_value_use_css_expression expr

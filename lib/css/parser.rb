@@ -13,7 +13,7 @@ module XRay
       R_IDENT = /-?[_a-z][_a-z0-9-]*/
       R_ANY = %r"((?:#{TERM})|(?:#{QUOT_EXPR})|(?:#{DQUOT_EXPR}))+"
       R_SELECTOR = %r"((?:#{TERM2})|(?:#{QUOT_EXPR})|(?:#{DQUOT_EXPR}))+"
-      R_PROPERTY = /[*_+]?-?[_a-z][_a-z0-9-]*/
+      R_PROPERTY = /[*_+\\]?-?[_a-z\\][\\_a-z0-9-]*/
       
       attr_reader :comments
 
