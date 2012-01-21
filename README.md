@@ -23,11 +23,11 @@ fdlint (开发代号xray) 是根据阿里巴巴前端开发checklist开发的自
 
 运行方式
 
-    ./xray <目标文件或目录>
+    ./fdlint <目标文件或目录>
 
 或者
 
-    ruby xray <目标文件或目录>
+    ruby fdlint <目标文件或目录>
 
 
 ## 源代码
