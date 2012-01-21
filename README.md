@@ -29,6 +29,10 @@ fdlint (开发代号xray) 是根据阿里巴巴前端开发checklist开发的自
 
     ruby fdlint <目标文件或目录>
 
+### Web
+
+[fdlint-host](https://github.com/qhwa/fdlint-host)
+
 
 ## 源代码
 
