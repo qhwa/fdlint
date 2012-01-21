@@ -15,7 +15,7 @@ module XRay
       klass.instance_methods.grep( /^parse_/ ).map {|m| m[/^parse_(.*)/,1]}
     end
 
-    RULE_PATH = 'rules.d'
+    RULE_PATH = File.expand_path '../rules.d', File.dirname(__FILE__)
     KEYWORDS = %w(file merge_importing)
 
     KEYWORDS.concat methods_to_kw(XRay::JS::Parser)
