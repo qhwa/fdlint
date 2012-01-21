@@ -99,7 +99,7 @@ module XRay
       end
 
       if @core_runner.valid_file? file
-        print @core_runner.check_file( f ), :file => file.to_s
+        print @core_runner.check_file( file ), :file => file.to_s
       end
     end
 
