@@ -46,4 +46,4 @@ fdlint (开发代号xray) 是根据阿里巴巴前端开发checklist开发的自
 
 ## 附录
 
-[扫描规则](https://github.com/qhwa/fdev-xray/wiki/fdlint-%E6%89%AB%E6%8F%8F%E8%A7%84%E5%88%99)
+[扫描规则](https://github.com/qhwa/fdlint/wiki/fdlint-%E6%89%AB%E6%8F%8F%E8%A7%84%E5%88%99)
