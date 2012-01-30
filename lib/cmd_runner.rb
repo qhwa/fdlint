@@ -84,7 +84,7 @@ module XRay
         end
       else
         method = options[:type] ? :"check_#{options[:type]}" : :check
-        print @core_runner.send(method, options[:text]), options
+        print @core_runner.send(method, options[:text].utf8!), options
       end
     end
 
