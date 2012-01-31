@@ -5,11 +5,11 @@ require_relative 'css/parser'
 require_relative 'helper/file_reader'
 require_relative 'node'
 
-STYLE_TYPES ||= [:css, :js, :html]
-
 module XRay
 
   module Rule
+
+    STYLE_TYPES = [:css, :js, :html]
 
     def self.methods_to_kw(klass)
       klass.instance_methods.grep( /^parse_/ ).map {|m| m[/^parse_(.*)/,1]}
@@ -48,7 +48,7 @@ module XRay
         if block_given?
           self.send :"add_\#{syntax}_rule", :check_#{kw}, &block
         elsif target.size > 0
-          do_check *target, #{kw}_rules
+          do_check #{kw}_rules, *target
         end
       end
 
@@ -68,7 +68,7 @@ module XRay
           if block_given?
             self.send :"add_#{syn}_rule", :check_#{syn}_#{kw}, &block
           elsif target.size > 0
-            do_check *target, #{syn}_#{kw}_rules
+            do_check #{syn}_#{kw}_rules, *target
           end
         end
 
@@ -111,7 +111,7 @@ module XRay
       STYLE_TYPES.each { |syn| send(:"clear_#{syn}_rules") }
     end
 
-    def do_check( *args , rules )
+    def do_check( rules, *args )
       @@context = self
       target = args.first
       rules.inject([]) do |results, r|

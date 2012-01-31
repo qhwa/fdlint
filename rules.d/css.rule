@@ -3,7 +3,9 @@
 css
 
 check_file_name_without_ad do |name|
-  ADVERTISMENT ||= /(?:[^a-z0-9%_-]|^)ad(?:[sv][^a-z\r=\?]+|banner|click|ver|name|x|log|[^a-z\r_-]*[\.\/]|bot|c_|client|council|gifs|graph|images|img|fshow|pic|vert|view|info|click|sponsor)/
+  unless defined? ADVERTISMENT
+    ADVERTISMENT = /(?:[^a-z0-9%_-]|^)ad(?:[sv][^a-z\r=\?]+|banner|click|ver|name|x|log|[^a-z\r_-]*[\.\/]|bot|c_|client|council|gifs|graph|images|img|fshow|pic|vert|view|info|click|sponsor)/
+  end
   if name =~ ADVERTISMENT
     ['路径和文件名中不应该出现ad', :error]
   end

@@ -76,8 +76,8 @@ module XRay
     def check_css_file( file, opt={} )
       results = []
       begin
-        "".extend(XRay::Rule).check_css_file(file).each do |msg, level, row=0, column=0|
-          results << LogEntry.new( msg, level, row, column )
+        "".extend(XRay::Rule).check_css_file(file).each do |msg, level, *pos|
+          results << LogEntry.new( msg, level, pos[0] || 0, pos[1] || 0 )
         end
 
         source = XRay::CSS::Reader.read( file, @opt )

@@ -121,7 +121,11 @@ module XRay
     private
 
     def prepare_text(text)
-      text.encode! 'utf-8', :invalide => :replace, :universal_newline => true
+      if text.respond_to? :encode!
+        text.encode! 'utf-8', :invalide => :replace, :universal_newline => true
+      else
+        text.gsub(/\r\n/, "\n").gsub(/\r/, "\n")
+      end
     end
     
     def batch_check(stop, skip_pattern, not_skip_empty, first)

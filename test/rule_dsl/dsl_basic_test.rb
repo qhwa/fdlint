@@ -69,7 +69,7 @@ module XRayTest
         }
 
         results = check_html_file 'a_B.html'
-        assert_equal [case_warn, msg], results,
+        assert_equal [case_warn, msg], results
         
       end
 
