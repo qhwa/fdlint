@@ -32,10 +32,11 @@ Usage: xray
         --css                        在扫描模式下仅检查CSS文件，在管道模式下指定内容为CSS
         --js                         在扫描模式下仅检查JS文件，在管道模式下指定内容为JS
         --html                       在扫描模式下仅检查HTML文件，在管道模式下指定内容为HTML
-    -c, --charset set                指定文件默认的编码
+    -c, --charset set                指定文件默认的编码(本参数已废弃，目前自动判断字符集)
     -d, --debug                      输出调试信息
     -l, --list                       无彩色输出，等同于 '--format=nocolor'
-    -m, --checkmin                   检查压缩后的js或css文件。如不指定改选项，会跳过*-min.css或*-min.js文件。 (e.g. *-min.js; *-min.css)
+    -m, --checkmin                   检查压缩后的js或css文件。如不指定改选项，会跳过*-min.css或*-min.js文件。
+                                      (e.g. *-min.js; *-min.css)
         --format [type]              输出模式：console （默认）、nocolor 或 vim
 ~~~
 
