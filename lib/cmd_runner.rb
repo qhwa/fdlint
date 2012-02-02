@@ -23,7 +23,7 @@ module XRay
       }
 
       opts = OptionParser.new do |opts|
-        opts.banner = "Usage: xray"
+        opts.banner = "Usage: fdlint"
         %w(css js html).each do |type|
           opts.on("--#{type}", "check #{type} files only") do
             options[:type] = type

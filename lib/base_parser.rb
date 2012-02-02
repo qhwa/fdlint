@@ -123,7 +123,7 @@ module XRay
 
     def prepare_text(text)
       if text.respond_to? :encode!
-        text.encode! 'utf-8', :invalide => :replace, :universal_newline => true
+        text.encode! 'utf-8', :invalid => :replace, :universal_newline => true
       else
         text.gsub(/\r\n/, "\n").gsub(/\r/, "\n")
       end

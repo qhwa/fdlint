@@ -1,0 +1,916 @@
+#set($isyun =$doc.doGetYunDoc())
+#if($isyun)
+	$rundata.getModuleInfo().setLayoutTemplate("yun.vm")
+	##增加$from 参数，用以实现nav 上的当前状态，对应layout 调用 doc:header.vm
+	#set($yunloction = "question")
+	#set($page_tracelog="yun")
+#else
+	$rundata.getModuleInfo().setLayoutTemplate("base.vm")
+	##增加$from 参数，用以实现nav 上的当前状态，对应layout 调用 doc:header.vm
+	#set($from = "problems")
+	#set($page_tracelog="detail")
+#end
+
+#requireCSS("css/app/hood/module/paginator.css")
+#requireCSS("css/app/hood/module/sharepage.css")
+#requireCSS("css/app/hood/baike/module/button.css")
+#requireCSS("css/app/hood/baike/module/window.css")
+#requireCSS("css/app/hood/baike/module/smartask.css")
+#requireCSS("css/app/hood/baike/module/userpiece.css")
+#requireCSS("css/app/hood/baike/module/editarea.css")
+#requireCSS("css/app/hood/baike/module/level.css")
+#requireCSS("css/app/hood/myhome/module/dialog.css")
+#requireCSS("css/app/hood/baike/page/detail.css")
+
+#requireJS("js/app/hood/global/community-level.js")
+#requireJS("js/app/hood/module/sharepage.js")
+#requireJS("js/app/hood/baike/module/window-min.js")
+#requireJS("js/lib/fdev-v3/widget/tab/tab-min.js")
+#requireJS("js/app/hood/baike/module/smartask-min.js")
+#requireJS("js/lib/fdev-v3/core/yui/animation-min.js")
+#requireJS("js/app/hood/baike/module/bubble-min.js")
+#requireJS("js/app/hood/baike/module/samefeel-min.js")
+#requireJS("js/app/hood/yunplan/module/yunview-min.js")
+#requireJS("js/app/hood/baike/module/userpiece-min.js")
+#requireJS("js/app/hood/baike/module/simpleedit-min.js")
+#requireJS("js/app/hood/module/paginator.js")
+#requireJS("js/app/hood/myhome/module/dialog-v3-min.js")
+#requireJS("js/app/hood/myhome/module/sns-share-v3-min.js")
+#requireJS("js/app/hood/myhome/module/snsfollow-v3-min.js")
+
+#requireJS("js/app/hood/baike/page/detail-min.js")
+
+#requireJS("js/lib/fdev-v3/core/yui/connection-min.js")
+#requireJS("js/lib/fdev-v3/widget/sidepoper/sidepoper-min.js")
+#requireJS("js/lib/fdev-v3/core/yui/animation-min.js")
+#requireJS("js/app/hood/baike/module/coloreggfloat-v3.js")
+#requireCSS("css/lib/fdev-v3/widget/sidepoper.css")
+#requireCSS("css/app/hood/baike/module/coloreggfloat-v3.css")
+
+#set($page_title=$doc.title+"_阿里巴巴生意经")
+#set($page_keywords=$!doc.tag+","+$!categoryMap.get("$doc.categoryId").name)
+#if($doc.appendTitle&&$doc.appendTitle!='')
+	#set($page_desc=$!webUtil.trunkString($doc.appendTitle,200))
+#else
+	#set($page_desc=$!webUtil.filterHtmlForDesc($doc.content,150))
+#end
+
+#set($gMemberId=$rundata.chinaSession.getAttribute("__member_id__"))
+#set($myEnhanceUser=$enhanceUserMap.get($gMemberId))
+#set($docStatus=$doc.doGetDocStatus())
+
+#set ($answerGroup = $form.quickAnswer.defaultInstance)
+#set ($eidAndDidGroup = $form.eidAndDidForm.defaultInstance)
+
+
+##问题状态
+#if($doc.askStatus=="C")
+	#set($questionFlag="close") ##关闭问题
+#elseif($doc.editions>=1)
+	#set($questionFlag="solve") ##已解决问题
+#elseif($doc.editions==0  && $dateUtil.isExpiredDoc($doc.gmtCreate))
+	#set($questionFlag="expired")  ##已过期问题
+#else
+	#set($questionFlag="wait") ##待解决问题
+#end
+
+##来访角色
+#if($gMemberId&&$doc.memberId==$gMemberId)
+	#set($roleFlag="asker") ##提问者本人
+#elseif($gMemberId&&$myAnswer)
+	#set($roleFlag="answer") ##已经回答者
+#elseif($gMemberId&&!$myAnswer)
+	#set($roleFlag="visitor") ##意向回答者
+#else
+	#set($roleFlag="guest") ##未登录游客
+#end
+
+##帖子锁定状态
+#set($lockGroup = $form.lockEditDoc.defaultInstance)
+#if($doc.locked == "Y")
+	#set($lockStatus = "只有管理员可编辑")
+	#set($lockFlag ="lock")
+#end
+#if($lockedLevel >= 3 || $doc.views>=5000 || "Y"==$doc.excellent)
+	#set($lockedLevel = 3)
+	#set($lockStatus = "三级以上用户可编辑")
+	#set($lockFlag ="protect")
+#else
+	#set($lockedLevel = 0)
+	#set($lockFlag ="free")
+#end
+
+#if($doc.doGetYunDoc())
+	#set($pageTracelog="yun") ##云计划
+#else
+	#set($pageTracelog="baike") ##普通生意经
+#end
+
+#if($gMemberId && $docStatus=='W' && $doc.memberId!=$gMemberId )
+##编辑器只提供给登录用户，且非提问者使用，且问题要是待解决状态
+<form id="orte-param">
+	<input type="hidden" name="fetch_piccount_url" value="http://picman.china.alibaba.com/album/ajax/album_get_count_detail.json" />
+	<input type="hidden" name="has_album" id="has-album-value" value="true" />
+	<input type="hidden" name="fetch_piclist_url" value="http://picman.china.alibaba.com/album/ajax/image_detail_list.json" />
+	<input type="hidden" name="fetch_albumlist_url" value="http://picman.china.alibaba.com/album/ajax/album_puller_ajax.json" />
+	<input type="hidden" name="upload_url"  value="http://picman.china.alibaba.com/album/ajax/image_upload_ajax.json?_input_charset=UTF-8" />
+	<input type="hidden" name="fetch_summinfo_url" value="http://picman.china.alibaba.com/album/ajax/album_global_info_ajax.json" />
+	<input type="hidden" name="new_album_url" value="http://picman.china.alibaba.com/album/ajax/createAlbum.json" />
+</form>
+<script type="text/javascript" src="http://baike.china.alibaba.com/alirte/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+#end
+#set($pid=$categoryMap.get("$doc.categoryId").pid)
+
+#if(!$isyun)
+<div class="layout-p24a30">
+	<div class="grid-30">
+		<ul class="module mod-breadcrumb">
+			<li class="first-col"><a href="${gonglueServer}" target="_self" title="生意经">生意经</a></li>
+			<li><a href="$category1DocList.addQueryData('pCId',$pid)" title='$!categoryMap.get("$pid").name'>$!categoryMap.get("$pid").name</a></li>
+			<li><a href="$category2DocList.addQueryData('cCId',$doc.categoryId)" title='$!categoryMap.get("$doc.categoryId").name'>$!categoryMap.get("$doc.categoryId").name</a></li>
+			<li><a href="$!detailLink.addQueryData('did',$!{doc.id})" title="$doc.title">#SLITERAL($!webUtil.extraSubstring($!{doc.title},70,"…"))</a></li>
+		</ul>
+	</div>
+</div>
+#end
+<div class="layout-p24a30">
+	<div class="grid-23">
+		##快速提问
+		$!control.setTemplate("doc:smartask.vm").setParameter("isYunPage",$isyun)
+		##问题展示区
+		<div class="module mod-question">
+			<div class="top-round"><b></b><i></i></div>
+			<div class="cell-hd">
+				#if($doc.askStatus=="C")
+				  <h3 class="icn-close">已关闭问题</h3>
+				  <a class="fd-right icn-details" href="http://club.china.alibaba.com/forum/thread/view/61_28410593_.html" title="投诉或咨询" onmousedown="aliclick(this,'?tracelog=baike_detail_ts')">投诉或咨询</a>
+				#elseif($doc.editions>=1)
+				   <h3 class="icn-solve">已解决问题</h3>
+				   <a class="fd-right icn-details" href="http://club.china.alibaba.com/forum/thread/view/61_28410593_.html" title="投诉或咨询" onmousedown="aliclick(this,'?tracelog=baike_detail_ts')">投诉或咨询</a>
+			    #elseif($doc.editions==0  && $dateUtil.isExpiredDoc($doc.gmtCreate))
+					<h3 class="icn-expired">已过期问题</h3>
+				   <a class="fd-right icn-details" href="http://club.china.alibaba.com/forum/thread/view/61_28410593_.html" title="投诉或咨询" onmousedown="aliclick(this,'?tracelog=baike_detail_ts')">投诉或咨询</a>
+				#else
+					<h3 class="icn-living">待解决问题</h3>
+				   <a class="fd-right icn-details" href="http://club.china.alibaba.com/forum/thread/view/61_28410593_.html" title="投诉或咨询" onmousedown="aliclick(this,'?tracelog=baike_detail_ts')">投诉或咨询</a>
+				   <span class="fd-right">离问题过期还有：<em>#getExpiredTimeStringTemplate($doc.gmtCreate)</em></span>
+				#end
+			</div>
+			<div class="cell-bd">
+				<div class="fd-clr">
+					<div class="question-user">
+					#if($doc.memberId)
+						<a class="avatar" href="$profileLink.addQueryData('mid',$doc.memberId)?tracelog=baike_detail_iskid" title="$webUtil.displayNickname($doc.nickname,$doc.memberId)"><img src="$showSummaryPicServer.getURI($!webUtil.getMemberSummaryPic($doc.memberId))" onerror="FD.hood.baike.avatarNotFind(this)" alt="$webUtil.displayNickname($doc.nickname,$doc.memberId)"/></a>
+					    #if($doc.memberId!=$!gMemberId)
+						<a class="icn-sendmsg #if(!$gMemberId) hood-login-required #end" href="#" title="给Ta留言" onmousedown="aliclick(this,'?tracelog=baike_detail_gtly')" target="_self" data-userid="$doc.memberId" data-mdkey="$webUtil.getForumReplySecureKey($doc.memberId,$gMemberId)">给Ta留言</a>
+						#end
+						<a class="icn-follow sns-follow" href="#" title="加关注" data-userid="$doc.memberId" onmousedown="aliclick(this,'?tracelog=myhome_add_baike')" target="_self">加关注</a>
+					#else
+						<a class="avatar" href="#" title="游客" target="_self"><img src="http://img.china.alibaba.com/cms/upload/gonglue/201103/avatar.jpg" alt="游客"/></a>
+					#end
+					</div>
+					<div class="question-details wrp">
+						#set($tags=$!webUtil.getListTags($!doc.tag,3))
+						<h1>$!{doc.title} #if($tags.size()>0)<i>[标签：#foreach($tag in $tags)#if($velocityCount>1) #end<a title="$!tag" class="tag-lnk" href="$!tagSearchList.addQueryData('tag',$!tag)" onmousedown="aliclick(this,'?tracelog=baike_detail_title_tag')">$!tag</a>#end]</i>#end</h1>
+						<p class="question-data fd-clr">
+							#if($!doc.reward>0)
+							<span class="sign-wealth" title="悬赏值"></span>
+							<span class="fc-orange">悬赏值：$!doc.reward</span>
+							#end
+							<span>提问者：#if($doc.memberId)<a href="$profileLink.addQueryData('mid',$doc.memberId)" title="$webUtil.displayNickname($doc.nickname,$doc.memberId)" onmousedown="aliclick(this,'?tracelog=baike_iskid_detail')">$webUtil.displayNickname($doc.nickname,$doc.memberId)</a>#else 游客 $!doc.ip #end</span>
+							<span>浏览次数：$!doc.views</span>
+							<span>提问时间：$!dateUtil.toLocaleString($doc.gmtCreate,'yyyy-MM-dd HH:mm')</span>
+						</p>
+
+						<p id="question-cont" class="question-cont">#SLITERAL($!webUtil.enterTabSpace2html($webUtil.escapeHTML($doc.appendTitle)))</p>
+		
+					</div>
+				</div>
+				<div class="question-operation fd-clr">
+					<a href="#" class="baike-count-btn baike-samefeel" target="_self" data-dignum="$doc.digges" data-digdocid="${doc.id}" title="有同感" onmousedown="aliclick(this,'?tracelog=baike_$!{page_tracelog}_ytg')">
+						<b>$!doc.digges</b>
+						<em>有同感</em>
+					</a>
+					<a class="baike-shortcut #if(!$gMemberId) hood-login-required #end" href="#" title="收藏" target="_self" onmousedown="aliclick(this,'?tracelog=baike_detail_sc')">收藏</a>
+					<div class="baike-share share-zone">
+						<div class="sharepage-area">
+							<a class="sharepage-copylink myhome-share-btn" href="#" title="站内分享" onmousedown="aliclick(this,'?tracelog=myhome_share_baike')">站内分享</a>
+							<span class="sharepage-label">分享<em>|</em></span>
+							<a class="sharepage-sina" data-sharepage="sina" href="#" title="分享到新浪微博" onmousedown="aliclick(this,'?tracelog=$!{pageTracelog}_detail_fxxlwb')">新浪微博</a>
+							<a class="sharepage-qzone" data-sharepage="qzone" href="#" title="分享到QQ空间" onmousedown="aliclick(this,'?tracelog=$!{pageTracelog}_detail_fxqqkj')">QQ空间</a>
+							<a class="sharepage-taojianghu" data-sharepage="taojianghu" href="#" title="分享到淘江湖" onmousedown="aliclick(this,'?tracelog=$!{pageTracelog}_detail_fxtjh')">淘江湖</a>
+							<a class="sharepage-tqq" data-sharepage="tqq" href="#" title="分享到腾讯微博" onmousedown="aliclick(this,'?tracelog=$!{pageTracelog}_detail_fxtxwb')">腾讯微博</a>
+							<a class="sharepage-renren" data-sharepage="renren" href="#" title="分享到人人网" onmousedown="aliclick(this,'?tracelog=$!{pageTracelog}_detail_fxrrw')">人人网</a>
+							<a class="sharepage-kaixin" data-sharepage="kaixin" href="#" title="分享到开心网" onmousedown="aliclick(this,'?tracelog=$!{pageTracelog}_detail_fxkxw')">开心网</a>
+						</div>
+					</div>
+				</div>
+				#set($apdTitleMaxLength=3000)
+				#set($restChar=$apdTitleMaxLength -$doc.appendTitle.length())
+				
+				##已登录，是提问者本人，非精品帖且补充问题长度不超过$apdTitleMaxLength（1000字）允许编辑补充问题
+				#if($gMemberId &&  $doc.memberId==$gMemberId  && $docStatus!='C' && $docStatus!='R')
+				<div class="asker-operation-box">
+					<ul class="question-asker-op fd-clr">
+						<li class="asker-op-dissatisfied"><span class="icn-dissatisfied">关闭问题</span></li>
+						#if($docStatus=='W')
+						<li class="asker-op-append"><span class="icn-modify">补充描述</span></li>
+						#end
+						#if($doc.reward<200)
+						<li class="asker-op-reward"><span class="icn-reward">提高悬赏</span></li>
+						#end
+					</ul>
+					#if($docStatus=='W')
+					<div class="asker-op-appendarea">
+						<div class="asker-tawrap fd-clr">
+							<textarea id="appendarea-ta"></textarea>
+						</div>
+						<div class="asker-btnwrap fd-clr">
+							<p id="appendarea-tips" class="appendarea-tips">补充提问细节，以得到更准确的答案，您还可以增加<span id="appendarea-count">$restChar</span>个字哦！</p>
+							<span id="appendarea-err" class="appendarea-result"></span>
+							<a class="appendarea-cancel btn-bk-o1" href="#" target="_self" title="取消">
+								<span><button id="appendarea-cancel" type="button"><em>取消</em></button></span>
+								<i></i>
+							</a>
+							<a class="appendarea-submit btn-bk-o" href="#" target="_self" title="提交">
+								<span><button id="appendarea-submit"  type="button" onmousedown="aliclick(this,'?tracelog=baike_detail_bcms')"><em>提交</em></button></span>
+								<i></i>
+							</a>
+						</div>
+						#set ($groupApd = $form.modifyApdTitle.defaultInstance)
+						########################################
+						## form表单之 form-appendques 补充问题功能
+						########################################
+						<form id="form-appendques" method="post" action="$docModule.setTarget('ajax.vm')?_input_charset=UTF-8">
+							<input type="hidden" name="action" value="docDetailOptAction"/>
+							<input type="hidden" name="event_submit_do_modify_append_title" value="true"/>
+							<input type="hidden" name="${groupApd.id.key}" value="${doc.id}"/>
+							<input type="hidden" id="hid-appendtitle" name="${groupApd.appendTitle.key}" value=""/>
+							$csrfToken.hiddenField
+						</form>
+					</div>
+					#end
+					<div class="asker-op-dissatisfiedarea">
+						#if($docStatus=='E')
+							<div class="asker-tips"><p>该问题已过期，如果以下回答您都不满意，请点击确认关闭该问题！#if($!doc.reward > 0)同时您提问时悬赏的财富值不被返还！#end</p></div>
+						#elseif($docStatus=='W')
+							<div class="asker-tips">
+							   <p>确认没有满意答案，要关闭问题吗？</p>
+							   <p>问题一旦关闭，将不会出现在系统中，将得不到网友的帮助和解答了！#if($!doc.reward > 0)同时您提问时悬赏的财富值不被返还！#end</p>
+						    </div>
+						#end
+						<div class="asker-btnwrap fd-clr">
+							<a class="dissatisfiedarea-cancel btn-bk-o1" href="#" target="_self" title="取消">
+								<span><button id="dissatisfiedarea-cancel"  type="button"><em>取消</em></button></span>
+								<i></i>
+							</a>
+							########################################
+							## form表单之 form-closeques 关闭问题功能
+							########################################
+							<form id="form-closeques" method="post" action="" target="_self">
+								 <input type="hidden" name="action" value="docDetailOptAction"/>
+								 <input type="hidden" name="event_submit_do_closeDocByAsker" value="true"/>
+								  <input type="hidden" name="$eidAndDidGroup.docId.key" value="$doc.id"/>
+								 $csrfToken.hiddenField
+								 <input type="hidden" name="action" value="docDetailOptAction"/>
+								 <a class="dissatisfiedarea-submit btn-bk-o" href="javascript:;" target="_self" title="确认关闭">
+									<span><button type="submit"  onmousedown="aliclick(this,'?tracelog=baike_detail_qrgb')"><em>确认关闭</em></button></span>
+									<i></i>
+								 </a>
+							</form>
+						</div>
+					</div>
+					<div class="asker-op-rewardarea">
+						<div class="asker-tips">
+						   <p>每提高一次悬赏值，您的问题在悬赏问题列表中排序会更加靠前。问题的悬赏值总额不能超过200。</p>
+						   <p>	
+								<span>追加悬赏</span>
+							    <select id="rewardsum-select">
+									<option value ="5" selected="selected">5</option>
+									<option value ="10">10</option>
+									<option value="15">15</option>
+									<option value="20">20</option>
+									<option value="30">30</option>
+									<option value="50">50</option>
+								</select>
+								<span>点财富值</span>
+							</p>
+						</div>
+						<div class="asker-btnwrap fd-clr">
+							<span id="reward-tip"></span>
+							<a class="rewardarea-cancel btn-bk-o1" href="#" target="_self" title="取消">
+								<span><button id="rewardarea-cancel" type="button"><em>取消</em></button></span>
+								<i></i>
+							</a>
+							<a class="rewardarea-submit btn-bk-o" href="#" target="_self" title="确定">
+								<span><button id="rewardarea-submit" type="button"><em>确定</em></button></span>
+								<i></i>
+							</a>
+							#set ($groupReward = $form.increaseReward.defaultInstance)
+    						########################################
+    						## form表单之 form-rewardanswer 追加悬赏功能
+    						########################################
+							<form id="form-rewardanswer" method="post" action="$docModule.setTarget('ajax.vm')?_input_charset=UTF-8">
+								<input type="hidden" name="action" value="docDetailOptAction"/>
+								<input type="hidden" name="event_submit_do_increaseRewardByAsker" value="true"/>
+								<input type="hidden" name="${groupReward.id.key}" value="${doc.id}"/>
+								<input type="hidden" name="action" value="docDetailOptAction"/>
+								<input id="hid-rewardsum" type="hidden" name="${groupReward.reward.key}" value="$doc.reward"/>
+								$csrfToken.hiddenField
+							</form>
+						</div>
+					</div>
+				</div>
+				#end
+			</div>
+			<div class="bottom-round"><b></b><q></q><i></i></div>
+		</div>
+		
+		##最满意答案区
+	#if($docStatus=='R')##已解答
+		<div id="mod-bestanswer" class="module mod-bestanswer">
+			<div class="top-round"><b></b><i></i></div>
+			<div class="cell-hd">
+				<span class="icn-bestanswer"></span>
+				<h3>最满意答案</h3>
+				#if($doc.locked  == "Y")	
+					<span class="fd-right icn-lock">该答案已经被锁定</span>
+				#elseif($lockedLevel > 0)
+					<span class="fd-right icn-lock">该答案已经被保护</span>
+				#end
+				<span class="fd-right">
+					#if($doc.locked!= "Y")<a id="supply-lnk" href="$docModule.setTarget('showForModify.vm').addQueryData('did',$doc.id)" target="_self" title="我来完善答案" rel="nofollow">我来完善答案</a>&nbsp;#end
+					#if($isAdmin)<a id="answer-permission-ctrl" href="#" title="设置锁定" target="_self">设置锁定</a>&nbsp;<a href="$adminModule.setTarget('doc/edit.vm').addQueryData('did',${doc.id})" title="后台编辑">后台编辑</a>#end
+				</span>
+			</div>
+			<div class="cell-bd">
+				<div class="entry">
+					<div class="article">
+						<p class="article-flag fd-clr">#if($doc.excellent=='Y')<span class="icn-prefect" title="精品"></span>#end</p>
+						<div class="preview">
+							#if($menuList&&$menuList.size()!=0)
+							<div class="p2 cate-p2 fd-clr">
+								#set($displayMenuCount=5)##目录，最多显示5个，超过则收缩，如果鼠标移入目录区域，则全展示
+								<div class="cateBox" #if($menuList.size()>$displayMenuCount) id="cate-more" #end>
+									<fieldset class="fd1" id="cateList1" name="cateList1">
+										<legend>目录</legend>
+										<div id="cateListCont1" class="catalog">
+											<ul>
+												#foreach($menu in $menuList)
+													<li><a href="#menu$velocityCount" target="_self" title="#SLITERAL($menu)">#SLITERAL($webUtil.extraSubstring($menu,30))</a></li>
+												#end
+											</ul>
+										</div>
+										#if($menuList.size()>$displayMenuCount)
+										<div id="extList1" class="extList"></div>
+										#end
+									</fieldset>
+									<input type="hidden" id="hid-editlock" #if($doc.locked != "Y") value="false" #else value="true" #end />
+									<input type="hidden" id="hid-editlnk" value="$docModule.setTarget('showForModify.vm').addQueryData('did',$doc.id)"/>
+								</div>
+							</div>
+							#end
+							<div class="p2 fd-clr">
+								#SLITERAL($!linkTool.addLink($doc.content))
+							</div>
+						</div>
+						<div class="article-btnwrap fd-clr">
+							#if($doc.locked!= "Y")
+							<a class="supply-btn btn-bk-o" href="$docModule.setTarget('showForModify.vm').addQueryData('did',$doc.id)" target="_self" title="我来完善答案" rel="nofollow">
+								<span><button id="supply-btn" #if(($lockedLevel > 0) && (!$myEnhanceUser || ${myEnhanceUser.titleDO.level} < $lockedLevel ))  data-feedbackable="true" #end type="button" onmousedown="aliclick(this,'?tracelog=baike_detail_wlws')"><em>我来完善答案</em></button></span>
+								<i></i>
+							</a>
+							<p class="article-tips">完善答案通过审核后，可获得<em>3</em>点财富值</p>
+							#end
+						</div>
+						<p class="article-info"><span>最后更新：$!dateUtil.toLocaleString($doc.lastEditTime,'yyyy-MM-dd HH:mm')</span>&nbsp;<span>版本：<a href="$docModule.setTarget('history/list.vm').addQueryData('did',$doc.id)" title="$doc.editions个历史版本" onmousedown="aliclick(this,'?tracelog=baike_detail_history')" rel="nofollow">$doc.editions个历史版本</a></span></p>
+					</div>
+					<div class="details">
+						#set($firstEditEnhance = $enhanceUserMap.get($doc.firstEditorId))
+						#set($lastEditEnhance = $enhanceUserMap.get($doc.lastEditorId))
+						
+						#set($firstEditNick=$webUtil.displayNickname($firstEditEnhance.user.nickname,$firstEditEnhance.user.memberId))
+						#set($lastEditNick=$webUtil.displayNickname($lastEditEnhance.user.nickname,$lastEditEnhance.user.memberId))
+						<dl>
+							<dt> 
+								<p>答案创立者</p>
+								<a class="avatar" href="$answerLink.addQueryData('mid',$doc.firstEditorId)" title="$!firstEditNick" onmousedown="aliclick(this,'?tracelog=baike_detail_answeridfirst')"><img src="$showSummaryPicServer.getURI($webUtil.getMemberSummaryPic($doc.firstEditorId))" onerror="FD.hood.baike.avatarNotFind(this)" alt="$!firstEditNick"/></a>
+							</dt>
+							<dd class="details-userinfo">
+								#if($firstEditEnhance.user.doIsTeacher())
+								<span class="icn-teacher" title="云计划导师"></span>
+								<a class="details-nick" href="$answerLink.addQueryData('mid',$doc.firstEditorId)" title="$!firstEditNick" onmousedown="aliclick(this,'?tracelog=baike_detail_answeridfirst')">$webUtil.extraSubstring($!firstEditNick,10,"…")</a>
+								#elseif($firstEditEnhance.user.doIsExpert())
+								<span class="icn-master" title="生意经领主"></span>
+								<a class="details-nick" href="$answerLink.addQueryData('mid',$doc.firstEditorId)" title="$!firstEditNick" onmousedown="aliclick(this,'?tracelog=baike_detail_answeridfirst')">$webUtil.extraSubstring($!firstEditNick,10,"…")</a>
+								#else
+								<a class="details-nick" href="$answerLink.addQueryData('mid',$doc.firstEditorId)" title="$!firstEditNick" onmousedown="aliclick(this,'?tracelog=baike_detail_answeridfirst')">$webUtil.extraSubstring($!firstEditNick,14,"…")</a>
+								#end
+								<span class="details-level">
+									<span class="level-${firstEditEnhance.titleDO.level}" title="${firstEditEnhance.titleDO.currentTitle} (${firstEditEnhance.titleDO.levelName})"></span>
+									<span>$firstEditEnhance.titleDO.currentTitle</span>
+								</span>
+								<span class="details-acception">采纳率:$firstEditEnhance.userCreditDetailDO.getAdoptProportion()</span>
+							</dd>
+							<dd class="details-fastlnk">
+								#if($doc.firstEditorId!=$!gMemberId)
+								<a class="icn-sendmsg #if(!$gMemberId) hood-login-required #end" href="#" target="_self" title="给Ta留言" onmousedown="aliclick(this,'?tracelog=baike_detail_gtly')" data-userid="$doc.firstEditorId" data-mdkey="$webUtil.getForumReplySecureKey($doc.firstEditorId,$gMemberId)">给Ta留言</a>
+								#end
+								#if($firstEditEnhance.user.doIsTeacher() || $firstEditEnhance.user.doIsExpert())
+								<a class="icn-details"  href="$docModule.setTarget('add.vm').addQueryData('mid',$doc.firstEditorId).render()" title="向Ta提问" onmousedown="aliclick(this,'?tracelog=baike_detail_xttw')">向Ta提问</a>
+								#end
+								<a class="icn-follow sns-follow" href="#" title="加关注" data-userid="$doc.firstEditorId" onmousedown="aliclick(this,'?tracelog=myhome_add_baike')" target="_self">加关注</a>
+							</dd>
+						</dl>
+						#if($doc.firstEditorId!=$doc.lastEditorId)
+						<dl>
+							<dt>
+								<p>最后编辑者</p>
+								<a class="avatar" href="$answerLink.addQueryData('mid',$doc.lastEditorId)" title="$!lastEditNick" onmousedown="aliclick(this,'?tracelog=baike_detail_answeridlast')"><img src="$showSummaryPicServer.getURI($webUtil.getMemberSummaryPic($doc.lastEditorId))" onerror="FD.hood.baike.avatarNotFind(this)" alt="$!lastEditNick"/></a>
+							</dt>
+							<dd class="details-userinfo">
+								#if($lastEditEnhance.user.doIsTeacher())
+								<span class="icn-teacher" title="云计划导师"></span>
+								<a class="details-nick" href="$answerLink.addQueryData('mid',$doc.lastEditorId)" title="$!lastEditNick" onmousedown="aliclick(this,'?tracelog=baike_detail_answeridlast')">$webUtil.extraSubstring($!lastEditNick,10,"…")</a>
+								#elseif($lastEditEnhance.user.doIsExpert())
+								<span class="icn-master" title="生意经领主"></span>
+								<a class="details-nick" href="$answerLink.addQueryData('mid',$doc.lastEditorId)" title="$!lastEditNick" onmousedown="aliclick(this,'?tracelog=baike_detail_answeridlast')">$webUtil.extraSubstring($!lastEditNick,10,"…")</a>
+								#else
+								<a class="details-nick" href="$answerLink.addQueryData('mid',$doc.lastEditorId)" title="$!lastEditNick" onmousedown="aliclick(this,'?tracelog=baike_detail_answeridlast')">$webUtil.extraSubstring($!lastEditNick,14,"…")</a>
+								#end
+								<span class="details-level">
+									<span class="level-${lastEditEnhance.titleDO.level}" title="${lastEditEnhance.titleDO.currentTitle} (${lastEditEnhance.titleDO.levelName})"></span>
+									<span>$lastEditEnhance.titleDO.currentTitle</span>
+								</span>
+								<span class="details-acception">采纳率:$lastEditEnhance.userCreditDetailDO.getAdoptProportion()</span>
+							</dd>
+							<dd class="details-fastlnk">
+								#if($doc.lastEditorId!=$!gMemberId)
+								<a class="icn-sendmsg #if(!$gMemberId) hood-login-required #end" href="#" target="_self" title="给Ta留言" onmousedown="aliclick(this,'?tracelog=baike_detail_gtly')" data-userid="$doc.lastEditorId" data-mdkey="$webUtil.getForumReplySecureKey($doc.lastEditorId,$gMemberId)">给Ta留言</a>
+								#end
+								#if($lastEditEnhance.user.doIsTeacher() || $lastEditEnhance.user.doIsExpert())
+								<a class="icn-details"  href="$docModule.setTarget('add.vm').addQueryData('mid',$doc.lastEditorId)" title="向Ta提问" onmousedown="aliclick(this,'?tracelog=baike_detail_xttw')">向Ta提问</a>
+								#end
+								<a class="icn-follow sns-follow" href="#" title="加关注" data-userid="$doc.lastEditorId" onmousedown="aliclick(this,'?tracelog=myhome_add_baike')" target="_self">加关注</a>
+							</dd>
+						</dl>
+						#end
+					</div>
+					
+					<div class="edge-line"><div class="edge"></div></div>
+				</div>
+			</div>
+			<div class="bottom-round"><b></b><i></i></div>
+		</div>
+		$!control.setTemplate("relatedKnowledge.vm").setParameter("relativeKnowledgeList",$relativeKnowledgeList)
+
+		##无满意答案，网友回答区域开始
+	#else ##未解答（包括关闭和过期）
+		#if(!$myAnswer && $docStatus=='W')
+		##没有回答时出现
+		
+		<div id="mod-newanswer"  class="module mod-newanswer mod-graybox">## #if(!$gMemberId ||$gMemberId==$doc.memberId)d-n#end
+			<div class="top-round"><b></b><i></i></div>
+			<div class="cell-hd">
+				<h3>我来回答</h3>
+			</div>
+			<div class="cell-bd">
+				<div class="newanswer-area">
+					<form id="form-newanswer" method="post" action="$detailLink.addQueryData('did', $doc.id)#editarea" target="_self" >
+						$csrfToken.hiddenField
+						<input type="hidden" name="action" value="docDetailOptAction"/>
+						<input type="hidden" name="test " value="docDetailOptAction"/>
+					    <input type="hidden" name="event_submit_do_addOrEditQaAnswer" value="true"/>
+						<input type="hidden" name="$!answerGroup.docId.key" value="$doc.id"/>
+						<div class="fd-clr">
+							<textarea id="editarea" name="$!answerGroup.content.key">$!answerGroup.content.value</textarea>
+						</div>
+						<div class="newanswer-btnwrap fd-clr">
+							#detailErrorMessage($answerGroup.content)#detailErrorMessage($answerGroup.csrfToken)
+							#if($answer_result_code)<span class="fd-left tip-err"> $answer_result_code.message</span>#end
+							<a class="newanswer-cancel btn-bk-o1" href="#" target="_self" title="取消">
+								<span><button id="newanswer-cancel" type="button" onmousedown="aliclick(this,'?tracelog=baike_detail_hdqx')"><em>取消</em></button></span>
+								<i></i>
+							</a>
+							<a class="newanswer-submit btn-bk-o" href="javascript:;"  target="_self" title="提交回答">
+								<span><button type="submit" onmousedown="aliclick(this,'?tracelog=baike_detail_tjhd')"><em>提交回答</em></button></span>
+								<i></i>
+							</a>
+							<p class="article-tips">答案被采纳后，可获得<em>6</em>点财富值</p>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="bottom-round"><b></b><i></i></div>
+		</div>
+		#elseif($myAnswer)
+		##我的回答排第一个
+		#set($myAnswerName=$webUtil.displayNickname($myEnhanceUser.user.nickname,$myEnhanceUser.user.memberId))
+		<div class="module mod-myanswer mod-graybox">
+			<div class="top-round"><b></b><i></i></div>
+			<div class="cell-hd">
+				<h3>我的回答</h3>
+			</div>
+			<div class="cell-bd">
+				<div class="entry">
+					<dl class="details">
+						<dt><a class="avatar" href="$answerLink.addQueryData('mid',$myAnswer.editorId)" title="$myAnswerName"><img src="$showSummaryPicServer.getURI($webUtil.getMemberSummaryPic($myAnswer.editorId))" onerror="FD.hood.baike.avatarNotFind(this)" alt="$myAnswerName"/></a></dt>
+						<dd class="details-userinfo">
+							#if($myEnhanceUser.user.doIsTeacher())<span class="icn-teacher" title="云计划导师"></span>#end
+							#if($myEnhanceUser.user.doIsExpert())<span class="icn-master" title="生意经领主"></span>#end
+								
+							<a class="details-nick" href="$answerLink.addQueryData('mid',$gMemberId)" title="$myAnswerName">$webUtil.extraSubstring($myAnswerName,16,"…")</a>
+							<span class="details-level">
+								<span>等级：</span>
+								<span class="level-${myEnhanceUser.titleDO.level}" title="${myEnhanceUser.titleDO.currentTitle} (${myEnhanceUser.titleDO.levelName})"></span>
+								<span>$!{myEnhanceUser.titleDO.currentTitle} (${myEnhanceUser.titleDO.levelName})</span>
+							</span>
+							<span class="details-acception">采纳率：$myEnhanceUser.userCreditDetailDO.getAdoptProportion()</span>
+							<span class="details-time">回答时间：$!dateUtil.toLocaleString($myAnswer.editTime,'yyyy-MM-dd HH:mm')</span>
+						</dd>
+					</dl>
+					<div class="article">
+						<div class="preview">
+							<div class="p2 fd-clr">
+								#SLITERAL($!myAnswer.content)
+							</div>
+						</div>
+						#if($docStatus=='W')
+						<div class="article-btnwrap fd-clr">
+							<a href="#" class="baike-count-btn baike-reliable baike-count-disabledbtn" target="_self" data-editionnum="$myAnswer.support" data-digmid="$myAnswer.editorId" data-editiontype="support" data-editionid="$myAnswer.id" title="靠谱" onmousedown="aliclick(this,'?tracelog=baike_$!{page_tracelog}_kaopu')">
+								<b>$myAnswer.support</b>
+								<em>靠谱</em>
+							</a>
+							<div id="myanswer-modify" class="myanswer-modify #if($quickAnswerError=='Y') d-n#end"><span class="icn-modify" onmousedown="aliclick(this,'?tracelog=baike_detail_xgda')">修改答案</span></div>
+						</div>
+						#end
+					</div>
+					#if($docStatus=='W')
+					<div id="myanswer-area" class="myanswer-area #if($quickAnswerError!='Y')d-n#end">
+						<form id="form-modifyanswer" action="$detailLink.addQueryData('did', $doc.id)#editarea" target="_self"  method="post">
+							<input type="hidden" name="action" value="docDetailOptAction"/>
+					        <input type="hidden" name="event_submit_do_addOrEditQaAnswer" value="true"/>
+						    <input type="hidden" name="$!answerGroup.docId.key" value="$doc.id"/>
+							$csrfToken.hiddenField
+							<div class="fd-clr">
+								<textarea id="editarea" name="$!answerGroup.content.key">
+									#if("Y"==$quickAnswerError)$!answerGroup.content.value#else$!myAnswer.content#end
+                                </textarea>
+							</div>
+							
+							<div class="myanswer-btnwrap fd-clr">
+								#detailErrorMessage($answerGroup.content)#detailErrorMessage($answerGroup.csrfToken)
+							    #if($answer_result_code)<span class="fd-left tip-err"> $answer_result_code.message</span>#end
+								<a class="myanswer-cancel btn-bk-o1" href="#" target="_self" title="取消">
+									<span><button id="myanswer-cancel" type="button"><em>取消</em></button></span>
+									<i></i>
+								</a>
+								<a class="myanswer-submit btn-bk-o" href="javascript:;" target="_self" title="提交修改">
+									<span><button type="submit" onmousedown="aliclick(this,'?tracelog=baike_detail_tjxg')"><em>提交修改</em></button></span>
+									<i></i>
+								</a>
+							</div>
+						</form>
+					</div>
+					#end
+					<div class="edge-line"><div class="edge"></div></div>
+				</div>
+			</div>
+			<div class="bottom-round"><b></b><i></i></div>
+		</div>
+		#end
+	#end
+		##网友回答
+	#if($paginator && $paginator.items >0)
+		<div class="module mod-normalanswer mod-graybox">
+			<div class="top-round"><b></b><i></i></div>
+			<div class="cell-hd">
+				<h3>回答</h3>
+				<span class="fd-left">共$paginator.items条</span>
+			</div>
+			<div class="cell-bd">
+				#foreach($nomalAnswer in $otherAnswers)
+				<div class="entry">
+					#set($userEnhance= $enhanceUserMap.get($nomalAnswer.editorId))
+					#set($normalAnswerName=$webUtil.displayNickname($userEnhance.user.nickname,$userEnhance.user.memberId))
+					<dl class="details">
+						<dt><a class="avatar" href="$answerLink.addQueryData('mid',$nomalAnswer.editorId)" title="$normalAnswerName" onmousedown="aliclick(this,'?tracelog=baike_detail_answerid')"><img src="$showSummaryPicServer.getURI($webUtil.getMemberSummaryPic($nomalAnswer.editorId))" onerror="FD.hood.baike.avatarNotFind(this)"  alt="$normalAnswerName"/></a></dt>
+						<dd class="details-userinfo">
+							#if($userEnhance.user.doIsTeacher())
+								<span class="icn-teacher" title="云计划导师"></span>
+							#end
+							#if($userEnhance.user.doIsExpert())
+								<span class="icn-master" title="生意经领主"></span>
+							#end
+							<a class="details-nick" href="$answerLink.addQueryData('mid',$nomalAnswer.editorId)" onmousedown="aliclick(this,'?tracelog=baike_detail_answerid')" title="$normalAnswerName">$webUtil.extraSubstring($normalAnswerName,16,"…")</a>
+							<span class="details-level">
+								<span>等级：</span>
+								<span class="level-${userEnhance.titleDO.level}" title="${userEnhance.titleDO.currentTitle} (${userEnhance.titleDO.levelName})"></span>
+								<span>$userEnhance.titleDO.currentTitle ($userEnhance.titleDO.levelName)</span>
+							</span>
+							<span class="details-acception">采纳率：$userEnhance.userCreditDetailDO.getAdoptProportion()</span>
+							<span class="details-time">回答时间：$!dateUtil.toLocaleString($nomalAnswer.editTime,'yyyy-MM-dd HH:mm')</span>
+						</dd>
+						<dd class="details-fastlnk">
+							<a class="icn-sendmsg #if(!$gMemberId) hood-login-required #end" href="#" target="_self" title="给Ta留言" onmousedown="aliclick(this,'?tracelog=baike_detail_gtly')" data-userid="$nomalAnswer.editorId" data-mdkey="$webUtil.getForumReplySecureKey($nomalAnswer.editorId,$gMemberId)">给Ta留言</a>
+							#if($userEnhance.user.doIsExpert()||$userEnhance.user.doIsTeacher())
+							<a class="icn-details"  href="$docModule.setTarget('add.vm').addQueryData('mid',$nomalAnswer.editorId)" title="向Ta提问" onmousedown="aliclick(this,'?tracelog=baike_detail_xttw')">向Ta提问</a>
+							#end
+							<a class="icn-follow sns-follow" href="#" title="加关注" data-userid="$nomalAnswer.editorId" onmousedown="aliclick(this,'?tracelog=myhome_add_baike')" target="_self">加关注</a>
+							#if($isAdmin)
+							<a class="details-adminmodify" href="$adminModule.setTarget('doc/editAnswer.vm').addQueryData('id',$nomalAnswer.id)" title="修改">修改</a>
+							<a class="details-adminmodify"  href="$adminModule.setTarget('doc/editAnswer.vm').addQueryData('id',$nomalAnswer.id).addQueryData('isdelete',true)" title="删除"  data-answerid="$nomalAnswer.id">删除</a>
+							#end
+						</dd>
+					</dl>
+					<div class="article">
+						<div class="preview">
+						<div class="p2 fd-clr">
+							#SLITERAL($nomalAnswer.content)
+						</div>
+						</div>
+						<div class="article-btnwrap fd-clr">
+							<a href="#" class="baike-count-btn baike-reliable" target="_self" data-editionnum="$nomalAnswer.support" data-digmid="$nomalAnswer.editorId" data-editiontype="support" data-editionid="$nomalAnswer.id" title="靠谱" onmousedown="aliclick(this,'?tracelog=baike_$!{page_tracelog}_kaopu')">
+								<b>$nomalAnswer.support</b>
+								<em>靠谱</em>
+							</a>
+							#if($doc.editions==0 && $doc.memberId==$gMemberId && $doc.askStatus!='C')
+							<a class="accept-btn btn-bk-o" href="#" target="_self" title="采纳为满意答案">
+								<span><button type="button" data-answerid="$nomalAnswer.id" onmousedown="aliclick(this,'?tracelog=baike_detail_cn')"><em>采纳为满意答案</em></button></span>
+								<i></i>
+							</a>
+							#end
+						</div>
+					</div>
+					<div class="edge-line"><div class="edge"></div></div>
+				</div>
+				#end
+			</div>
+			<div class="bottom-round"><b></b><i></i></div>
+		</div>
+		
+		#if($paginator && $paginator.getPages()>1)
+		  #set($pageLocaction=$detailLink.addQueryData("did","$doc.id").render()+"?page=")
+		  <div class="module mod-paging">
+			<ul data-sp="paging-a" class="paging-a f-r">
+				#hoodPaginator( $paginator $pageLocaction "")
+			</ul>
+		  </div>
+		#end
+	#end
+	##未解决问题，相关问题在下
+	#if($docStatus!='R')$!control.setTemplate("relatedKnowledge.vm").setParameter("relativeKnowledgeList",$relativeKnowledgeList)#end
+	#if(!$isyun)
+		##p4p广告
+		<div class="module mod-mainbox mod-p4poffers">
+			<div class="top-round"><b></b><i></i></div>
+			<div class="cell-hd">
+				<h3>热门推荐</h3>
+				<a title="更多热门推荐" href="http://p4psearch.china.alibaba.com/p4p114/p4psearch/offer.htm?keywords=$!{doc.tag}" class="fd-right font-song">更多热门推荐&nbsp;&gt;</a>
+				<a title="我也要出现在这里" href="http://page.china.alibaba.com/html/p4p/pro.html?tracelog=p4plist" class="fd-right font-song">我也要出现在这里&nbsp;&gt;</a>
+			</div>
+			<div class="cell-bd">
+				<div id="guess-offers"></div>
+			</div>
+			<div class="bottom-round"><b></b><i></i></div>
+		</div>
+		<script type="text/javascript" src="http://style.china.alibaba.com/js/vas/hub/zq.js"></script>
+		<script type="text/javascript">
+			##当前位置生成 广告
+			ZQ.init({
+				prodid:"93",
+				container:"guess-offers",
+				tag:"$!{doc.tag}",
+				width:706,
+				height:200
+			});
+		</script>
+	#end
+	</div>
+	<div class="grid-7 grid-fixed">
+		$control.setTemplate("doc:userPiece.vm").setParameter("enhanceForUserPiece",$myEnhanceUser)
+		##任务奖励/首页静态位
+		$!control.setTemplate("admin:resource.vm").setParameter("name","201112_index_rewardplan")
+	#if($isyun)
+		$control.setTemplate("doc:yunStatic.vm")
+	#else
+		<div class="module mod-guessinterest mod-indigobox mod-segment">
+			<div class="top-round"><b></b><i></i></div>
+			<div class="cell-hd">
+				<h3>#if($doc.editions==0)您可能有同感的问题 #else 猜你还关注以下知识#end</h3>
+			</div>
+			<div class="cell-bd">
+				<ul id="list-guessinterest" class="request-load list-square wrp">
+				</ul>
+			</div>
+			<div class="bottom-round"><b></b><i></i></div>
+		</div>
+		#if($doc.editions>0)
+    		$!control.setTemplate("admin:resource.vm").setParameter("name","2011_detail_right_1")
+    		$!control.setTemplate("admin:resource.vm").setParameter("name","2011_detail_right_2_$doc.categoryId")
+    		$!control.setTemplate("admin:resource.vm").setParameter("name","2011_detail_right_3")
+		#end
+	#end
+	</div>
+</div>
+
+##seo 浮出toolbar start  Author:zhiwen.mizw 2009-12-10
+$!control.setTemplate("SeoPop.vm").setParameter("threadId","$!doc.id").setParameter("articleTitle",$doc.title)
+## seo 浮出toolbar end  Author:zhiwen.mizw 2009-12-10
+
+<div class="d-n">
+	#if($gMemberId && $doc.memberId==$gMemberId )
+	##采纳满意答案只有提问者本人才可使用
+	<div id="bestanswer-window">
+		<div class="bestanswer-window #if($isyun && $dateUtil.getTimeIntervalDays($doc.gmtCreate,$dateUtil.getCurrentTime()) < 10) yunplan-bestanswer #end">
+			<form id="form-bestanswer" action="$detailLink.addQueryData('did', $doc.id)" method="post" target="_self">
+				<input type="hidden" name="action" value="docDetailOptAction"/>
+				<input type="hidden" name="event_submit_do_chooseAnswerByAsker" value="true"/>
+				<input type="hidden" name="$eidAndDidGroup.docId.key" value="$doc.id"/>
+				<input type="hidden" id="bestanswer-answerid" name="$eidAndDidGroup.eid.key" />
+				$csrfToken.hiddenField
+				#if($isyun && $dateUtil.getTimeIntervalDays($doc.gmtCreate,$dateUtil.getCurrentTime()) < 10)
+				<h3>您的问题非常好，但采纳最佳答案的机会只有一次呦！很多重量级的导师可能还会做出解答，建议您再等等！</h3>
+				#else
+				<h3>谢谢您对回答者的肯定</h3>
+				#end
+				<p class="fd-gray">采纳后将无法增加新的回答，如果只是想表示认同这个答案，可以点击“靠谱”按钮。</p>
+				<p>您可以给回答者写上几句感谢语或者评论:</p>
+				<textarea id="thank-ta" name="$eidAndDidGroup.message.key"></textarea>
+				<p class="thank-tips fd-clr">
+					<span class="fd-left">（非必填项）</span>
+					<span id="thank-count" class="fd-right"></span>
+				</p>
+				<p class="thank-wrap fd-clr">
+					<a class="thank-submit btn-bk-o" href="javascript:;" target="_self" title="确认采纳">
+						<span><button type="submit" onmousedown="aliclick(this,'?tracelog=baike_detail_qrcn')"><em>确认采纳</em></button></span>
+						<i></i>
+					</a>
+					<a class="thank-cancel btn-bk-o1" href="#" target="_self" title="取消">
+						<span><button id="thank-cancel"  type="button"><em>取&nbsp;消</em></button></span>
+						<i></i>
+					</a>
+				</p>
+			</form>	
+		</div>
+	</div>
+	#end
+	<div id="sendmsg-window">
+		<div class="sendmsg-window">
+			<textarea id="sendmsg-ta"></textarea>
+			<p class="sendmsg-tips fd-clr">
+				<span id="sendmsg-result" class="fd-left"></span>
+				<span id="sendmsg-count" class="fd-right"></span>
+			</p>
+			<p class="sendmsg-wrap fd-clr">
+				<a class="sendmsg-submit btn-bk-o" href="#" target="_self" title="提交">
+					<span><button id="sendmsg-submit" type="button"><em>提&nbsp;交</em></button></span>
+					<i></i>
+				</a>
+				<a class="sendmsg-cancel btn-bk-o1" href="#" target="_self" title="取消">
+					<span><button id="sendmsg-cancel"  type="button"><em>取&nbsp;消</em></button></span>
+					<i></i>
+				</a>
+			</p>
+		</div>
+	</div>
+	#if($isAdmin)
+	
+	##升级锁定弹出框 
+	<div id="adminlock-window">
+		<div class="adminlock-window">
+		########################################
+		## form表单之 form-adminlock 管理员锁定相关
+		########################################
+		<form action="$detailLink.addQueryData('did',${doc.id})" method="post" target="_self">
+			<input type="hidden" name="$lockGroup.docId.key" value="$!{doc.id}"/>
+			<input type="hidden" name="action" value="docAction"/>
+			<input type="hidden" name="event_submit_do_lockEditDoc" value="1"/>
+			$csrfToken.hiddenField
+			<p class="adminlock-tips">当前状态：$!lockStatus #if($doc.locked != "Y" && $lockedLevel > 0 && $lockedTime) 截止日期：$!dateUtil.toLocaleString($lockedTime,"yy/MM/dd") #end</p>
+			<p class="adminlock-select fd-clr">
+				<span>限制编辑等级：</span>
+				<select id="adminlock-grade" name="$lockGroup.lockedLevel.key">
+					<option value="Y">锁定</option>
+					<option value="3">知县（三级）以上用户</option>
+					<option value="N">解锁</option>
+				</select>
+			</p>
+			<p class="adminlock-select fd-clr">
+				<span>限制编辑时间：</span>
+				<select id="adminlock-date" name="$lockGroup.lockedDate.key">
+					<option value="1">1天</option>
+					<option value="3">3天</option>
+					<option value="7">一周</option>
+				</select>
+			</p>
+			<p class="adminlock-btnwrap">
+				<a class="adminlock-submit btn-bk-o" href="javascript:;" target="_self" title="确定">
+					<span><button  type="submit"><em>确&nbsp;定</em></button></span>
+					<i></i>
+				</a>
+			</p>
+		</form>
+		</div>
+	</div>
+	#end
+	
+	
+	#set($suggestGroup = $form.suggest4Doc.defaultInstance)
+	<div id="lockfeedback-window">
+		<div class="lockfeedback-window">
+			########################################
+			## form表单之 form-lockfeedback 锁定保护帖反馈
+			########################################
+			<form id="form-lockfeedback" action="$docModule.setTarget('ajax.vm').addQueryData('_input_charset','UTF-8')" method="post">
+				<input type="hidden" name="$suggestGroup.docId.key" value="$!{doc.id}"/>
+				<input type="hidden" name="action" value="docAction"/>
+				<input type="hidden" name="event_submit_do_suggest" value="1"/>
+				$csrfToken.hiddenField
+				<p class="ins-text">当前问题的答案已经被保护，只有知县（三级）以上的<a id="lockfeedback-loginlnk" href="#" target="_self" title="登录">登录</a>用户可以编辑！写下您的建议，管理员会及时与您联络！</p>
+				<p class="per-opt">
+					<textarea id="feedback-value" name="$suggestGroup.msg.key">$!{suggestGroup.msg.value}</textarea>
+				</p>		
+				<p class="per-button">
+					<input id="lockfeedback-submit" class="btn-submit" type="submit" name="btn-submit" value="确定" />
+					<input id="lockfeedback-cancel" class="btn-quit"  type="button" value="取消" name="btn-quit" />
+				</p>
+			</form>
+		</div>
+	</div>
+	
+	##收藏的浮出框
+	<div id="shortcut-window">
+		<div class="shortcut-window">
+			<div class="textinfo">
+				<p>收藏成功，问题有新内容时，将会留言提醒您！</p>
+				<a href="${workServer}/app/subscription.htm?tracelog=baike_detail_shoucang2" title="管理我的收藏">管理我的收藏</a>
+			</div>
+		</div>
+	</div>
+</div>
+########################################
+## form表单之 form-privatetalk 给Ta留言
+########################################
+<form id="form-privatetalk"  method="post" action="$clubServer/misc/common/messageInsertInterface.html?_input_charset=UTF-8">
+	<input type="hidden" name="from" value="baike"/>
+	<input type="hidden" name="memberId" value="$gMemberId"/>
+	<input id="privatetalk-md5" type="hidden" name="md5" value=""/>
+	<input id="privatetalk-fmid" type="hidden" name="friendMemberId" value=""/>
+	<input id="privatetalk-cont" type="hidden" name="msgContent" value=""/>
+</form>
+
+
+########################################
+## form表单之 form-samefeel 有同感功能 
+########################################
+<form id="form-samefeel" method="post" action="$docModule.setTarget('ajax.vm')?_input_charset=UTF-8">
+	<input type="hidden" name="action" value="docAction"/>
+	<input type="hidden" name="event_submit_do_dig" value="true"/>
+	<input type="hidden" id="samefeel-docid" name="digid" value=""/>
+	$csrfToken.hiddenField
+</form>
+
+########################################
+## form表单之 form-reliable 靠谱功能 
+########################################
+<form id="form-reliable" method="post" action="$docModule.setTarget('ajax.vm')?_input_charset=UTF-8">
+	<input type="hidden" name="action" value="docDetailOptAction"/>
+	<input type="hidden" name="event_submit_do_digEdition" value="true"/>
+    <input type="hidden" id="reliable-digtype" name="digtype" value=""/>
+	<input type="hidden" id="reliable-editionid" name="editionid" value=""/>
+	$csrfToken.hiddenField
+</form>
+
+#set ($docRss = $form.docSubscription.defaultInstance)
+
+########################################
+## form表单之 form-shortcut 收藏功能
+########################################
+<form id="form-shortcut" method="post" action="$detailLink.addQueryData('did',$doc.id)?_input_charset=UTF-8">
+	<input type="hidden" name="action" value="DocAction"/>
+	<input type="hidden" name="${docRss.memberId.key}" value="$gMemberId"/>
+	<input type="hidden" name="${docRss.docId.key}" value="${doc.id}"/>
+	<input type="hidden" name="event_submit_do_subscribe" value="true"/>
+	$csrfToken.hiddenField
+</form>
+
+########################################
+## form表单之 form-guessinterest 猜你还关注相关问题
+########################################
+<form id="form-guessinterest" method="get" action="$userModule.setTarget('service/suggest.vm')">
+	<input type="hidden" name="cid" value="$doc.categoryId"/>
+	<input type="hidden" name="answered" value="$doc.editions"/>
+	<input type="hidden" name="docid" value="$doc.id"/>
+</form>
+
+##页面数据存储表单
+<form id="form-pageinfo">
+	<input id="flag-question" type="hidden" value="$!questionFlag"/>
+	<input id="flag-role" type="hidden" value="$!roleFlag"/>
+	<input id="flag-lock" type="hidden" value="$!lockFlag"/>
+	<input id="flag-admin" type="hidden" value="$!isAdmin"/>
+	<input id="flag-species" type="hidden" value="$!isyun"/>
+</form>
+	
+$control.setTemplate("doc:coloregg.vm")
