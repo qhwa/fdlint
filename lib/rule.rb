@@ -16,7 +16,7 @@ module XRay
     end
 
     RULE_PATH = File.expand_path '../rules.d', File.dirname(__FILE__)
-    KEYWORDS = %w(file merge_importing)
+    KEYWORDS = %w(file merge_importing merge_file)
 
     KEYWORDS.concat methods_to_kw(XRay::JS::Parser)
     KEYWORDS.concat methods_to_kw(XRay::CSS::Parser)
