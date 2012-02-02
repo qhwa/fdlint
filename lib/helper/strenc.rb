@@ -2,65 +2,44 @@
 
 class String
 
-  @@encs = %w(ascii-8bit utf-8 gb18030 gbk gb2312 cp936 big5)
+  @@encs = %w(ascii utf-8 gb18030 gbk gb2312 cp936 big5)
 
   class << self
-
-    def encs
-      @@encs
-    end
-
-    def encs=(arr)
-      @@encs = arr
-    end
-
-    private
-    def init_strenc_with_native
-      define_method :enc! do |encoding|
-        @@encs.each do |c|
-          begin
-            self.encode!( encoding, c ).force_encoding( encoding )
-            if self.valid_encoding?
-              @former_enc = c
-              break
-            end
-          rescue
-          end
-        end
-        self
-      end
-    end
-
-    def init_strenc_with_iconv
-      require 'iconv'
-      instance_eval do
-        define_method :enc! do |encoding|
-          @@encs.each do |c|
-            begin
-              text = Iconv.new(encoding, c).iconv(self)
-              if self =~ /./
-                @former_enc = c
-                break
-              end
-            rescue
-            end
-          end
-          self
-        end
-      end
-    end
-
+    def encs; @@encs; end
+    def encs=(arr); @@encs = arr; end
   end
 
-  if self.public_instance_methods.include? :encode!
-    self.send :init_strenc_with_native
+  if self.respond_to? :encode!
+    def try_convert to, from
+      self.encode!( to, from ).force_encoding( to )
+      self.valid_encoding?
+    end
   else
-    self.send :init_strenc_with_iconv
+    require 'iconv'
+    def try_convert to, from
+      text = Iconv.new(to, from).iconv(self)
+      self.replace(text) if self =~ /./
+    end
   end
 
   attr_reader :former_enc
 
-  @@encs[1..-1].each do |tar|
+  def enc!(encoding)
+    @@encs.each do |c|
+      begin
+        puts "#{c} => #{encoding}"
+        if self.send :try_convert, encoding, c
+          @former_enc = c
+          break
+        end
+      rescue => e
+        puts e
+      end
+    end
+    self
+  end
+
+  @@encs.each do |tar|
     mtd = tar.gsub(/-/, '') << "!"
     define_method mtd do
       enc! tar
@@ -68,6 +47,16 @@ class String
     public mtd
   end
 
+  private :try_convert
 
 end
 
+
+if __FILE__ == $0
+  src = "test 中文" 
+  src.gb2312!
+  puts src
+
+  src.utf8!
+  puts src
+end
