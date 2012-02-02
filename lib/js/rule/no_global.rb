@@ -7,12 +7,14 @@ module XRay
       class NoGlobalRule
         
         def visit_stat_var(stat)
-          scope = current_scope
-          stat.declarations.each do |dec|
-            scope << dec.left.text
-          end
           ['不允许使用全局变量', :error] if @scope_index == 0
         end
+
+        def visit_stat_var_declaration(dec)
+          scope = current_scope
+          scope << dec.left.text
+          nil
+        end 
 
         def visit_function_name(name)
           current_scope << name.text 
@@ -25,6 +27,11 @@ module XRay
           params.each do |param|
             scope << param.text
           end
+          nil
+        end
+
+        def visit_stat_for(stat)
+          first = stat.condition.first
           nil
         end
 
