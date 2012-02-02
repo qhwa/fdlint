@@ -32,7 +32,7 @@ fdlint (开发代号xray) 是根据阿里巴巴前端开发checklist开发的自
 参数列表：
 
 ~~~
-Usage: xray
+Usage: fdlint
         --css                        在扫描模式下仅检查CSS文件，在管道模式下指定内容为CSS
         --js                         在扫描模式下仅检查JS文件，在管道模式下指定内容为JS
         --html                       在扫描模式下仅检查HTML文件，在管道模式下指定内容为HTML
