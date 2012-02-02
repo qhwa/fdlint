@@ -7,7 +7,9 @@ module XRay
       class NoGlobalRule
         
         def visit_stat_var(stat)
-          ['不允许使用全局变量', :error] if @scope_index == 0
+          unless @scope_index > 0
+            ['不允许使用全局变量', :error] 
+          end
         end
 
         def visit_stat_var_declaration(dec)
