@@ -2,9 +2,6 @@
 require 'optparse'
 require 'find'
 require_relative 'runner'
-require_relative 'printer/vim_printer'
-require_relative 'printer/console_printer'
-require_relative 'printer/nocolor_printer'
 
 module XRay
 
@@ -43,6 +40,7 @@ module XRay
         end
         opts.on("--format [type]", [:console, :nocolor, :vim], "output format. Can be 'vim', 'console' or 'nocolor'. Default is 'console'") do |f|
           options[:format] = f.intern
+          require_relative "printer/#{f}_printer"
         end
       end
 
@@ -115,15 +113,6 @@ module XRay
 
     def print_results( results, opt={} )
       IO.popen "chcp 65001" if ENV['OS'] =~ /windows/i
-      print_class = case opt[:format]
-        when :vim
-          'VimPrinter'
-        when :nocolor
-          'NoColorPrinter'
-        else 
-          'ConsolePrinter'
-      end
-      XRay.register_printer XRay.const_get( print_class )
       XRay.printer.new( results, opt ).print
     end
 
