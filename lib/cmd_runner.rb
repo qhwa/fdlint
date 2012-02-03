@@ -50,11 +50,13 @@ module XRay
         rest = opts.parse! args
         files.concat rest
 
-        if $stdin.tty?
-          raise ArgumentError.new("") if files.empty?
-        else
-          str = ARGF.read
-          options[:text] = str
+        if files.empty?
+          unless $stdin.tty?
+            str = ARGF.read
+            options[:text] = str
+          else
+            raise ArgumentError.new("") 
+          end
         end
 
       rescue => e
