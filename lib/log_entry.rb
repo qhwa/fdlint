@@ -7,7 +7,6 @@ module XRay
   class LogEntry
 
     def initialize(message, level, row = 0, colmn = 0)
-      raise colmn if colmn < 0
       super
     end
 

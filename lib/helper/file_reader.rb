@@ -10,9 +10,8 @@ module XRay
       # and encoding
       def readfile(path, opt={})
         if File.readable?(path)
-          bin = File.read(path)
-          text = bin.utf8! || bin
-          [text, text.former_enc ||'ascii-8bit' ]
+          bin = File.read(path).utf8!
+          [bin, bin.former_enc ||'ascii-8bit' ]
         else
           raise ArgumentError.new("File is not readable!")
         end

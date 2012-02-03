@@ -9,31 +9,38 @@ class String
     def encs=(arr); @@encs = arr; end
   end
 
-  if self.respond_to? :encode!
+  if public_instance_methods.include? :encode!
     def try_convert to, from
-      self.encode!( to, from ).force_encoding( to )
-      self.valid_encoding?
+      encode!( to, from ).force_encoding( to )
+      valid_encoding?
     end
   else
     require 'iconv'
     def try_convert to, from
       text = Iconv.new(to, from).iconv(self)
-      self.replace(text) if self =~ /./
+      replace(text) if self =~ /./
     end
   end
 
   attr_reader :former_enc
 
   def enc!(encoding)
+
+    if respond_to? :force_encoding
+      force_encoding encoding
+      if valid_encoding?
+        @former_enc = encoding
+        return self 
+      end
+    end
+    
     @@encs.each do |c|
       begin
-        puts "#{c} => #{encoding}"
-        if self.send :try_convert, encoding, c
+        if send :try_convert, encoding, c
           @former_enc = c
           break
         end
       rescue => e
-        puts e
       end
     end
     self
@@ -53,10 +60,5 @@ end
 
 
 if __FILE__ == $0
-  src = "test 中文" 
-  src.gb2312!
-  puts src
-
-  src.utf8!
-  puts src
+  puts File.read('test/fixtures/html/1-1.html').utf8!
 end
