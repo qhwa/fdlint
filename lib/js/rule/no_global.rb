@@ -25,7 +25,7 @@ module XRay
 
         def visit_function_parameters(params)
           @scope_index = (@scope_index || 0) + 1
-          scope = current_scope
+          scope = current_scope(true)
           params.each do |param|
             scope << param.text
           end
@@ -45,6 +45,7 @@ module XRay
         def visit_expr_assignment(expr)
           if expr.type == '='
             id = find_assignment_id(expr.left)
+
             if id && use_id_global?(id.text)
               ['禁止使用未定义的变量(或全局变量)', :error] 
             end
@@ -53,9 +54,10 @@ module XRay
 
         private
 
-        def current_scope
+        def current_scope(empty = false)
           @scopes ||= []
           @scope_index ||= 0
+          @scopes[@scope_index] = [] if empty
           @scopes[@scope_index] ||= []
         end
 
