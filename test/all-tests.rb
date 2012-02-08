@@ -26,6 +26,8 @@ require_relative 'js/parser_test'
 require_relative 'js/rule_test'
 require_relative 'rule_dsl/dsl_basic_test'
 require_relative 'rule_dsl/importing_test'
+require_relative 'cli/cli_1.9_test'
+require_relative 'cli/output_format_test'
 
 
 module XRayTest
@@ -58,6 +60,10 @@ module XRayTest
       #RULE
       tests << Rule::DSLBasicTest.suite
       tests << Rule::ImportingTest.suite
+
+      #CLI
+      tests << CLI::CLI19Test.suite
+      tests << CLI::OutputFormatTest.suite
 
       tests
     end
