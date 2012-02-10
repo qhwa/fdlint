@@ -128,22 +128,25 @@ module XRay
     def method_missing( name , *args, &block )
       if cmd = cmd_name(name) and self.respond_to? cmd 
         send(cmd, name, &block )
-        if block_given?
-          XRay::Rule.instance_eval do 
-            define_method(name) do |*tar, &b|
-              if tar.size > 0
-                @@context = self
-                block.call(*tar)
-              else
-                send(cmd, name, &b )
-              end
-            end
-          end
-        end
+        def_rule_cmd(cmd, name, &block) if block_given?
       else
         super
       end
     end
+
+    def def_rule_cmd(cmd, name, &block)
+      XRay::Rule.instance_eval do 
+        define_method(name) do |*tar, &b|
+          if tar.size > 0
+            @@context = self
+            block.call *tar
+          else
+            send cmd, name, &b
+          end
+        end
+      end
+    end
+    private :def_rule_cmd
 
     def cmd_name(name)
       name = name.to_s
@@ -152,7 +155,8 @@ module XRay
           return :"check_#{kw}"
         else 
           STYLE_TYPES.each do |s| 
-            return :"check_#{s}_#{kw}" if name.start_with? "check_#{s}_#{kw}"
+            cmd = "check_#{s}_#{kw}"
+            return cmd if name.start_with? cmd
           end
         end
       end
