@@ -1,1 +1,0 @@
-(function(c,a){var b={init:function(){var d=c("a.advice-entry","#header");a.UI.positionFixed(d)}};a.PageContext.register("~AdviceEntry",b)})(jQuery,Platform.winport);

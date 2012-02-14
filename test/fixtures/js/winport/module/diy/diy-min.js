@@ -1,1 +1,0 @@
-(function(d,c){var b=c.diy.Msg;var a={authAjax:function(g,f){var e=this,i=f.success,h="ÍøÂç·±Ã¦£¬ÇëË¢ĞÂºóÖØÊÔ";f.error=f.error||function(){b.warn(h)};f.success=function(j){if(!j){f.error();return}i&&i.apply(this,arguments)};d.ajax(g,f)}};c.diy.Diy=a})(jQuery,Platform.winport);

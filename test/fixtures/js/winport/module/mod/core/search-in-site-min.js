@@ -1,1 +1,0 @@
-(function(c,b){var d=b.widget.InstantValidator;var a={init:function(e){this.div=e;this.initPriceInput()},initPriceInput:function(){var e=c("input.price-low,input.price-high",this.div);d.validate(e,"price")}};b.ModContext.register("wp-search-in-site",a)})(jQuery,Platform.winport);

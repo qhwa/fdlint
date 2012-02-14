@@ -1,1 +1,0 @@
-(function(d,c){var a=c.LayoutFolder;var b={init:function(){this.initFolder()},initFolder:function(){var e=new a()}};c.ModContext.register("wp-offerdetail",b)})(jQuery,Platform.winport);

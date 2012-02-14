@@ -1,1 +1,0 @@
-(function(b,a){var d=a.UI,c=a.widget.PagingSwitcher;a.ModContext.register("wp-recommend-albums-main",function(g){var e=b("div.group",g),f=b("div.paging a",g);new c(f,e)});a.ModContext.register("wp-recommend-albums-sub",function(h){var g=b("div.image img",h),e=b("ul",h),f=b("div.paging a",h);d.resizeImage(g,64);new c(f,e)})})(jQuery,Platform.winport);
