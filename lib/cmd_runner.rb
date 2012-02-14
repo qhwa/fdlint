@@ -26,7 +26,7 @@ module XRay
         opts.banner = "Usage: fdlint"
         %w(css js html).each do |type|
           opts.on("--#{type}", "check #{type} files only") do
-            options[:type] = type
+            options[:type] = type.intern
           end
         end
         opts.on("--charset set", "-c", "file charset") do |enc|
@@ -73,7 +73,7 @@ module XRay
   class CMDRunner
 
     def self.run
-        self.new.run
+      self.new.run
     end
 
     def run

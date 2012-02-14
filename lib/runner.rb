@@ -137,12 +137,12 @@ module XRay
 
     def check_file( file )
       type = CodeType.guess_by_name(file)
-      send( :"check_#{type}_file", file ) if CodeType.is_style_file? file
+      send( "check_#{type}_file", file ) if CodeType.is_style_file? file
     end
 
     def check(text, filename="")
       type = CodeType.guess(text, filename)
-      send :"check_#{type}", text
+      send "check_#{type}", text
     end
 
     def valid_file? file
