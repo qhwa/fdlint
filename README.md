@@ -1,6 +1,8 @@
 fdlint -- 让前端code review更轻松
 =================================
 
+![fdlint-logo](http://q.pnq.cc/wp-content/uploads/2012/02/fdlint-logo-white.png)
+
 fdlint (开发代号xray) 是根据阿里巴巴前端开发checklist开发的自动代码扫描工具。
 可以扫描出前端程序中不符合开发规范的地方。
 
