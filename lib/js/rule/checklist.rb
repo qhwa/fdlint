@@ -6,7 +6,7 @@ module XRay
   module JS
     module Rule
      
-      class Checklist
+      class ChecklistRule
 
         include XRay::JS::Rule::Helper, XRay::Rule
         
