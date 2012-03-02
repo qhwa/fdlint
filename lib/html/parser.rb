@@ -70,7 +70,10 @@ module XRay; module HTML
       text = ''
       until text_end? do
         text << '<' if @scanner.skip(/</)
-        text << @scanner.scan(TEXT)
+        text << "#{@scanner.scan(TEXT)}"
+
+        # TODO: make this detection a rule
+        parse_warn "'#{$~}' not escaped" if text =~ /<|>/
       end
       TextElement.new text
     end
