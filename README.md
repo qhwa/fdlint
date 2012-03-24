@@ -53,7 +53,7 @@ Usage: fdlint
 
 ## 源代码
 
-    git clone git://github.com/qhwa/fdev-xray.git
+    git clone git://github.com/qhwa/fdlint.git
 
 
 ## 目前进度
