@@ -57,7 +57,7 @@ module XRayTest
 
         def visit(js)
           stat = parse js, 'stat_if'
-          rule = XRay::JS::Rule::Checklist.new
+          rule = XRay::JS::Rule::ChecklistRule.new
           rule.visit_stat_if stat
         end
 

@@ -9,13 +9,8 @@ module XRayTest
         include XRay::HTML
 
         %w(area base basefont br col frame hr img input link meta param).each do |tag|
-          define_method("test_#{tag}_tag") do
-            assert_equal [
-              Element.new(tag, {:name => 'test'}),
-              TextElement.new(' text' )
-            ], XRay::HTML::Parser.parse("<#{tag} name=\"test\"> text"),
-            "TAG: #{tag} will auto close and have no children"
-          end
+          define_method("test_#{tag}_tag") { check_tag tag }
+          define_method("test_#{tag.upcase}_tag") { check_tag tag.upcase }
         end
 
         def test_manual_close
@@ -31,7 +26,14 @@ module XRayTest
           end
         end
 
-        
+        def check_tag( name )
+          assert_equal [
+            Element.new( name, {:name => 'test'}),
+            TextElement.new(' text' )
+          ], XRay::HTML::Parser.parse("<#{name} name=\"test\"> text"),
+          "TAG: #{name} will auto close and have no children"
+        end
+      
       end
 
     end

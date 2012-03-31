@@ -163,7 +163,7 @@ module XRay; module HTML
     end
 
     def auto_close?(tag)
-      XRay::HTML::AUTO_CLOSE_TAGS.include?(tag.to_s)
+      XRay::HTML::AUTO_CLOSE_TAGS.include?(tag.to_s.downcase)
     end
 
     def text_end?

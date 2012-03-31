@@ -33,7 +33,7 @@ module XRayTest
 
         def visit(js)
           expr = parse js, 'expr_equal'
-          rule = XRay::JS::Rule::Checklist.new
+          rule = XRay::JS::Rule::ChecklistRule.new
           rule.visit_expr_equal expr
         end
 

@@ -29,10 +29,6 @@ module XRayTest
 
       end
 
-      def has_ruby(ver)
-        not `which ruby#{ver}`.empty?
-      end
-
       def do_all_test
         public_methods.grep(/^do_test_/).each do |m|
           send m

@@ -9,7 +9,7 @@ module XRayTest
     class OutputFormatTest < Test::Unit::TestCase
 
       @@bin = File.expand_path(File.join File.dirname(__FILE__), '../../bin/fdlint')
-      @@cmd = "ruby1.9.1 #{@@bin}"
+      @@cmd = "ruby #{@@bin}"
 
       def test_with_console_format
         res = `#{@@cmd} #{FIXTURE_ABS_PATH}/css/empty.css`

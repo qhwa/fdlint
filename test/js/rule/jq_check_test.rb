@@ -79,7 +79,7 @@ module XRayTest
 
         def visit(js)
           expr = parse js, 'expr_member'
-          rule = XRay::JS::Rule::Checklist.new
+          rule = XRay::JS::Rule::ChecklistRule.new
           rule.send :visit_expr_member, expr
         end
 

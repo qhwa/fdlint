@@ -25,6 +25,7 @@ module XRayTest
             assert_equal Element.new('div', {:class=>"info"}), e
           end
         end
+
         def test_center_tag
           XRay::HTML::Parser.parse('<center></center>') do |e|
             assert_equal Element.new('center'), e

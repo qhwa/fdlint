@@ -52,7 +52,7 @@ module XRayTest
           stat = parse js, :statement
           assert_equal type, stat.type
 
-          rule = XRay::JS::Rule::Checklist.new
+          rule = XRay::JS::Rule::ChecklistRule.new
           rule.visit_statement stat
         end
 
