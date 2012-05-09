@@ -4,7 +4,7 @@
 html
 
 check_tag_name_downcase do |tag|
-  if tag.tag_name =~ /[A-Z]/
+  if tag.tag_name =~ /[A-Z]/ || tag.ending =~ /[A-Z]/
     ["标签名必须小写", :error]
   end
 end

@@ -11,10 +11,10 @@ module XRay
     class Element < Node
 
       attr_reader :tag, :props, :children
-      attr_accessor :parent, :close_type
+      attr_accessor :parent, :close_type, :ending
 
-      def initialize(tag, props=[], children=[], close_type=:after)
-        @tag, @props, @children, @close_type = tag, to_props(props), Array.[](children).flatten || [], close_type
+      def initialize(tag, props=[], children=[], close_type=:after, ending=nil)
+        @tag, @props, @children, @close_type, @ending = tag, to_props(props), Array.[](children).flatten || [], close_type, ending
         @position = @tag.position.dup if tag.is_a?(Node) and tag.position
         @children.each { |el| el.parent = self }
       end
@@ -41,7 +41,8 @@ module XRay
         if children.empty?
           "<#{@tag}#{prop_text} />"
         else
-          "<#{@tag}#{prop_text}>#{inner_html}</#{@tag}>"
+          cls = ending || "</#{@tag}>"
+          "<#{@tag}#{prop_text}>#{inner_html}#{cls}"
         end
       end
 

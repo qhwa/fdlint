@@ -15,6 +15,7 @@ require_relative 'parser/parse_with_text_test'
 require_relative 'parser/parse_with_prop_test'
 require_relative 'parser/parse_with_script_tag_test'
 require_relative 'parser/parse_with_style_tag_test'
+require_relative 'parser/parse_with_diff_case_test'
 require_relative 'parser/parse_dtd_test'
 require_relative 'parser/parse_script_tag_test'
 
@@ -38,6 +39,7 @@ module XRayTest
         tests << Parser::ParseWithTextTest.suite
         tests << Parser::ParseWithScriptTagTest.suite
         tests << Parser::ParseWithStyleTagTest.suite
+        tests << Parser::ParseWithDiffCaseTest.suite
         tests << Parser::ParseDTDTest.suite
         tests << Parser::ParseScriptTagTest.suite
         tests

@@ -82,7 +82,7 @@ module XRay; module HTML
       if @scanner.check DTD
         parse_dtd_tag
       elsif @scanner.check SELF_CLOSE_TAG
-        parse_self_closing_tag
+        parse_self_ending_tag
       elsif @scanner.check TAG
         parse_normal_tag
       end
@@ -130,7 +130,8 @@ module XRay; module HTML
       skip />/
 
       children = []
-      end_tag = %r(<#{tag.text.sub(/^(?!=\/)/, '\/')}>)
+      ending = nil
+      end_tag = %r(<#{tag.text.sub(/^(?!=\/)/, '\/')}>)i
       if auto_close?(tag.text) and !@scanner.check(end_tag)
         close_type = :none
       else
@@ -139,7 +140,7 @@ module XRay; module HTML
           children << child if child
         end
         begin
-          skip end_tag
+          ending = scan(end_tag).text
           close_type = :after
         rescue => e
           close_type = :none
@@ -147,14 +148,14 @@ module XRay; module HTML
         end
       end
       @parsing_script = false
-      Element.new(tag, prop, children, close_type)
+      Element.new(tag, prop, children, close_type, ending)
     end
 
     def parse_dtd_tag
       scan DTD
     end
 
-    def parse_self_closing_tag
+    def parse_self_ending_tag
       skip /</
       tag = scan(TAG_NAME)
       prop = parse_properties

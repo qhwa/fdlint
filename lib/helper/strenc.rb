@@ -15,6 +15,7 @@ class String
       valid_encoding?
     end
   else
+    # for ruby 1.8
     require 'iconv'
     def try_convert to, from
       text = Iconv.new(to, from).iconv(self)
@@ -40,7 +41,7 @@ class String
           @former_enc = c
           break
         end
-      rescue => e
+      rescue
       end
     end
     self

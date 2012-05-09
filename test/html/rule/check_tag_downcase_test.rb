@@ -28,6 +28,11 @@ module XRayTest
           assert_equal [["标签名必须小写", :error]], @rule.check_html_tag(tag)
         end
 
+        def test_check_tag_with_upcase_ending
+          tag = XRay::HTML::Element.new('div', nil, [], :after, '</DIV>')
+          assert_equal [["标签名必须小写", :error]], @rule.check_html_tag(tag)
+        end
+
         def test_check_tag_with_simple_upcase_prop_name
           prop = XRay::HTML::Property.new('Href', 'nogo')
           assert_equal [["属性名必须小写，连字符用中横线", :error]], @rule.check_html_property(prop)
