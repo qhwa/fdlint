@@ -72,6 +72,12 @@ module XRayTest
           end
         end
 
+        def test_parse_invalid_prop_syntax
+          assert_raise(XRay::ParseError) do 
+            parse %Q(<a href="#"title="title\n">link test</a>)
+          end
+        end
+
         def parse(src, &block)
           XRay::HTML::Parser.parse(src, &block)
         end

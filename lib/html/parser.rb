@@ -85,6 +85,8 @@ module XRay; module HTML
         parse_self_ending_tag
       elsif @scanner.check TAG
         parse_normal_tag
+      else
+        parse_error('Invalid HTML struct')
       end
     end
 
