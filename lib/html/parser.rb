@@ -16,7 +16,7 @@ module XRay; module HTML
     PROP_NAME       = %r/\w[-:\w]*/m
     PROP_VALUE      = %r/'([^']*)'|"([^"]*)"|([^\s>]+)/m
     PROP            = %r/#{PROP_NAME}\s*(?:=\s*#{PROP_VALUE})?/m
-    TAG_NAME        = /\w[^>\/\s]*/ 
+    TAG_NAME        = /\w[^>\(\)\/\s]*/ 
     TAG_START       = %r/<(#{TAG_NAME})/m
     TAG_END         = %r/<\/#{TAG_NAME}\s*>/m
     TAG             = %r/#{TAG_START}(\s+#{PROP})*\s*>/m
@@ -133,7 +133,11 @@ module XRay; module HTML
 
       children = []
       ending = nil
-      end_tag = %r(<#{tag.text.sub(/^(?!=\/)/, '\/')}>)i
+      begin
+        end_tag = %r(<#{tag.text.sub(/^(?!=\/)/, '\/')}>)i
+      rescue
+        raise ::XRay::ParseError.new("invalid tag name: #{tag.text}", scanner_pos)
+      end
       if auto_close?(tag.text) and !@scanner.check(end_tag)
         close_type = :none
       else
@@ -170,10 +174,13 @@ module XRay; module HTML
     end
 
     def text_end?
+
+      return true if @scanner.eos?
+
       if @parsing_script
-        @scanner.check(/<\/script\s*>/) 
+        @scanner.check(/<\/script\s*>/)
       else
-        @scanner.check(%r(#{TAG}|#{SELF_CLOSE_TAG}|#{TAG_END}|#{COMMENT})) or @scanner.eos?
+        @scanner.check(%r(#{TAG}|#{SELF_CLOSE_TAG}|#{TAG_END}|#{COMMENT}))
       end
     end
 

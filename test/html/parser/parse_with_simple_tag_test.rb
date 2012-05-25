@@ -31,6 +31,12 @@ module XRayTest
           assert_equal @element.outer_html, '<div class="info">information</div>'
         end
 
+        def test_raise_error_on_invalid_tag_name
+          assert_raise(XRay::ParseError) do 
+            XRay::HTML::Parser.new('<tag(name) />').parse
+          end
+        end
+
       end
 
     end
