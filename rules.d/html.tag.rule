@@ -18,8 +18,15 @@ check_tag_img_must_have_alt do |tag|
 end
 
 check_tag_hyperlink_with_target do |tag|
-  if tag.tag_name_equal? 'a' and tag.prop_value(:href) =~ /^#/ and tag.prop_value(:target) != '_self'
-    ['功能a必须加target="_self"，除非preventDefault过', :warn]
+
+  if tag.tag_name_equal? 'base' and tag.prop_value(:target)
+    @has_target = true
+  end
+
+  unless @has_target
+    if tag.tag_name_equal? 'a' and tag.prop_value(:href) =~ /^#/ and tag.prop_value(:target) != '_self'
+      ['功能a必须加target="_self"，除非preventDefault过', :warn]
+    end
   end
 end
 

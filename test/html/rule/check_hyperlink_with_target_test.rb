@@ -23,6 +23,13 @@ module XRayTest
           assert_equal [['功能a必须加target="_self"，除非preventDefault过', :warn]], @rule.check_html_tag(tag)
         end
 
+        def test_when_html_has_base_tag
+          @rule.check_html_tag XRay::HTML::Element.new('base', {:target=>'_self'})
+
+          tag = XRay::HTML::Element.new('a', {:href=>'#nogo'})
+          assert_equal [], @rule.check_html_tag(tag)
+        end
+
       end
 
     end
