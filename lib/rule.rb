@@ -11,16 +11,16 @@ module XRay
 
     STYLE_TYPES = [:css, :js, :html]
 
-    def self.methods_to_kw(klass)
+    def self.methods_to_keywords(klass)
       klass.instance_methods.grep( /^parse_/ ).map {|m| m[/^parse_(.*)/,1]}
     end
 
     RULE_PATH = File.expand_path '../rules.d', File.dirname(__FILE__)
     KEYWORDS = %w(file merge_importing merge_file)
 
-    KEYWORDS.concat methods_to_kw(XRay::JS::Parser)
-    KEYWORDS.concat methods_to_kw(XRay::CSS::Parser)
-    KEYWORDS.concat methods_to_kw(XRay::HTML::Parser)
+    KEYWORDS.concat methods_to_keywords(XRay::JS::Parser)
+    KEYWORDS.concat methods_to_keywords(XRay::CSS::Parser)
+    KEYWORDS.concat methods_to_keywords(XRay::HTML::Parser)
 
     @@common_rules = []
     @@context = nil
@@ -208,9 +208,6 @@ module XRay
   end
 
 end
-
-#include XRay::RuleHelper
-#
 
 
 if __FILE__ == $0

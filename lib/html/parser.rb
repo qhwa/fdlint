@@ -133,6 +133,8 @@ module XRay; module HTML
       @parsing_script = tag =~ /^script$/i
       skip />/
 
+      scopes << tag
+
       children = []
       ending = nil
       begin
@@ -140,6 +142,7 @@ module XRay; module HTML
       rescue
         raise ::XRay::ParseError.new("invalid tag name: #{tag.text}", scanner_pos)
       end
+
       if auto_close?(tag.text) and !@scanner.check(end_tag)
         close_type = :none
       else
@@ -156,7 +159,16 @@ module XRay; module HTML
         end
       end
       @parsing_script = false
-      Element.new(tag, prop, children, close_type, ending)
+
+      scopes.pop
+
+      el = Element.new(tag, prop, children, close_type, ending)
+      el.scopes = scopes.dup
+      el
+    end
+
+    def scopes
+      @scopes ||= []
     end
 
     def parse_dtd_tag
@@ -168,7 +180,9 @@ module XRay; module HTML
       tag = scan(TAG_NAME)
       prop = parse_properties
       skip /\/>/
-      Element.new(tag, prop, [], :self)
+      el = Element.new(tag, prop, [], :self)
+      el.scopes = scopes.dup
+      el
     end
 
     def auto_close?(tag)

@@ -11,12 +11,25 @@ module XRay
     class Element < Node
 
       attr_reader :tag, :props, :children
-      attr_accessor :parent, :close_type, :ending
+      attr_accessor :parent, :close_type, :ending, :scopes
 
       def initialize(tag, props=[], children=[], close_type=:after, ending=nil)
         @tag, @props, @children, @close_type, @ending = tag, to_props(props), Array.[](children).flatten || [], close_type, ending
         @position = @tag.position.dup if tag.is_a?(Node) and tag.position
         @children.each { |el| el.parent = self }
+        @scopes = []
+      end
+
+      def has_scope?
+        !(parent.nil? and @scopes.empty?)
+      end
+
+      def in_scope?(scp)
+        if parent
+          parent.tag_name_equal? scp
+        else
+          scopes.include?(scp)
+        end
       end
 
       def text

@@ -35,3 +35,7 @@ def has_ruby(ver)
   not `which ruby#{ver}`.empty?
 end
 
+def fixture(path)
+  IO.read File.join( FIXTURE_PATH, path )
+end
+

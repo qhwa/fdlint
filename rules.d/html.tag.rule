@@ -98,8 +98,8 @@ end
 
 check_tag_css_in_head do |tag|
   if tag.tag_name_equal?('link') and tag.prop_value(:rel) =~ /stylesheet/i
-    if tag.parent and !(tag.parent.tag_name_equal? 'head')
-      ["外链CSS置于head里(例外：应用里的footer样式)", :warn]
+    if tag.has_scope? and !tag.in_scope?('head')
+        ["外链CSS置于head里(例外：应用里的footer样式)", :warn]
     end
   end
 end

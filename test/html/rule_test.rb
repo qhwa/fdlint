@@ -21,6 +21,7 @@ require_relative 'rule/check_button_test'
 require_relative 'rule/check_class_count_test'
 require_relative 'rule/check_tag_closed_test'
 require_relative 'rule/check_html_template_test'
+require_relative 'rule/check_css_in_head_test'
 
 module XRayTest
   
@@ -48,6 +49,7 @@ module XRayTest
         tests << Rule::CheckClassCountTest.suite
         tests << Rule::CheckTagClosedTest.suite
         tests << Rule::CheckHTMLTemplateTest.suite
+        tests << Rule::CheckCSSInHeadTest.suite
         tests
       end
     end
