@@ -67,6 +67,8 @@ module XRay
           @have_dtd
         end
 
+        alias_method :have_dtd?, :has_dtd?
+
       end
 
     end

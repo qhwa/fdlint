@@ -39,7 +39,9 @@ module XRay; module HTML
       end
     end
 
-    alias_method :parse, :parse_doc
+    def parse
+      parse_doc
+    end
 
     def parse_element
       if @scanner.check(DTD) and !@dtd_checked
