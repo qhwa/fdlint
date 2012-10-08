@@ -29,6 +29,8 @@ require_relative 'rule_dsl/importing_test'
 require_relative 'cli/cli_test'
 require_relative 'cli/type_test'
 require_relative 'cli/output_format_test'
+require_relative 'cli/log_level_test'
+require_relative 'runner/log_level_test'
 
 
 module XRayTest
@@ -66,6 +68,10 @@ module XRayTest
       tests << CLI::CLITest.suite
       tests << CLI::TypeTest.suite
       tests << CLI::OutputFormatTest.suite
+      tests << CLI::LogLevelTest.suite
+
+      #RUNNER
+      tests << Runner::LogLevelTest.suite
 
       tests
     end

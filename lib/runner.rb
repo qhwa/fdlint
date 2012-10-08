@@ -45,14 +45,15 @@ module XRay
     
     include Helper::FileReader
 
-    attr_reader :source
-    attr_reader :rules
+    attr_reader :source, :rules
   
     def initialize(opt={})
       @opt = {
         :encoding => 'utf-8',
-        :debug    => false
+        :debug    => false,
+        :log_level => :warn
       }.merge opt
+
       @rules = []
 
       if @opt[:debug]
@@ -163,7 +164,26 @@ module XRay
 
     def run_parser(parser)
       parser.parse_no_throw
-      parser.results
+      filter_results parser.results
+    end
+
+    def filter_results(results)
+      case log_level
+        when :warn
+          results
+        when :error
+          results.select {|r| r.level == :error || r.level == :fatal }
+        when :fatal
+          results.select {|r| r.level == :fatal }
+      end
+    end
+
+    def log_level
+      @opt[:log_level]
+    end
+
+    def log_level=(lvl)
+      @opt[:log_level] = lvl
     end
 
   end

@@ -44,6 +44,9 @@ module XRay
         opts.on("--format [type]", [:console, :nocolor, :vim], "output format. Can be 'vim', 'console' or 'nocolor'. Default is 'console'") do |f|
           options[:format] = f.intern
         end
+        opts.on("--level [log_level]", [:warn, :error, :fatal], "determine the log level. Can be 'warn', 'error' or 'fatal'") do |level|
+          options[:log_level] = level
+        end
       end
 
       begin
