@@ -41,6 +41,10 @@ module XRay
           results
         end
 
+        def visit_text(tag)
+          check_html_text tag
+        end
+
         def visit_property(prop)
           check_html_property prop
         end

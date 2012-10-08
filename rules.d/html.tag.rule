@@ -129,3 +129,8 @@ check_tag_html_template do |tag|
   end
 end
 
+check_text_should_escape do |el|
+  if el.text =~ /[<>]/
+    ["特殊HTML符号(>和<)必须转义", :error]
+  end
+end

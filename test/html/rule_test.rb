@@ -22,6 +22,7 @@ require_relative 'rule/check_class_count_test'
 require_relative 'rule/check_tag_closed_test'
 require_relative 'rule/check_html_template_test'
 require_relative 'rule/check_css_in_head_test'
+require_relative 'rule/check_unescape_char_test'
 
 module XRayTest
   
@@ -50,6 +51,7 @@ module XRayTest
         tests << Rule::CheckTagClosedTest.suite
         tests << Rule::CheckHTMLTemplateTest.suite
         tests << Rule::CheckCSSInHeadTest.suite
+        tests << Rule::CheckUnescapedCharTest.suite
         tests
       end
     end
