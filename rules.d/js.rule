@@ -59,6 +59,14 @@ check_expr_member do |expr|
     ['必须去掉临时调试代码。如果一定要使用alert功能，请使用 window.alert', :warn]
   end
 end
+
+check_expr_member do |expr|
+  if expr.left
+    if expr.left.text =~ /(?<!this|self),_/
+      ['禁止调用对象的私有方法', :error]
+    end
+  end
+end
  
 check_expr_equal do |expr|
   if expr.type == '==' || expr.type == '!='

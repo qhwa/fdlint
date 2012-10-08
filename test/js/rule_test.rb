@@ -24,6 +24,7 @@ module XRayTest
         all_test
         file_checker_test
         alert_check_test
+        private_method_check_test
       )
         
       def self.suite
