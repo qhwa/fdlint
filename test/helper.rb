@@ -31,7 +31,7 @@ module XRayTest
   end
 end
 
-def has_ruby(ver)
+def has_ruby?(ver)
   not `which ruby#{ver}`.empty?
 end
 
