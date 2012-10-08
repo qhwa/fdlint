@@ -44,6 +44,7 @@ Usage: fdlint
     -m, --checkmin                   检查压缩后的js或css文件。如不指定改选项，会跳过*-min.css或*-min.js文件。
                                       (e.g. *-min.js; *-min.css)
         --format [type]              输出模式：console （默认）、nocolor 或 vim
+        --level [log_level]          输出时消息的过滤等级：warn（默认）、error 或 fatal
 ~~~
 
 ### Web
