@@ -23,6 +23,7 @@ module XRayTest
         no_global_test
         all_test
         file_checker_test
+        alert_check_test
       )
         
       def self.suite

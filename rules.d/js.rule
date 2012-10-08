@@ -53,6 +53,12 @@ check_expr_member do |expr|
     ['不允许使用eval', :error] 
   end
 end
+
+check_expr_member do |expr|
+  if expr.left && expr.left.text == 'alert'
+    ['必须去掉临时调试代码。如果一定要使用alert功能，请使用 window.alert', :warn]
+  end
+end
  
 check_expr_equal do |expr|
   if expr.type == '==' || expr.type == '!='
