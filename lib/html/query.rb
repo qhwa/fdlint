@@ -11,6 +11,28 @@ module XRay
       PROP_PAIR = %r(\s*,?\s*#{WORD}(==[^\s,])?)
       PROP = %r(\[#{WORD}.*?\])
 
+      def match?(str)
+        obj = query_obj(str)
+        tag = obj[:tag]
+        cls = obj[:classes]
+        props = obj[:properties]
+        unless tag.nil? or tag_name_equal? tag
+          return false
+        end
+        classes = prop_value(:class)
+        cls.each { |c| return false unless classes.include? c }
+        props.each do |n, v|
+          if v.nil?
+            return false unless has_prop? n
+          else
+            return false unless prop_value(n) == v
+          end
+        end
+        true
+      end
+
+      alias_method :===, :match?
+
       def query_obj(str)
         classes = []
         props = {}
@@ -41,28 +63,6 @@ module XRay
         props["id"] = id if id
         {:tag => tag, :classes => classes, :properties => props }
       end
-
-      def match(str)
-        obj = query_obj(str)
-        tag = obj[:tag]
-        cls = obj[:classes]
-        props = obj[:properties]
-        unless tag.nil? or tag_name_equal? tag
-          return false
-        end
-        classes = prop_value(:class)
-        cls.each { |c| return false unless classes.include? c }
-        props.each do |n, v|
-          if v.nil?
-            return false unless has_prop? n
-          else
-            return false unless prop_value(n) == v
-          end
-        end
-        true
-      end
-
-      alias_method :===, :match
 
     end
 
