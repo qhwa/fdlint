@@ -129,7 +129,7 @@ module XRay
       visitor = HTML::Rule::CheckTagRule.new( opt )
       parser.add_visitor visitor
       results = run_parser( parser )
-      unless @parsed_element.empty?
+      unless @parsed_element.nil? or @parsed_element.empty?
         results += check_scripts_in_html(opt)
         results += check_styles_in_html(opt)
       end
