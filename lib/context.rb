@@ -8,8 +8,12 @@ module XRay
       scope == :lib
     end
 
-    def page?
+    def page_level?
       scope == :page
+    end
+
+    def in_page?
+      scope == :in_page
     end
 
   end

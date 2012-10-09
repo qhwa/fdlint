@@ -14,10 +14,10 @@ module XRayTest
         end
 
         def test_content_must_be_right
-          assert_equal [
+          assert_equal Document.new([
             Element.new('em', nil, [TextElement.new('important')]),
             TextElement.new(' information!! Attention please!')
-          ],@element, 'must contain two children'
+          ]),@element, 'must contain two children'
         end
 
       end

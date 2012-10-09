@@ -14,16 +14,17 @@ module XRayTest
 
         include XRay::CSS, XRay::CSS::Rule, XRay::Rule, XRay::Context
 
-        XRay::Rule.import_all
-       
         Node = XRay::Node
+        XRay::Rule.import_all
 
         def setup
+          self.scope = :page
         end
 
         # selector
 
         def test_check_selector_with_id
+
           selector = Node.new '#mydiv a'
           message, level = check_selector_with_id selector
 

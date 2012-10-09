@@ -28,10 +28,10 @@ module XRayTest
 
         def test_parse_double_dtd
           parse('<!DOCTYPE html><!DOCTYPE html>') do |e|
-            assert_equal [
+            assert_equal e, [
               DTDElement.new('html'), 
               TextElement.new('<!DOCTYPE html>')
-            ], e
+            ]
           end
         end
 

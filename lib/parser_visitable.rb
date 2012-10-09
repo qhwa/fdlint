@@ -55,12 +55,14 @@ module XRay
     end
  
     def parse_no_throw
+      root = []
       begin
-        self.parse
+        root = self.parse
       rescue ParseError => e
         @results ||= []
         @results << LogEntry.new(e.to_s, :fatal, e.position.row, e.position.column)
       end
+      root
     end
 
     def add_visitor(visitor)

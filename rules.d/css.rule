@@ -31,14 +31,14 @@ check_file_name_downcase do |name|
 end
 
 check_selector_with_id do |selector|
-  if !context.lib? &&
+  if context.page_level? &&
       selector =~ /#[-\w]+/
     ['页面级别样式不使用id', :error]
   end
 end
 
 check_selector_with_global_tag do |selector|
-  if !context.lib? &&
+  if context.page_level? &&
       selector =~ /^\w+$/
     ['页面级别样式不能全局定义标签样式', :error]
   end

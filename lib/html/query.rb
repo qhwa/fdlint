@@ -74,12 +74,17 @@ module XRay
       end
 
       public
-      def query( selector )
+      def query( selector, &block )
         ret = []
-        ret << self if match?(selector)
-        children.each do |node|
-          ret.concat node.query(selector)
+        if match?(selector)
+          ret << self 
+          yield self if block_given?
         end
+
+        children && children.each do |node|
+          ret += node.query(selector, &block)
+        end
+
         ret
       end
       

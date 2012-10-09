@@ -1,4 +1,6 @@
 require_relative '../base_parser'
+require_relative '../css/parser'
+require_relative '../js/parser'
 require_relative 'struct'
 
 module XRay; module HTML
@@ -24,23 +26,18 @@ module XRay; module HTML
     DTD             = /\s*<!(doctype)\s+(.*?)>/im
     COMMENT         = /<!--(.*?)-->/m
 
+    def parse
+      parse_doc
+    end
+
     def parse_doc
       nodes = batch(:parse_element)
       case nodes.size
         when 0 then nil
         when 1 then nodes[0]
         else 
-
-          class << nodes
-            def position; XRay::Position.new(0,0,0); end
-          end
-
-          nodes
+          ::XRay::HTML::Document.new( nodes )
       end
-    end
-
-    def parse
-      parse_doc
     end
 
     def parse_element

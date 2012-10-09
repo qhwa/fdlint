@@ -27,10 +27,10 @@ module XRayTest
         end
 
         def check_tag( name )
-          assert_equal [
+          assert_equal Document.new([
             Element.new( name, {:name => 'test'}),
             TextElement.new(' text' )
-          ], XRay::HTML::Parser.parse("<#{name} name=\"test\"> text"),
+          ]), XRay::HTML::Parser.parse("<#{name} name=\"test\"> text"),
           "TAG: #{name} will auto close and have no children"
         end
       

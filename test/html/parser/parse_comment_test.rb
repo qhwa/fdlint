@@ -16,17 +16,17 @@ module XRayTest
 
         def test_double_close
           parse('<!--content-->-->') do |e|
-            assert_equal [CommentElement.new('content'), TextElement.new('-->')], e
+            assert_equal Document.new([CommentElement.new('content'), TextElement.new('-->')]), e
           end
         end
 
         def test_double_start_and_close
           parse(' <--<!--content-->-->') do |e|
-            assert_equal [
+            assert_equal Document.new([
               TextElement.new(' <--'),
               CommentElement.new('content'),
               TextElement.new('-->')
-            ], e
+            ]), e
           end
         end
 

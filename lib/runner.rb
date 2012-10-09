@@ -71,14 +71,14 @@ module XRay
       parser               = XRay::CSS::VisitableParser.new(css, @logger)
       visitor              = XRay::CSS::Rule::CheckListRule.new( opt )
       parser.add_visitor visitor
-      run_parser parser
+      run_parser( parser )
     end
 
     def check_css_file( file, opt={} )
       results = []
       begin
         "".extend(XRay::Rule).check_css_file(file).each do |msg, level, *pos|
-          results << LogEntry.new( msg, level, pos[0] || 0, pos[1] || 0 )
+          results.unshift LogEntry.new( msg, level, pos[0] || 0, pos[1] || 0 )
         end
 
         source = XRay::CSS::Reader.read( file, @opt )
@@ -86,22 +86,22 @@ module XRay
           :scope => CodeType.scope(file)
         }))
       rescue EncodingError => e
-        results << LogEntry.new( "File can't be read as #{@opt[:encoding]} charset", :fatal)
+        results.unshift LogEntry.new( "File can't be read as #{@opt[:encoding]} charset", :fatal)
       rescue => e
         if @opt[:debug]
           puts e
           puts e.backtrace 
         end
-        results << LogEntry.new( e.to_s, :fatal)
+        results.unshift LogEntry.new( e.to_s, :fatal)
       end
       results
     end
 
-    def check_js(js)
+    def check_js(js, opt={})
       @source = js
       parser = JS::VisitableParser.new(js, @logger)
       parser.add_visitors JS::Rule::All.new
-      run_parser parser
+      run_parser( parser )
     end
 
     def check_js_file(file, opt = {})
@@ -112,13 +112,13 @@ module XRay
         source, encoding = readfile(file, opt)
         results.concat check_js(source)
       rescue  EncodingError => e
-        results << LogEntry.new( "File can't be read as #{@opt[:encoding]} charset", :fatal)
+        results.unshift LogEntry.new( "File can't be read as #{@opt[:encoding]} charset", :fatal)
       rescue => e
         if @opt[:debug]
           puts e
           puts e.backtrace 
         end
-        results << LogEntry.new( e.to_s, :fatal )
+        results.unshift LogEntry.new( e.to_s, :fatal )
       end
       results
     end
@@ -128,7 +128,42 @@ module XRay
       parser = HTML::VisitableParser.new(text, @logger)
       visitor = HTML::Rule::CheckTagRule.new( opt )
       parser.add_visitor visitor
-      run_parser parser
+      results = run_parser( parser )
+      unless @parsed_element.empty?
+        results += check_scripts_in_html(opt)
+        results += check_styles_in_html(opt)
+      end
+      results
+    end
+
+    def check_scripts_in_html(opt={})
+      results = []
+      @parsed_element.query('script') do |script|
+        row = script.position.row
+        col = script.position.column
+        Runner.new.check_js(script.text, opt).each do |ret|
+          ret.column += script.outer_html[/^\s*<script*?>/].size if ret.row == 1
+          ret.row += row - 1
+          results << ret
+        end
+      end
+
+      results
+    end
+
+    def check_styles_in_html(opt={})
+      results = []
+      @parsed_element.query('style') do |style|
+        row = style.position.row
+        col = style.position.column
+        Runner.new.check_css(style.text, opt.merge({:scope => :in_page })).each do |ret|
+          ret.column += style.outer_html[/^\s*<style*?>/].size if ret.row == 1
+          ret.row += row - 1
+          results << ret
+        end
+      end
+
+      results
     end
 
     def check_html_file(file, opt={})
@@ -163,8 +198,8 @@ module XRay
     end
 
     def run_parser(parser)
-      parser.parse_no_throw
-      filter_results parser.results
+      @parsed_element = parser.parse_no_throw
+      filter_results( parser.results ).sort_by!(&:row)
     end
 
     def filter_results(results)

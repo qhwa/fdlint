@@ -5,8 +5,12 @@ module XRay
 
     Node = XRay::Node
     AUTO_CLOSE_TAGS = %w(area base basefont br col frame hr img input link meta param) 
-    INLINE_ELEMENTS = %w(a br label abbr legend address link area mark audio meter bm nav cite optgroup code option del q details small dfn select command source datalist span em strong font sub i summary iframe sup img tbody input td ins time kbd var)
-
+    INLINE_ELEMENTS = %w(a br label abbr legend address link 
+                         area mark audio meter bm nav cite optgroup 
+                         code option del q details small dfn select 
+                         command source datalist span em strong 
+                         font sub i summary iframe sup img tbody 
+                         input td ins time kbd var)
 
     class Element < Node
 
@@ -63,6 +67,8 @@ module XRay
         @children.inject('') { |s,c| s + c.inner_text }
       end
 
+      alias_method :text, :inner_text
+
       def prop_text
         props.inject('') { |s, p| s << " " << p.to_s }
       end
@@ -112,6 +118,14 @@ module XRay
         @close_type == :self
       end
 
+      def each(&block)
+        children.each {|node| yield node }
+      end
+
+      def empty?
+        false
+      end
+
       protected
       def parse(text)
         @outer_html = text
@@ -134,6 +148,28 @@ module XRay
 
     end
 
+
+    class Document < Element
+      def initialize( children=[] )
+        super(nil, {}, children || [])
+        @position = Position.new(0,0,0)
+      end
+
+      def ==(other)
+        if other.is_a?(Array)
+          return children == other
+        elsif other.is_a?(Document)
+          return children == other.children
+        else
+          super
+        end
+      end
+
+      def empty?
+        children.empty?
+      end
+
+    end
 
     class TextElement < Element
 
