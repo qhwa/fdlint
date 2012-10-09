@@ -21,7 +21,7 @@ fdlint (开发代号xray) 是根据阿里巴巴前端开发checklist开发的自
 ### 命令行工具
 
 #### ruby脚本
-适合安装了Ruby运行环境的Windows/\*nix系统
+适合安装了Ruby1.9+ 环境的Windows/\*nix系统
 
 运行方式
 
