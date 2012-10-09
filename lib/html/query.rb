@@ -11,7 +11,15 @@ module XRay
       PROP_PAIR = %r(\s*,?\s*#{WORD}(==[^\s,])?)
       PROP = %r(\[#{WORD}.*?\])
 
+      ###
+      # This method implemented CSS selector for
+      # HTML (like Sizzle) very simply. It is not
+      # fully supported CSS selector.
+      #
+      # TODO: support full CSS3 selector
+      ###
       def match?(str)
+        return false if is_a?(TextElement)
         obj = query_obj(str)
         tag = obj[:tag]
         cls = obj[:classes]
@@ -33,6 +41,7 @@ module XRay
 
       alias_method :===, :match?
 
+      private
       def query_obj(str)
         classes = []
         props = {}
@@ -63,6 +72,18 @@ module XRay
         props["id"] = id if id
         {:tag => tag, :classes => classes, :properties => props }
       end
+
+      public
+      def query( selector )
+        ret = []
+        ret << self if match?(selector)
+        children.each do |node|
+          ret.concat node.query(selector)
+        end
+        ret
+      end
+      
+      alias_method :*, :query
 
     end
 
