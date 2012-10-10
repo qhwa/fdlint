@@ -56,12 +56,11 @@ Usage: fdlint
 
     git clone git://github.com/qhwa/fdlint.git
 
+## 开源协议
 
-## 目前进度
-
-公开测试(Beta)中
-
+[BSD协议](http://www.linfo.org/bsdlicense.html)
 
 ## 附录
 
 [扫描规则](https://github.com/qhwa/fdlint/wiki/fdlint-%E6%89%AB%E6%8F%8F%E8%A7%84%E5%88%99)
+
