@@ -130,7 +130,7 @@ module XRay; module HTML
       @parsing_script = tag =~ /^script$/i
       skip />/
 
-      scopes << tag
+      scopes << tag.text
 
       children = []
       ending = nil

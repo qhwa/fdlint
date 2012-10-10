@@ -32,10 +32,10 @@ module XRayTest
 
         def test_from_fixture
           results = XRay::Runner.new.check_html( fixture "html/css_out_of_head.html" )
-          found = results.any? do |res|
+          found = results.find_all do |res|
             res.message == "外链CSS置于head里(例外：应用里的footer样式)"
           end
-          assert found
+          assert_equal 1, found.size
         end
 
         protected
