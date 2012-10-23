@@ -16,6 +16,7 @@ module XRay
         )
 
         R_THIS_NULL_BOOLEAN = /(?:this|null|true|false)\b/
+        R_HEX = /0[xX]/
         R_NUMBERIC = /[+-]?(?:\d|(?:[.]\d))/
         R_STRING = /['"]/
         R_REGEXP = /\/[^\/]/
@@ -34,6 +35,9 @@ module XRay
           # literal 
           elsif check R_THIS_NULL_BOOLEAN 
             parse_expr_literal_this_null_boolean
+
+          elsif check R_HEX
+            parse_expr_literal_hex
 
           elsif check R_NUMBERIC
             parse_expr_literal_number
@@ -127,6 +131,12 @@ module XRay
           end
 
           create_expression 'string', expr 
+        end
+
+        def parse_expr_literal_hex
+          log 'parse expr literal hex'
+          expr = scan /0[xX][0-9a-fA-F]+/
+          create_expression 'number', expr
         end
 
         def parse_expr_literal_number
