@@ -1,5 +1,8 @@
 source :rubygems
 gem 'win32console' if ENV['OS'] =~ /windows/i
-gem 'test-unit'
-gem 'rake'
 
+group :development do
+  gem 'test-unit'
+  gem 'rake'
+  gem 'gem-this'
+end
