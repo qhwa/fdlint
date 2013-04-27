@@ -1,5 +1,5 @@
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     gem-this (0.3.7)
     rake (0.9.2.2)
@@ -12,3 +12,4 @@ DEPENDENCIES
   gem-this
   rake
   test-unit
+  win32console
