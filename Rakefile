@@ -40,7 +40,9 @@ spec = Gem::Specification.new do |s|
   s.rdoc_options      = %w(--main README.md)
 
   # Add any extra files to include in the gem
-  s.files             = %w(README.md Rakefile Gemfile.lock Gemfile) + Dir.glob("{bin,test,lib,rules.d}/**/*")
+  s.files             = %w(README.md Rakefile Gemfile.lock Gemfile) + 
+                        Dir.glob("{bin,test,lib,rules.d}/**/*") -
+                        Dir.glob("test/fixtures/html/{cms,tmp}/**/*")
   s.executables       = FileList["bin/**"].map { |f| File.basename(f) }
   s.require_paths     = ["lib"]
 
