@@ -19,14 +19,6 @@ module XRayTest
         else 
           warn 'Skipping Ruby1.9 CLI Test!'
         end
-
-        if has_ruby? '1.8'
-          @cmd = "ruby1.8 #{@bin}"
-          do_all_test
-        else 
-          warn 'Skipping Ruby1.8 CLI Test!'
-        end
-
       end
 
       def do_all_test
