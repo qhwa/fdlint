@@ -25,13 +25,17 @@ fdlint (开发代号xray) 是根据阿里巴巴前端开发checklist开发的自
 #### ruby脚本
 适合安装了Ruby1.9+ 环境的Windows/\*nix系统
 
+安装
+
+    gem install fdlint
+
 运行方式
 
-    /path/to/fdlint [参数] <目标文件或目录>
+    fdlint [参数] <目标文件或目录>
 
 或者使用管道：
 
-    echo '* {}' | /path/to/fdlint
+    echo '* {}' | fdlint
 
 参数列表：
 
