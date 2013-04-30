@@ -29,7 +29,7 @@ spec = Gem::Specification.new do |s|
 
   # Change these as appropriate
   s.name              = "fdlint"
-  s.version           = "0.1.0"
+  s.version           = "0.1.3"
   s.summary           = "Code reviewer for web developing. Check your HTML/JS/CSS codes against bad codes."
   s.author            = "qhwa,bencode"
   s.email             = "qhwa@163.com,bencode@163.com"
@@ -48,7 +48,7 @@ spec = Gem::Specification.new do |s|
 
   # If you want to depend on other gems, add them here, along with any
   # relevant versions
-  s.add_dependency("win32console")
+  #s.add_dependency("win32console")
 
   # If your tests use any gems, include them here
   s.add_development_dependency("rake")

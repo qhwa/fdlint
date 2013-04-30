@@ -10,8 +10,5 @@ end
 
 require_relative '../lib/cmd_runner'
 
-if __FILE__ == $0
-  trap("SIGINT") { puts "\nGoodbye!"; exit! }
-  XRay::CMDRunner.run
-end
-
+trap("SIGINT") { puts "\nGoodbye!"; exit! }
+XRay::CMDRunner.run
