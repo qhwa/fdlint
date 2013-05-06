@@ -47,6 +47,9 @@ module XRay
         opts.on("--level [log_level]", [:warn, :error, :fatal], "determine the log level. Can be 'warn', 'error' or 'fatal'") do |level|
           options[:log_level] = level
         end
+        opts.on("--check-html-link", "check html link valid") do
+          options[:check_html_link] = true
+        end
       end
 
       begin
@@ -104,7 +107,8 @@ module XRay
       end
 
       if @core_runner.valid_file? file
-        print @core_runner.check_file( file ), opt.merge( :file => file.to_s )
+        ret = @core_runner.check_file file, opt.merge(:file => file.to_s)
+        print ret
       end
     end
 

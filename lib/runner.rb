@@ -13,6 +13,7 @@ require_relative 'css/parser'
 require_relative 'css/rule/checklist'
 require_relative 'html/parser'
 require_relative 'html/rule/check_tag_rule'
+require_relative 'html/rule/check_link_rule'
 require_relative 'js/parser'
 require_relative 'js/rule/all'
 require_relative 'js/rule/file_checker'
@@ -125,9 +126,13 @@ module XRay
 
     def check_html(text, opt={})
       @source = text
+
       parser = HTML::VisitableParser.new(text, @logger)
-      visitor = HTML::Rule::CheckTagRule.new( opt )
+      visitor = HTML::Rule::CheckTagRule.new(opt)
       parser.add_visitor visitor
+      visitor = HTML::Rule::CheckLinkRule.new(opt)
+      parser.add_visitor visitor
+
       results = run_parser( parser )
       unless @parsed_element.nil? or @parsed_element.empty?
         results += check_scripts_in_html(opt)
@@ -168,17 +173,17 @@ module XRay
 
     def check_html_file(file, opt={})
       source, encoding = readfile file
-      check_html source
+      check_html source, opt
     end
 
-    def check_file( file )
+    def check_file(file, opts = {})
       type = CodeType.guess_by_name(file)
-      send( "check_#{type}_file", file ) if CodeType.is_style_file? file
+      send( "check_#{type}_file", file, opts) if CodeType.is_style_file? file
     end
 
-    def check(text, filename="")
+    def check(text, filename="", opts = {})
       type = CodeType.guess(text, filename)
-      send "check_#{type}", text
+      send "check_#{type}", text, opts
     end
 
     def valid_file? file
