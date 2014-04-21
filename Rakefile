@@ -48,11 +48,13 @@ spec = Gem::Specification.new do |s|
 
   # If you want to depend on other gems, add them here, along with any
   # relevant versions
-  #s.add_dependency("win32console")
+  s.add_dependency("colored")
+  s.add_dependency("string/utf8")
 
   # If your tests use any gems, include them here
   s.add_development_dependency("rake")
   s.add_development_dependency("test-unit")
+  s.add_development_dependency("bundler")
 end
 
 # This task actually builds the gem. We also regenerate a static

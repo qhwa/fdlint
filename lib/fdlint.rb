@@ -1,0 +1,5 @@
+require 'fdlint/version'
+require 'fdlint/support/file'
+require 'fdlint/helper/logger'
+require 'fdlint/validator'
+require 'fdlint/printer'

@@ -1,14 +1,7 @@
 #!/usr/bin/env ruby
+$: << File.expand_path( '../../lib', __FILE__ )
 
-unless Kernel.respond_to?(:require_relative)
-  module Kernel
-    def require_relative(path)
-      require File.expand_path(path.to_str, File.dirname(caller[0]))
-    end
-  end
-end
+require 'fdlint'
+require 'fdlint/cli'
 
-require_relative '../lib/cmd_runner'
-
-trap("SIGINT") { puts "\nGoodbye!"; exit! }
-XRay::CMDRunner.run
+Fdlint::CLI.run
