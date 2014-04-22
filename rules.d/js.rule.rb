@@ -121,7 +121,7 @@ review( 'stat' ) {
 }
 
 # 检查是否有全局变量、全局函数
-group( 'no global variables' ) {
+group( 'no global variables or functions' ) {
 
   scope_depth = 0
   scoped_vars = []
