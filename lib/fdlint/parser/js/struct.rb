@@ -61,6 +61,8 @@ module Fdlint
         alias :contain? :contains?
       end
 
+      # The whole program element
+      # Javascript files are first parsed into programs.
       class Program < Element
         alias :elements :left
 
@@ -70,6 +72,8 @@ module Fdlint
 
       end
 
+      # Function declaraion
+      # key word 'function' parsed as FunctionDeclaraion
       class FunctionDeclaraion < Element
         attr_reader :body
         alias :name :left
@@ -88,7 +92,7 @@ module Fdlint
         end
 
         def end_with_semicolon?
-          @end_with_semicolon || false
+          !!@end_with_semicolon
         end
 
       end

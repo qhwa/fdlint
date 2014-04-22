@@ -3,6 +3,7 @@ module Fdlint
     module JS
       module Stat
         
+        # 循环语句
         module Iter
 
           def parse_stat_dowhile

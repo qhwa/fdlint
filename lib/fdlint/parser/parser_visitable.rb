@@ -43,7 +43,7 @@ module Fdlint
           alias_method old_method, method
 
           define_method(method) do |*args, &block|
-            #before name, *args
+            before name, *args
             node = self.send(old_method, *args, &block)
             node && visit(name, node)
             node
@@ -118,7 +118,7 @@ module Fdlint
         def walk(name, node, &block)
           visitors = self.visitors[name.to_s]
           visitors && visitors.each do |visitor|
-            result = visitor.call node, source #, file
+            result = visitor.call node, source, self
             yield result if result && block_given?
           end
         end

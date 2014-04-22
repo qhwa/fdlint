@@ -9,27 +9,28 @@ module Fdlint
     module JS
       module Stat 
         
+        # Stat : Statement node.
         module Stat
 
           include Var, If, Switch, Iter, Try
 
           def parse_statement
-            # 在1.8下map是无序的,所以这里只能用数组来实现
+            # 在ruby-1.8下map是无序的,所以这里只能用数组来实现
             map = [
-              /\{/, 'block',
-              /\;/, 'empty',
-              /var\b/, 'var',
-              /if\b/, 'if',
-              /switch\b/, 'switch',
-              /do\b/, 'dowhile',
-              /while\b/, 'while',
-              /for\b/, 'for',
+              /\{/,         'block',
+              /\;/,         'empty',
+              /var\b/,      'var',
+              /if\b/,       'if',
+              /switch\b/,   'switch',
+              /do\b/,       'dowhile',
+              /while\b/,    'while',
+              /for\b/,      'for',
               /continue\b/, 'continue',
-              /break\b/, 'break',
-              /return\b/, 'return',
-              /throw\b/, 'throw',
-              /try\b/, 'try',
-              /./, 'expression'
+              /break\b/,    'break',
+              /return\b/,   'return',
+              /throw\b/,    'throw',
+              /try\b/,      'try',
+              /./,          'expression'
             ] 
 
             0.upto(map.size / 2 - 1) do |i|

@@ -2,6 +2,7 @@ task :default => [:test]
 
 desc "run unit tests"
 task :test do
+  require "minitest/autorun"
   require_relative 'test/all_tests'
 end
 

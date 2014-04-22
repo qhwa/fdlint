@@ -81,7 +81,8 @@ module Fdlint
           :html => ::Fdlint::Parser::HTML::HtmlParser
         }.fetch( code_type ).new( source )
 
-        file = File.new(self.file)
+        file = File.new(self.file) if self.file
+
         base_parser.tap do |parser|
           content_level_rules.each do |validation|
             parser.add_visitor *validation.to_visitor( file: file )

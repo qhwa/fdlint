@@ -64,6 +64,16 @@ module Fdlint; module Rule
       @uri  = nil
     end
 
+    def before( element, &block )
+      @scope = :"before_parse_#{element}"
+      rule &block
+    end
+
+    def after( element, &block )
+      @scope = element.intern
+      rule &block
+    end
+
   end
 
 end; end;

@@ -21,14 +21,14 @@ module Fdlint; module Rule
     def to_visitor( opt={} )
       [
         scope,
-        proc { |node, source|
-          exec( node, source, opt[:file] )
+        proc { |node, source, parser|
+          exec( node, source, opt[:file], parser )
         }
       ]
     end
 
-    def exec( node, source, file )
-      Runner.new.exec( node, source, file, validate_block ) do |results|
+    def exec( node, source, file = nil, parser = nil )
+      Runner.new.exec( node, source, file, parser, validate_block ) do |results|
         results.map do |msg, level|
           if node.respond_to? :position
             row, column = node.position.row, node.position.column
@@ -42,8 +42,8 @@ module Fdlint; module Rule
 
     class Runner
 
-      def exec( node, source, file, validate_block, &block )
-        instance_exec( node, source, file, &validate_block ) 
+      def exec( node, source, file, parser, validate_block, &block )
+        instance_exec( node, source, file, parser, &validate_block ) 
         yield results if block_given?
       end
 

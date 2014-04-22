@@ -1,7 +1,7 @@
 # CSS review rules
 # Author: @qhwa
 
-rules_for 'css', 'js', 'html'
+rules_for 'css', 'js'
 
 review( 'file' ) {
   rule { |file|
