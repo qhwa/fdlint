@@ -5,6 +5,10 @@ module Fdlint::Parser
     def to_s
         "[#{row},#{column}]"
     end
+
+    def inspect
+      "[#{pos}, #{row}:#{column}]"
+    end
   end
 
   class PositionInfo
@@ -22,6 +26,13 @@ module Fdlint::Parser
       @len = lines.length
     end
 
+    # Public: Turn given number position index into a
+    #         position object which contains the 
+    #         column and row index info
+    #
+    # pos - position index of the source string
+    #
+    # Returns the position object
     def locate(pos)
       if @row && pos >= @lines[@row -1] && pos < @lines[@row]
         row = @row

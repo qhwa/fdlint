@@ -29,10 +29,19 @@ module Fdlint; module Rule
 
     def exec( node, source, file = nil, parser = nil )
       Runner.new.exec( node, source, file, parser, validate_block ) do |results|
-        results.map do |msg, level|
-          if node.respond_to? :position
-            row, column = node.position.row, node.position.column
+        results.map do |msg, level, opt|
+          pos = if node.respond_to?( :position ) && node.position
+                  node.position
+                else
+                  opt[:pos]
+                end
+
+          if pos
+            pos.column  += opt[:column_offset] if opt[:column_offset]
+            pos.row     += opt[:row_offset] if opt[:row_offset]
+            row, column  = pos.row, pos.column
           end
+
           LogEntry.new( msg, level, row, column ).tap do |entry|
             entry.validation = self
           end
@@ -51,16 +60,16 @@ module Fdlint; module Rule
         @results ||= []
       end
 
-      def fatal( msg )
-        results << [msg, :fatal]
+      def fatal( msg, opt={} )
+        results << [msg, :fatal, opt]
       end
       
-      def error( msg )
-        results << [msg, :error]
+      def error( msg, opt={} )
+        results << [msg, :error, opt]
       end
 
-      def warn( msg )
-        results << [msg, :warn]
+      def warn( msg, opt={} )
+        results << [msg, :warn, opt]
       end
 
 

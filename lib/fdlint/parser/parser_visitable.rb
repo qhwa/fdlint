@@ -26,7 +26,10 @@ module Fdlint
         def klass.method_added(method)
           unless @flag
             @flag = true
-            ParserVisitable.wrap(self, method)
+            case method.to_s
+            when /^parse_/
+              ParserVisitable.wrap(self, method)
+            end
             @flag = false
           end
         end
@@ -111,8 +114,10 @@ module Fdlint
           end
         end
 
-        def before(name, node)
-          walk 'before_parse_' << name, node
+        def before(name)
+          walk 'before_parse_' << name, nil do |result|
+            results << result
+          end
         end
 
         def walk(name, node, &block)

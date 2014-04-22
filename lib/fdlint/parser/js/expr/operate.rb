@@ -20,7 +20,7 @@ module Fdlint
             r = /delete|void|typeof|\+\+|--|\+|-|~|!/
             if check r
               op = scan r
-              create_element Expression, op.text, nil, parse_expr_unary
+              create_element Expression, op.text, nil, parse_expr_unary, scanner_pos
             else
               parse_expr_postfix
             end

@@ -46,19 +46,19 @@ module Fdlint
             expr
           end
 
-          protected
-
           def parse_expr_with_operate(left, pattern = nil, &block)
             block = block || lambda {
               if check pattern
+                skip_empty
+                before_pos = scanner_pos
                 op = scan pattern
-                [op.text, self.send(left)]
+                [op.text, self.send(left), before_pos]
               end
             }
 
             expr = self.send left
             while (ret = block.call) 
-              expr = create_element Expression, ret[0], expr, ret[1]
+              expr = create_element Expression, ret[0], expr, ret[1], ret[2]
             end 
             expr
           end

@@ -39,12 +39,12 @@ review( 'stat_if' ) {
 
   rule { |stat|
     count = 0;
-    # 检查 "else if" 的数量
+    # count "else if"
     while stat.false_part && stat.false_part.type == 'if'
       count += 1
       stat = stat.false_part
     end
-    # 加上最后一个 "else"
+    # count "else"
     count += 1 if stat.false_part
     if count >= 3
       error '3个条件及以上的条件语句用switch代替if else'
@@ -132,7 +132,7 @@ group( 'no global variables or functions' ) {
     scope_depth -= 1
   }
 
-  review( 'expr_assignment' ) { |expr, source, file, parser|
+  review( 'expr_assignment' ) { |expr|
     if expr.type == "="
       expr = expr.left
       if expr.type == "id" && !scoped_vars.flatten.include?( expr.left.text )
@@ -148,4 +148,58 @@ group( 'no global variables or functions' ) {
   review( 'function_name' ) { |name|
     error '不允许申明全局函数' if scope_depth <= 1
   }
+}
+
+# bad case:  x_y, x_Y, X_y, _Xy
+# good case: X_Y, _xy, _xY
+group( '变量名的命名规范' ) {
+  review( 'stat_var_declaration' ) { |stat|
+    var_name = stat.left.text.sub(/^_+/, '')
+    if var_name =~ /[a-z]/ && var_name =~ /[A-Z]/ && var_name =~ /[^_]_/
+      error '成员函数，成员对象，局部变量采用首字母小写的驼峰格式'
+    end
+  }
+  review( 'expr_assignment' ) { |expr|
+    if expr.type == "="
+      var_name = expr.left.text.sub(/^_+/, '')
+      if var_name =~ /[a-z]/ && var_name =~ /[A-Z]/ && var_name =~ /[^_]_/
+        error '成员函数，成员对象，局部变量采用首字母小写的驼峰格式'
+      end
+    end
+  }
+}
+
+
+review( 'expr_literal_string' ) { |string|
+  if string.text.start_with? '"'
+    warn '尽可能使用单引号，而不是双引号'
+  end
+}
+
+review( 'statement' ) { |stat, source, file, parser|
+  line = parser.scanned_source.lines.last
+  if line =~ /^\t+/
+    error '不要使用 tab 来表示缩进'
+  elsif line =~ /^[ ]{1,3}\S/
+    error '应该使用连续的4个空白字符表示缩进'
+  end
+}
+
+review( 'expr_logical_or' ) { |expr, source|
+  if expr.left && expr.right
+    left = expr.position.pos - 2
+    unless expr.type == "(" || expr.type == "."
+      unless source[left, expr.type.size + 2] == (" " << expr.type << " ")
+        error '操作符(如, +/-/*/% 等)两边留空'
+      end
+    end
+  end
+}
+
+before( 'function_parameters' ) { |params, source, file, parser|
+  if parser.check /[^)]*\)\{/
+    warn "函数定义的'{'前应该留一个空格",
+      pos: parser.scanner_pos,
+      column_offset: parser.rest_source.index('){')
+  end
 }

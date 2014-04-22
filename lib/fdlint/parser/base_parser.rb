@@ -35,6 +35,11 @@ module Fdlint
         pos
       end
 
+      def scanner_pos
+        pos = @text_size - @scanner.rest.size
+        @pos_info.locate pos    
+      end
+
       def check(pattern, not_skip_empty = false)
         skip_empty = !not_skip_empty
         if skip_empty && @scanner.check(/\s+/)
@@ -84,6 +89,15 @@ module Fdlint
         @scanner.eos?
       end
 
+      def scanned_source
+        pos = @text_size - @scanner.rest.size
+        source[0..(pos-1)]
+      end
+
+      def rest_source
+        @scanner.rest
+      end
+
       protected
       
       def filter_text(text)
@@ -112,11 +126,6 @@ module Fdlint
         raise ParseError.new(message, pos)
       end
         
-      def scanner_pos
-        pos = @text_size - @scanner.rest.size
-        @pos_info.locate pos    
-      end
-
       private
 
       def prepare_text(text)
