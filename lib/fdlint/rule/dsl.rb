@@ -46,7 +46,11 @@ module Fdlint; module Rule
 
     def check( node, &block )
       @scope = node.intern
-      yield if block_given?
+      if block && block.arity > 0
+        rule &block
+      else
+        yield if block_given?
+      end
     end
 
     alias_method :review, :check

@@ -17,15 +17,11 @@ review( 'file' ) {
   }
 }
 
-review( 'statement' ) {
-
-  rule { |stat|
-    ary = %w(empty var continue break return throw expression)
-    if ary.include?(stat.type) && !stat.end_with_semicolon?
-      error '所有语句结束带上分号'
-    end
-  }
-
+review( 'statement' ) { |stat|
+  ary = %w(empty var continue break return throw expression)
+  if ary.include?(stat.type) && !stat.end_with_semicolon?
+    error '所有语句结束带上分号'
+  end
 }
 
 review( 'stat_if' ) {
@@ -56,22 +52,20 @@ review( 'stat_if' ) {
   }
 }
 
-review( 'expr_new' ) {
-  rule { |expr|
+review( 'expr_new' ) { |expr|
+  expr = expr.left
+  if expr.type == '('
+    args = expr.right.elements
     expr = expr.left
-    if expr.type == '('
-      args = expr.right.elements
-      expr = expr.left
-    end
+  end
 
-    if args.nil? || args.empty?
-      if expr.text == 'Object'
-        error '使用{}代替new Object()'
-      elsif expr.text == 'Array'
-        error '使用[]代替new Array()'
-      end 
-    end
-  }
+  if args.nil? || args.empty?
+    if expr.text == 'Object'
+      error '使用{}代替new Object()'
+    elsif expr.text == 'Array'
+      error '使用[]代替new Array()'
+    end 
+  end
 }
 
 review( 'expression' ) {
@@ -102,22 +96,18 @@ review( 'expression' ) {
 
 }
 
-review( 'expr_equal' ) {
-  rule { |expr|
-    if expr.type == '==' || expr.type == '!='
-      warn '避免使用==和!=操作符'
-    end
-  }
+review( 'expr_equal' ) { |expr|
+  if expr.type == '==' || expr.type == '!='
+    warn '避免使用==和!=操作符'
+  end
 }
 
-review( 'stat' ) {
-  rule { |stat|
-    if stat.try_part.contains?('try') ||
-        stat.catch_part && (stat.catch_part.contains? 'try') ||
-        stat.finally_part && (stat.finally_part.contains? 'try')
-      warn 'try catch一般不允许嵌套，若嵌套，需要充分的理由'
-    end
-  }
+review( 'stat' ) { |stat|
+  if stat.try_part.contains?('try') ||
+      stat.catch_part && (stat.catch_part.contains? 'try') ||
+      stat.finally_part && (stat.finally_part.contains? 'try')
+    warn 'try catch一般不允许嵌套，若嵌套，需要充分的理由'
+  end
 }
 
 # 检查是否有全局变量、全局函数
@@ -142,27 +132,20 @@ group( 'no global variables or functions' ) {
     scope_depth -= 1
   }
 
-  review( 'expr_assignment' ) {
-
-    rule { |expr, source, file, parser|
-      if expr.type == "="
-        expr = expr.left
-        if expr.type == "id" && !scoped_vars.flatten.include?( expr.left.text )
-          error '禁止使用未定义的变量(或全局变量)'
-        end
+  review( 'expr_assignment' ) { |expr, source, file, parser|
+    if expr.type == "="
+      expr = expr.left
+      if expr.type == "id" && !scoped_vars.flatten.include?( expr.left.text )
+        error '禁止使用未定义的变量(或全局变量)'
       end
-    }
+    end
   }
 
-  review( 'stat_var_declaration' ) {
-    rule { |stat|
-      error "禁止使用未定义的变量(或全局变量)" if scope_depth <= 0
-    }
+  review( 'stat_var_declaration' ) { |stat|
+    error "禁止使用未定义的变量(或全局变量)" if scope_depth <= 0
   }
 
-  review( 'function_name' ) {
-    rule { |name|
-      error '不允许申明全局函数' if scope_depth <= 1
-    }
+  review( 'function_name' ) { |name|
+    error '不允许申明全局函数' if scope_depth <= 1
   }
 }
