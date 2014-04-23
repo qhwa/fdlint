@@ -1,7 +1,77 @@
 #!/usr/bin/env ruby
-$: << File.expand_path( '../../lib', __FILE__ )
-
+require 'gli'
+begin # XXX: Remove this begin/rescue before distributing your app
 require 'fdlint'
 require 'fdlint/cli'
+rescue LoadError
+  STDERR.puts "In development, you need to use `bundle exec bin/fdlint` to run your app"
+  STDERR.puts "At install-time, RubyGems will make sure lib, etc. are in the load path"
+  STDERR.puts "Feel free to remove this message from bin/fdlint now"
+  exit 64
+end
 
-Fdlint::CLI.run
+include GLI::App
+
+program_desc 'Code reviewer for web developing. Check your HTML/JS/CSS codes against bad smells.'
+
+version Fdlint::VERSION
+
+desc 'Print debug logs'
+switch [:d, :debug], negatable: false
+
+desc "review codes"
+arg_name 'path'
+command [:review, :check] do |c|
+
+  %w(css js html).each do |type|
+    c.desc "check #{type} files only" 
+    c.switch type.intern, negatable: false
+  end
+
+  c.desc "output format. Can be 'vim', 'console' or 'nocolor'."
+  c.default_value :console
+  c.flag :format, must_match: %w[console nocolor vim]
+
+  c.desc "ignore minified files"
+  c.default_value false
+  c.switch [:m, :"ignore-min"], negatable: false
+
+  c.desc "shortcut for '--format=list'"
+  c.switch [:l, :list], negatable: false
+
+  c.desc "charset for reading files"
+  c.default_value 'utf-8'
+  c.flag [:c, :charset]
+
+  c.desc "the log level for filter results"
+  c.default_value 'warn'
+  c.flag [:loglevel], must_match: %s[warn error faltal]
+
+  c.action do |global, opt, args|
+
+    if args.empty?
+      if $stdin.tty?
+        help_now! 'files required'
+      else
+        source = ARGF.read
+      end
+    end
+
+    options = {
+
+      :log_level => opt[:loglevel],
+      :format    => opt[:list] ? :nocolor : opt[:format],
+      :encoding  => opt[:encoding],
+      :syntax    => opt[:css]  ? :css :
+                    opt[:js]   ? :js  :
+                    opt[:html] ? :html : nil,
+      :debug     => global[:debug],
+      :files     => args,
+      :text      => source
+    }
+
+    Fdlint::CLI.run options
+  end
+end
+
+exit run(ARGV)

@@ -1,34 +1,31 @@
-# -*- encoding: utf-8 -*-
+# Ensure we require the local version and not one we might have installed already
+require File.join([File.dirname(__FILE__),'lib','fdlint','version.rb'])
+spec = Gem::Specification.new do |s| 
 
-Gem::Specification.new do |s|
-  s.name = "fdlint"
-  s.version = "0.1.3"
+  s.name             = "fdlint"
+  s.version          = Fdlint::VERSION
+  s.summary          = "Code reviewer for web developing. Check your HTML/JS/CSS codes against bad codes."
+  s.author           = "qhwa,bencode"
+  s.email            = "qhwa@163.com,bencode@163.com"
+  s.homepage         = "https://github.com/qhwa/fdlint"
+  s.has_rdoc         = false
+  s.extra_rdoc_files = %w(README.md)
+  s.rdoc_options     = %w(--main README.md)
+  s.files            = %w(README.md Rakefile Gemfile.lock Gemfile) +
+                        Dir.glob("{bin,test,lib,rules.d}/**/*") -
+                        Dir.glob("test/fixtures/html/{cms,tmp}/**/*")
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["qhwa,bencode"]
-  s.date = "2013-04-30"
-  s.email = "qhwa@163.com,bencode@163.com"
-  s.executables = ["fdlint"]
-  s.extra_rdoc_files = ["README.md"]
-  s.files = ["README.md", "Rakefile", "Gemfile.lock", "Gemfile", "bin/fdlint", "test/html", "test/html/rule", "test/html/rule/check_block_level_element_test.rb", "test/html/rule/check_hyperlink_with_target_test.rb", "test/html/rule/check_hyperlink_with_title_test.rb", "test/html/rule/check_css_in_head_test.rb", "test/html/rule/check_unescape_char_test.rb", "test/html/rule/check_html_template_test.rb", "test/html/rule/check_prop_have_value_test.rb", "test/html/rule/check_unique_import_test.rb", "test/html/rule/check_dtd_test.rb", "test/html/rule/check_form_element_name_test.rb", "test/html/rule/check_no_import_css_test.rb", "test/html/rule/check_prop_seperator_test.rb", "test/html/rule/check_id_n_class_downcase_test.rb", "test/html/rule/check_tag_downcase_test.rb", "test/html/rule/check_tag_closed_test.rb", "test/html/rule/check_img_with_alt_prop_test.rb", "test/html/rule/check_head_contain_meta_and_title_test.rb", "test/html/rule/check_class_count_test.rb", "test/html/rule/check_style_prop_test.rb", "test/html/rule/check_button_test.rb", "test/html/parser_test.rb", "test/html/rule_test.rb", "test/html/query_test.rb", "test/html/parser", "test/html/parser/parse_with_style_tag_test.rb", "test/html/parser/parse_comment_test.rb", "test/html/parser/parse_with_simple_tree_test.rb", "test/html/parser/parse_with_text_test.rb", "test/html/parser/parse_with_multi_line_test.rb", "test/html/parser/parse_with_simple_tag_test.rb", "test/html/parser/parse_with_diff_case_test.rb", "test/html/parser/parse_dtd_test.rb", "test/html/parser/parse_with_prop_test.rb", "test/html/parser/parse_with_selfclosing_test.rb", "test/html/parser/parse_with_script_tag_test.rb", "test/html/parser/parse_with_auto_close_tag_test.rb", "test/html/parser/parse_with_multi_children_test.rb", "test/html/parser/parse_script_tag_test.rb", "test/html/parser/parse_with_emtpy_test.rb", "test/html/mixed_type_test.rb", "test/js", "test/js/stat", "test/js/stat/if.rb", "test/js/stat/iter.rb", "test/js/stat/try.rb", "test/js/stat/var.rb", "test/js/stat/switch.rb", "test/js/stat/stat.rb", "test/js/rule", "test/js/rule/use_strict_equal_test.rb", "test/js/rule/jq_check_test.rb", "test/js/rule/base_test.rb", "test/js/rule/stat_if_with_muti_else_test.rb", "test/js/rule/all_test.rb", "test/js/rule/stat_if_with_brace_test.rb", "test/js/rule/nest_try_catch_test.rb", "test/js/rule/file_checker_test.rb", "test/js/rule/alert_check_test.rb", "test/js/rule/private_method_check_test.rb", "test/js/rule/no_global_test.rb", "test/js/rule/no_eval_test.rb", "test/js/rule/semicolon_test.rb", "test/js/rule/new_object_and_new_array_test.rb", "test/js/expr", "test/js/expr/operate.rb", "test/js/expr/expr.rb", "test/js/expr/primary.rb", "test/js/expr/left_hand.rb", "test/js/parser_test.rb", "test/js/rule_test.rb", "test/position_info_test.rb", "test/runner", "test/runner/log_level_test.rb", "test/fixtures", "test/fixtures/html", "test/fixtures/html/css_out_of_head.html", "test/fixtures/html/unescaped.html", "test/fixtures/html/readme.html", "test/fixtures/html/mixed_types.html", "test/fixtures/html/tmp", "test/fixtures/html/view.vm", "test/fixtures/html/1-2.html", "test/fixtures/html/fdev-template.html", "test/fixtures/html/cms", "test/fixtures/html/syntax_err.html", "test/fixtures/html/google.com.html", "test/fixtures/html/no_dtd.html", "test/fixtures/html/mixed_log_levels.html", "test/fixtures/html/cms.html", "test/fixtures/html/train", "test/fixtures/html/train/\u{8bf4}\u{660e}.txt", "test/fixtures/html/train/\u{7ba1}\u{7406}\u{53cd}\u{9988}.html", "test/fixtures/html/train/\u{4fee}\u{6539}\u{5b50}\u{5206}\u{7c7b}.html", "test/fixtures/html/train/\u{7f51}\u{4e0a}\u{57f9}\u{8bad}home\u{9875}.html", "test/fixtures/html/train/\u{9996}\u{9875}\u{5e7f}\u{544a}\u{8bbe}\u{7f6e}.html", "test/fixtures/html/train/\u{4fee}\u{6539}\u{4e00}\u{7ea7}\u{5206}\u{7c7b}.html", "test/fixtures/html/train/\u{8bbe}\u{7f6e}\u{9996}\u{9875}\u{63a8}\u{8350}.html", "test/fixtures/html/train/\u{6d4f}\u{89c8}\u{8bb0}\u{5f55}.html", "test/fixtures/html/train/detail\u{56fe}\u{6587}\u{7ed3}\u{5408}.html", "test/fixtures/html/train/\u{6dfb}\u{52a0}\u{4e00}\u{7ea7}\u{5206}\u{7c7b}.html", "test/fixtures/html/train/\u{767b}\u{5f55}.html", "test/fixtures/html/train/\u{6dfb}\u{52a0}\u{8bfe}\u{7a0b}.html", "test/fixtures/html/train/detail\u{7684}Flash.html", "test/fixtures/html/train/\u{7f51}\u{5546}\u{57f9}\u{8bad}list\u{9875}.html", "test/fixtures/html/train/index.html", "test/fixtures/html/train/test.html", "test/fixtures/html/train/\u{535a}\u{5ba2}\u{8bbe}\u{7f6e}.html", "test/fixtures/html/train/\u{7ba1}\u{7406}\u{5206}\u{7c7b}.html", "test/fixtures/html/train/\u{7ba1}\u{7406}\u{8d26}\u{6237}.html", "test/fixtures/html/train/\u{4fee}\u{6539}\u{8bfe}\u{7a0b}.html", "test/fixtures/html/train/\u{7ba1}\u{7406}\u{8bfe}\u{7a0b}.html", "test/fixtures/html/train/\u{6dfb}\u{52a0}\u{5b50}\u{5206}\u{7c7b}.html", "test/fixtures/html/train/detail\u{7684}Vedio.html", "test/fixtures/html/review.board.html", "test/fixtures/html/1-1.html", "test/fixtures/js", "test/fixtures/js/scope-test.js", "test/fixtures/js/jquery-1.7.js", "test/fixtures/css", "test/fixtures/css/mac-line-sep-err-min.css", "test/fixtures/css/mac-line-sep-good-min.css", "test/fixtures/css/import.css", "test/fixtures/css/mac-line-sep-err.css", "test/fixtures/css/multi-encoding-in-a-file.css", "test/fixtures/css/gb_using_star.css", "test/fixtures/css/utf8_good_declaring_charset.css", "test/fixtures/css/utf8_good.css", "test/fixtures/css/utf8_using_star.css", "test/fixtures/css/using_expr.css", "test/fixtures/css/using_star.css", "test/fixtures/css/simple.css", "test/fixtures/css/broken.css", "test/fixtures/css/empty-min.css", "test/fixtures/css/using_hack.css", "test/fixtures/css/empty.css", "test/fixtures/css/gb-good.css", "test/fixtures/css/mac-line-sep-good.css", "test/fixtures/css/font-family.css", "test/fixtures/css/using_id.css", "test/fixtures/css/cbu", "test/fixtures/css/cbu/merge.css", "test/fixtures/css/cbu/my_home_admin.css", "test/fixtures/css/cbu/v1.css", "test/fixtures/css/cbu/min.css", "test/fixtures/css/cbu/pic_list.css", "test/fixtures/css/cbu/quote-edit.css", "test/fixtures/css/cbu/diy-merge.css", "test/fixtures/css/cbu/index_v0.1.css", "test/fixtures/css/cbu/selloffer.shopwindow.css", "test/fixtures/css/cbu/36.css", "test/fixtures/css/cbu/default.css", "test/fixtures/css/cbu/china_top.css", "test/fixtures/css/cbu/fns-v1.css", "test/fixtures/css/cbu/default-merge.css", "test/fixtures/css/cbu/nav.css", "test/fixtures/css/css3.css", "test/helper.rb", "test/rule_dsl", "test/rule_dsl/dsl_basic_test.rb", "test/rule_dsl/importing_test.rb", "test/all_tests.rb", "test/cli", "test/cli/output_format_test.rb", "test/cli/cli_test.rb", "test/cli/type_test.rb", "test/cli/log_level_test.rb", "test/parser_visitable_test.rb", "test/css", "test/css/rule", "test/css/rule/file_name_test.rb", "test/css/rule/compression_test.rb", "test/css/rule/check_list_rule_test.rb", "test/css/rule/check_encoding_test.rb", "test/css/parser_test.rb", "test/css/mac_line_end_support_test.rb", "lib/html", "lib/html/rule", "lib/html/rule/check_tag_rule.rb", "lib/html/parser.rb", "lib/html/query.rb", "lib/html/struct.rb", "lib/js", "lib/js/stat", "lib/js/stat/if.rb", "lib/js/stat/iter.rb", "lib/js/stat/try.rb", "lib/js/stat/var.rb", "lib/js/stat/switch.rb", "lib/js/stat/stat.rb", "lib/js/rule", "lib/js/rule/checklist.rb", "lib/js/rule/helper.rb", "lib/js/rule/all.rb", "lib/js/rule/no_global.rb", "lib/js/rule/file_checker.rb", "lib/js/expr", "lib/js/expr/operate.rb", "lib/js/expr/expr.rb", "lib/js/expr/primary.rb", "lib/js/expr/left_hand.rb", "lib/js/parser.rb", "lib/js/struct.rb", "lib/parser_visitable.rb", "lib/parse_error.rb", "lib/rule_helper.rb", "lib/encoding_error.rb", "lib/position_info.rb", "lib/helper", "lib/helper/file_reader.rb", "lib/helper/color_string.rb", "lib/helper/code_type.rb", "lib/helper/strenc.rb", "lib/cmd_runner.rb", "lib/runner.rb", "lib/context.rb", "lib/base_parser.rb", "lib/file_validator.rb", "lib/rule.rb", "lib/log_entry.rb", "lib/node.rb", "lib/printer", "lib/printer/nocolor_printer.rb", "lib/printer/vim_printer.rb", "lib/printer/base_printer.rb", "lib/printer/console_printer.rb", "lib/css", "lib/css/rule", "lib/css/rule/checklist.rb", "lib/css/rule/check_compression_rule.rb", "lib/css/parser.rb", "lib/css/reader.rb", "lib/css/struct.rb", "rules.d/js.file.rule", "rules.d/html.tag.rule", "rules.d/html.dtd.rule", "rules.d/css.rule", "rules.d/js.mergefile.rule", "rules.d/html.prop.rule", "rules.d/js.rule", "rules.d/js.jquery.rule"]
-  s.homepage = "https://github.com/qhwa/fdlint"
-  s.rdoc_options = ["--main", "README.md"]
-  s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.25"
-  s.summary = "Code reviewer for web developing. Check your HTML/JS/CSS codes against bad codes."
+  s.require_paths << 'lib'
+  s.executables << 'fdlint'
+  s.has_rdoc = false
+  s.bindir   = 'bin'
 
-  if s.respond_to? :specification_version then
-    s.specification_version = 3
+  s.add_runtime_dependency('gli','~> 2.9.0')
+  s.add_runtime_dependency("colored", "~> 1.2")
+  s.add_runtime_dependency("string_utf8", "~> 0.1.1")
 
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<rake>, [">= 0"])
-      s.add_development_dependency(%q<test-unit>, [">= 0"])
-    else
-      s.add_dependency(%q<rake>, [">= 0"])
-      s.add_dependency(%q<test-unit>, [">= 0"])
-    end
-  else
-    s.add_dependency(%q<rake>, [">= 0"])
-    s.add_dependency(%q<test-unit>, [">= 0"])
-  end
+  s.add_development_dependency("rake", "~> 0.9.2.2")
+  s.add_development_dependency("test-unit")
+  s.add_development_dependency("bundler")
+
 end

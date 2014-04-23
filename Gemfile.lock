@@ -1,15 +1,25 @@
+PATH
+  remote: .
+  specs:
+    fdlint (0.2.0.pre.pre)
+      colored (~> 1.2)
+      gli (~> 2.9.0)
+      string_utf8 (~> 0.1.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
-    gem-this (0.3.7)
+    colored (1.2)
+    gli (2.9.0)
     rake (0.9.2.2)
+    string_utf8 (0.1.1)
     test-unit (2.4.8)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  gem-this
-  rake
+  bundler
+  fdlint!
+  rake (~> 0.9.2.2)
   test-unit
-  win32console
