@@ -46,7 +46,7 @@ module Fdlint
           alias_method old_method, method
 
           define_method(method) do |*args, &block|
-            before name, *args
+            before name
             node = self.send(old_method, *args, &block)
             node && visit(name, node)
             node

@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'colored'
 
 module Fdlint 
@@ -37,7 +38,7 @@ module Fdlint
 
           puts "     #{log_text entry}\n"
           if source
-            puts "       #{source.lines[row][left..right].gsub(/\t/, ' ')}"
+            puts "       #{source.lines.to_a[row][left..right].gsub(/\t/, ' ')}"
             puts "       #{indent}^"
           end
         else
