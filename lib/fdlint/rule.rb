@@ -1,5 +1,3 @@
-require 'find'
-require 'fdlint/helper/file_reader'
 require 'fdlint/rule/validation'
 require 'fdlint/rule/dsl'
 
@@ -19,7 +17,7 @@ module Fdlint
       #
       # Returns an Array holding all validations for this file
       def validations_for_file( opt={} )
-        all[opt[:code_type]].select do |validation|
+        (all[opt[:code_type]] || []).select do |validation|
           validation.scope == :file
         end
       end
@@ -29,10 +27,9 @@ module Fdlint
       [:css, :html, :js].each do |syntax|
         # Public: Rules for css content validation
         #
-        # Returns an Array holding all rules for css content
-        #         validation.
+        # Returns an Array holding all rules for content validation.
         define_method "validations_for_#{syntax}_content" do
-          all[syntax].select do |validation|
+          (all[syntax] || []).select do |validation|
             validation.scope != :file
           end
         end

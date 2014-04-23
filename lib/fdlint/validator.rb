@@ -1,4 +1,3 @@
-require 'fdlint/encoding_error'
 require 'fdlint/rule'
 require 'fdlint/helper/code_type'
 require 'fdlint/parser'
