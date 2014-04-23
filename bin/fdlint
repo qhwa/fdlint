@@ -1,10 +1,14 @@
 #!/usr/bin/env ruby
-
-$: << File.expand_path( '../../lib', __FILE__ )
-
 require 'gli'
+begin # XXX: Remove this begin/rescue before distributing your app
 require 'fdlint'
 require 'fdlint/cli'
+rescue LoadError
+  STDERR.puts "In development, you need to use `bundle exec bin/fdlint` to run your app"
+  STDERR.puts "At install-time, RubyGems will make sure lib, etc. are in the load path"
+  STDERR.puts "Feel free to remove this message from bin/fdlint now"
+  exit 64
+end
 
 include GLI::App
 
@@ -68,11 +72,6 @@ command [:review, :check] do |c|
 
     Fdlint::CLI.run options
   end
-end
-
-on_error do |err|
-  puts err.message
-  puts err.backtrace.join( "\n" )
 end
 
 exit run(ARGV)
