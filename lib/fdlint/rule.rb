@@ -10,6 +10,8 @@ module Fdlint
     class << self
 
       include ::Fdlint::Helper::Logger
+
+      SYNTAXES = [:css, :html, :js]
       
       # Public: Rules for file validation
       #
@@ -24,7 +26,7 @@ module Fdlint
 
       alias_method :for_file, :validations_for_file
 
-      [:css, :html, :js].each do |syntax|
+      SYNTAXES.each do |syntax|
         # Public: Rules for css content validation
         #
         # Returns an Array holding all rules for content validation.

@@ -44,6 +44,7 @@ module Fdlint; module Parser; module HTML
 
     def parse_element
       if @scanner.check(DTD) and !@dtd_checked
+        # only one DTD for one document
         @dtd_checked = true
         parse_dtd
       elsif @scanner.check(COMMENT)
@@ -51,7 +52,7 @@ module Fdlint; module Parser; module HTML
       elsif @scanner.check(TAG_START)
         parse_tag
       elsif !text_end?
-        parse_text
+        parse_text_tag
       else
         parse_error('Invalid HTML struct')
       end
@@ -67,8 +68,9 @@ module Fdlint; module Parser; module HTML
       CommentElement.new(@scanner[1])
     end
 
-    def parse_text
+    def parse_text_tag
       text = ''
+      pos  = scanner_pos
       until text_end? do
         text << '<' if @scanner.skip(/</)
         text << "#{@scanner.scan(TEXT)}"
@@ -76,7 +78,9 @@ module Fdlint; module Parser; module HTML
         # TODO: make this detection a rule
         parse_warn "'#{$~}' not escaped" if text =~ /<|>/
       end
-      TextElement.new text
+      TextElement.new( text ).tap do |text|
+        text.position = pos
+      end
     end
 
     def parse_tag
@@ -161,7 +165,7 @@ module Fdlint; module Parser; module HTML
 
       scopes.pop
 
-      el = Element.new(tag, prop, children, close_type, ending)
+      el = Tag.new(tag, prop, children, close_type, ending)
       el.scopes = scopes.dup
       el
     end

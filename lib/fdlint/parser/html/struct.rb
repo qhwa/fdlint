@@ -10,21 +10,53 @@ module Fdlint; module Parser
                          command source datalist span em strong 
                          font sub i summary iframe sup img tbody 
                          input td ins time kbd var)
+    module Matchable
+      def =~ patten
+        if name
+          case patten
+          when String
+            name =~ Regexp.new("^#{patten}$", Regexp::IGNORECASE)
+          when Regexp
+            name =~ patten
+          end
+        end
+      end
+
+      alias_method :name_equal?, :=~
+
+    end
+
 
     class Element < Node
 
+      include Matchable
+
       attr_reader :tag, :props, :children
-      attr_accessor :parent, :close_type, :ending, :scopes
+      attr_accessor :position, :parent, :close_type, :ending, :scopes
 
       def initialize(tag, props=[], children=[], close_type=:after, ending=nil)
-        @tag, @props, @children, @close_type, @ending = tag, to_props(props), Array.[](children).flatten || [], close_type, ending
-        @position = @tag.position.dup if tag.is_a?(Node) and tag.position
-        @children.each { |el| el.parent = self }
+
+        @tag, @close_type, @ending = tag, close_type, ending
+        @props  = to_props( props )
         @scopes = []
+
+        if tag.respond_to?( :position ) and tag.position
+          @position = @tag.position.dup
+        end
+
+        @children = (Array.[](children).flatten || []).tap do |children|
+          children.each do |child|
+            child.parent = self
+          end
+        end
       end
 
       def has_scope?
-        !(parent.nil? and @scopes.empty?)
+        !top_level?
+      end
+
+      def top_level?
+        parent.nil? and @scopes.empty?
       end
 
       def in_scope?(scp)
@@ -36,17 +68,11 @@ module Fdlint; module Parser
       end
 
       def text
-        children.inject("") do |s,child|
-          s + child.text
-        end
+        children.inject("") { |s,child| s + child.text }
       end
 
       def tag_name
         @tag.is_a?(Node) ? @tag.text : @tag.to_s
-      end
-
-      def tag_name_equal?(name)
-        tag_name.downcase == name.downcase
       end
 
       def inner_html
@@ -97,6 +123,10 @@ module Fdlint; module Parser
         end
       end
 
+      def [] name
+        prop_value(name)
+      end
+
       def to_s
         "[HTML: #{outer_html}]"
       end
@@ -110,7 +140,7 @@ module Fdlint; module Parser
       end
 
       def closed?
-        @close_type != :none
+        auto_close? && !self_closed? || @close_type != :none
       end
 
       def self_closed?
@@ -125,30 +155,41 @@ module Fdlint; module Parser
         false
       end
 
-      protected
-      def parse(text)
-        @outer_html = text
+      def stylesheet_link?
+        self =~ 'link' && self['rel'] =~ /stylesheet/i
       end
+
+      protected
+
+        def parse(text)
+          @outer_html = text
+        end
 
       private
 
-      def to_props(src)
-        case src
-          when Array
-            src
-          when Hash
-            src.map do |n, v|
-              Property.new(n, v)
+        def to_props(src)
+          case src
+            when Array
+              src
+            when Hash
+              src.map do |n, v|
+                Property.new(n, v)
+              end
+            else
+              []
             end
-          else
-            []
-          end
-      end
+        end
 
     end
 
+    class Tag < Element
+      include Matchable
 
-    class Document < Element
+      alias_method :name, :tag_name
+    end
+
+    class Document < Tag
+
       def initialize( children=[] )
         super(nil, {}, children || [])
         @position = Position.new(0,0,0)
@@ -168,9 +209,15 @@ module Fdlint; module Parser
         children.empty?
       end
 
+      def has_dtd?
+        !empty? && children.first.is_a?( DTDElement )
+      end
+
+      alias_method :have_dtd?, :has_dtd?
+
     end
 
-    class TextElement < Element
+    class TextElement < Tag
 
       def initialize(text="")
         super(nil)
@@ -262,6 +309,8 @@ module Fdlint; module Parser
 
     class Property < Node
 
+      include Matchable
+
       attr_reader :name, :sep
       attr_accessor :value
 
@@ -270,10 +319,6 @@ module Fdlint; module Parser
       end
 
       def position; name.position; end
-
-      def name_equal?(text)
-        @name.to_s.downcase == text.to_s.downcase
-      end
 
       def to_s
         if value.nil?

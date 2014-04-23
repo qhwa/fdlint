@@ -1,5 +1,5 @@
 require 'fdlint/version'
-require 'fdlint/support/file'
+require 'fdlint/support/core_ext'
 require 'fdlint/helper/logger'
 require 'fdlint/validator'
 require 'fdlint/printer'
