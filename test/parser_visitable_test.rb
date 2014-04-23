@@ -1,15 +1,15 @@
 require_relative 'helper'
 
-require 'node'
-require 'parser_visitable'
+require 'fdlint/parser/node'
+require 'fdlint/parser/parser_visitable'
 
 
-module XRayTest
+module FdlintTest
   
   class ParserVisitableTest < Test::Unit::TestCase  
     
-    Node = XRay::Node
-    ParserVisitable = XRay::ParserVisitable
+    Node            = Fdlint::Parser::Node
+    ParserVisitable = Fdlint::Parser::ParserVisitable
 
     class MockParser
 
@@ -46,17 +46,17 @@ module XRayTest
 
     class SimpleVisitor
       
-      def visit_node(node)
+      def visit_node(node, source, parser)
         puts "visit node: #{node}"
         ['visit node', :info]
       end
 
-      def visit_node_a(node)
+      def visit_node_a(node, source, parser)
         puts "visit node a: #{node}"
         ['visit node a', :warn]
       end
 
-      def visit_node_b(node)
+      def visit_node_b(node, source, parser)
         puts "visit node b: #{node}"
         [
           ['visit node b 1', :warn],
@@ -64,37 +64,21 @@ module XRayTest
         ]
       end
 
-      def visit_node_c(node)
+      def visit_node_c(node, source, parser)
         puts "visit node c: #{node}"
         ['visit node c', :warn]
       end
+
     end
-
-    class SimpleObserver
-      attr_reader :times
-
-      def update(result, parser)
-        puts "observer: #{result}"
-        @times ||= 0
-        @times += 1  
-      end
-    end
-
 
     def test_default
       parser = MockParser.new
 
-      visitor = SimpleVisitor.new
-      parser.add_visitor SimpleVisitor.new
-
-      observer = SimpleObserver.new
-      parser.add_observer observer
-
+      parser.add_visitors SimpleVisitor.new
       parser.parse_node
 
       results = parser.results
-      assert_equal 5, results.length
-      assert_equal 5, observer.times
+      assert_equal 4, results.length
     end
     
   end

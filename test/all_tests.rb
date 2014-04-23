@@ -34,51 +34,50 @@ require_relative 'cli/log_level_test'
 require_relative 'runner/log_level_test'
 
 
-module XRayTest
+module FdlintTest
 
   class ALL < Test::Unit::TestSuite
 
     def self.suite
-      tests = Test::Unit::TestSuite.new
+      Test::Unit::TestSuite.new.tap do |tests|
 
-      tests << PositionInfoTest.suite
-      tests << ParserVisitableTest.suite
-      
-      #CSS
-      tests << CSS::ParserTest.suite
-      tests << CSS::MacLineEndSupportTest.suite
-      tests << CSS::Rule::CheckListRuleTest.suite
-      tests << CSS::Rule::CheckEncodingTest.suite
-      tests << CSS::Rule::CheckFileNameTest.suite
-      tests << CSS::Rule::CompressionTest.suite
+        tests << PositionInfoTest.suite
+        tests << ParserVisitableTest.suite
+        
+        #CSS
+        tests << CSS::ParserTest.suite
+        tests << CSS::MacLineEndSupportTest.suite
+        tests << CSS::Rule::CheckListRuleTest.suite
+        tests << CSS::Rule::CheckEncodingTest.suite
+        tests << CSS::Rule::CheckFileNameTest.suite
+        tests << CSS::Rule::CompressionTest.suite
 
-      #HTML
-      tests << HTML::ParserTest.suite
-      tests << HTML::RuleTest.suite
-      tests << HTML::QueryTest.suite
-      tests << HTML::MixedTypeTest.suite
+        #HTML
+        tests << HTML::ParserTest.suite
+        tests << HTML::RuleTest.suite
+        tests << HTML::QueryTest.suite
+        tests << HTML::MixedTypeTest.suite
 
-      #JS
-      tests << JS::ParserTest.suite
-      tests << JS::RuleTest.suite
+        #JS
+        tests << JS::ParserTest.suite
+        tests << JS::RuleTest.suite
 
-      #RULE
-      tests << Rule::DSLBasicTest.suite
-      tests << Rule::ImportingTest.suite
+        #RULE
+        tests << Rule::DSLBasicTest.suite
+        tests << Rule::ImportingTest.suite
 
-      #CLI
-      tests << CLI::CLITest.suite
-      tests << CLI::TypeTest.suite
-      tests << CLI::OutputFormatTest.suite
-      tests << CLI::LogLevelTest.suite
+        #CLI
+        tests << CLI::CLITest.suite
+        tests << CLI::TypeTest.suite
+        tests << CLI::OutputFormatTest.suite
+        tests << CLI::LogLevelTest.suite
 
-      #RUNNER
-      tests << Runner::LogLevelTest.suite
-
-      tests
+        #RUNNER
+        tests << Runner::LogLevelTest.suite
+      end
     end
   end
 
 end
 
-Test::Unit::UI::Console::TestRunner.run( XRayTest::ALL )
+Test::Unit::UI::Console::TestRunner.run( FdlintTest::ALL )

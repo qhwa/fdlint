@@ -5,11 +5,11 @@ require_relative '../helper'
 require 'css/parser'
 
 
-module XRayTest
+module FdlintTest
   module CSS
     class ParserTest < Test::Unit::TestCase 
-      ParseError = XRay::ParseError
-      include XRay::CSS
+      ParseError = Fdlint::ParseError
+      include Fdlint::CSS
 
       def test_parse_stylesheet_empty
         css = "  \n "
@@ -261,7 +261,7 @@ END
       private
 
       def create_parser(css)
-        Parser.new css, XRayTest::Logger.new
+        Parser.new css, FdlintTest::Logger.new
       end
 
       def parse_css(css, name = 'stylesheet')

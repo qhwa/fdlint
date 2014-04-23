@@ -2,15 +2,14 @@
 
 require_relative 'helper'
 
-require 'position_info'
+require 'fdlint/parser/position_info'
 
-module XRayTest
+module FdlintTest
   
   class PositionInfoTest < Test::Unit::TestCase
 
-    PositionInfo = XRay::PositionInfo
-
-    Position = XRay::Position
+    PositionInfo = Fdlint::Parser::PositionInfo
+    Position     = Fdlint::Parser::Position
 
     @@test_paragraph = %(this is line one
    this is line two this is line two    

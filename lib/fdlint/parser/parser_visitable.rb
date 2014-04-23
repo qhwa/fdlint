@@ -74,8 +74,14 @@ module Fdlint
       #
       # Returns Parser's visitors
       def add_visitors(visitors)
-        visitors.each do |target, visitor|
-          add_visitor target, visitor
+        if visitors === Array
+          visitors.each do |target, visitor|
+            add_visitor target, visitor
+          end
+        else
+          visitors.public_methods(false).grep(/^visit_/).map do |method|
+            add_visitor method.to_s.sub( /^visit_/, '' ), visitors.method( method )
+          end
         end
         self.visitors
       end
@@ -104,6 +110,10 @@ module Fdlint
 
       def results
         @results ||= []
+      end
+
+      # You may override this function
+      def source
       end
 
       private 
