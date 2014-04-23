@@ -41,6 +41,9 @@ module FdlintTest
         puts 'parse node c'
         Node.new 'node c'
       end
+
+      def source
+      end
       
     end
 

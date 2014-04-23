@@ -112,10 +112,6 @@ module Fdlint
         @results ||= []
       end
 
-      # You may override this function
-      def source
-      end
-
       private 
 
         def visit(name, node)
