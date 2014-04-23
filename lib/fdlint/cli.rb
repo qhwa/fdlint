@@ -81,9 +81,11 @@ module Fdlint
         end
 
         def validate_file( path )
+          printer.pre_validate path
           ::Fdlint::Validator.new( path ).validate do |file, source, results|
             printer.print( file, source, results )
           end
+          printer.post_validate path
         end
 
       private

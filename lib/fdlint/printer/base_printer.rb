@@ -10,6 +10,12 @@ module Fdlint
 
       attr_accessor :file, :source, :results
 
+      def pre_validate( file )
+      end
+
+      def post_validate( file )
+      end
+
       def print( file, source, results )
         @file, @source, @results = file, source, results || []
       end

@@ -187,7 +187,7 @@ review( 'statement' ) { |stat, source, file, parser|
 
 review( 'expr_logical_or' ) { |expr, source|
   if expr.left && expr.right
-    left = expr.position.pos - 2
+    left = expr.position.pos - 1
     unless expr.type == "(" || expr.type == "."
       unless source[left, expr.type.size + 2] == (" " << expr.type << " ")
         error '操作符(如, +/-/*/% 等)两边留空'

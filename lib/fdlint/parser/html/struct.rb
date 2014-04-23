@@ -12,6 +12,9 @@ module Fdlint; module Parser
                          input td ins time kbd var)
     module Matchable
       def =~ patten
+        name = respond_to?(:name) ? self.name :
+               respond_to?(:tag_name) ? tag_name :
+               nil
         if name
           case patten
           when String

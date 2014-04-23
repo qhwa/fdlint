@@ -6,36 +6,23 @@ module Fdlint
 
     class ConsolePrinter < BasePrinter
 
+      def pre_validate( file )
+        Kernel.print "\n---> reviewing " << file.to_s << " "
+      end
+
       def print( file, source, results )
 
         super
-
-        if source
-          print_with_source
-        else
-          if @results && @results.empty?
-            puts "[OK] ".green << file.to_s
-          else
-            puts "[EE] ".red << file.to_s
-
-            @results.each do |r|
-              print_log_entry r
-            end
-          end
-        end
-      end
-
-      def print_with_source
+        
         if @results.empty?
-          puts "[OK] ".green << file.to_s
+          puts " [✔]\n".green
         else
-          puts "[EE] ".red << file.to_s
+          puts " [✗]\n".yellow
 
           @results.each do |r|
             print_log_entry r
           end
         end
-        
 
       end
 
@@ -49,11 +36,15 @@ module Fdlint
           indent = ' ' * ( col - left )
 
           puts "     #{log_text entry}\n"
-          puts "       #{source.lines[row][left..right].gsub(/\t/, ' ')}"
-          puts "       #{indent}^"
+          if source
+            puts "       #{source.lines[row][left..right].gsub(/\t/, ' ')}"
+            puts "       #{indent}^"
+          end
         else
-          puts "     #{log_text entry}\n"
+          puts "     #{log_text entry}"
         end
+
+        puts "\n"
       end
 
 

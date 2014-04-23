@@ -162,8 +162,8 @@ review( 'tag' ) { |tag|
   end
 }
 
-review( 'text_tag' ) do |text_tag|
-  if text_tag.text =~ /[<>]/
+review( 'text_tag' ) do |text_tag, source, file|
+  if text_tag.text =~ /[<>]/ && !(text_tag.in_scope?('script') || text_tag.in_scope?('style'))
     error "特殊HTML符号(>和<)必须转义"
   end
 end
