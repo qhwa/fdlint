@@ -19,7 +19,7 @@ module Fdlint
       #
       # Returns an Array holding all validations for this file
       def validations_for_file( opt={} )
-        (all[opt[:code_type]] || []).select do |validation|
+        (all[opt[:syntax]] || []).select do |validation|
           validation.scope == :file
         end
       end
@@ -63,9 +63,9 @@ module Fdlint
         debug { "done" }
       end
 
-      def add( code_type, scope, opt )
-        debug { "  -> adding rule: #{code_type.inspect} - #{scope.inspect} - #{opt[:desc]}" }
-        cache = @rules[code_type] ||= []
+      def add( syntax, scope, opt )
+        debug { "  -> adding rule: #{syntax.inspect} - #{scope.inspect} - #{opt[:desc]}" }
+        cache = @rules[syntax] ||= []
         cache << Validation.new( scope, opt[:block] ).tap do |v|
           v.desc = opt[:desc]
           v.uri  = opt[:uri]

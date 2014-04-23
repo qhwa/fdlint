@@ -1,4 +1,5 @@
 require 'fdlint/rule'
+require 'fdlint/helper/file_reader'
 require 'fdlint/helper/code_type'
 require 'fdlint/parser'
 require 'fdlint/parser/js/js_parser'
@@ -9,13 +10,13 @@ module Fdlint
 
   class Validator
 
-    attr_reader :file, :source, :results, :code_type
+    attr_reader :file, :source, :results, :syntax
     include Fdlint::Helper::Logger
 
     def initialize( path = nil, options = {} )
-      @file      = path
-      @source    = options[:text]
-      @code_type = options[:code_type] || Helper::CodeType.guess( source, file )
+      @file   = path
+      @source = options[:text]
+      @syntax = options[:syntax] || Helper::CodeType.guess( source, file )
     end
 
     def validate
@@ -78,7 +79,7 @@ module Fdlint
           :js   => ::Fdlint::Parser::JS::JsParser,
           :css  => ::Fdlint::Parser::CSS::CssParser,
           :html => ::Fdlint::Parser::HTML::HtmlParser
-        }.fetch( code_type ).new( source )
+        }.fetch( syntax ).new( source )
 
         file = File.new(self.file) if self.file
 
@@ -90,11 +91,11 @@ module Fdlint
       end
 
       def content_level_rules
-        Fdlint::Rule.send( :"for_#{code_type}_content" )
+        Fdlint::Rule.send( :"for_#{syntax}_content" )
       end
 
       def file_level_rules
-        Fdlint::Rule.for_file( :code_type => code_type )
+        Fdlint::Rule.for_file( :syntax => syntax )
       end
 
   end

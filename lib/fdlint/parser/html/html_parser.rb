@@ -8,6 +8,7 @@ module Fdlint; module Parser; module HTML
   class HtmlParser < ::Fdlint::Parser::BaseParser
 
     include ::Fdlint::Parser::ParserVisitable
+    include ::Fdlint::Helper::Logger
 
     def self.parse(src, &block)
       parser = self.new(src)
@@ -33,13 +34,8 @@ module Fdlint; module Parser; module HTML
     end
 
     def parse_doc
-      nodes = batch(:parse_element)
-      case nodes.size
-        when 0 then nil
-        when 1 then nodes[0]
-        else 
-          ::Fdlint::Parser::HTML::Document.new( nodes )
-      end
+      debug { "parse doc" }
+      ::Fdlint::Parser::HTML::Document.new( batch(:parse_element) )
     end
 
     def parse_element
@@ -59,6 +55,7 @@ module Fdlint; module Parser; module HTML
     end
 
     def parse_dtd
+      debug { "parse dtd" }
       node = scan(DTD)
       DTDElement.new(@scanner[2], @scanner[1], node.position)
     end
@@ -183,7 +180,7 @@ module Fdlint; module Parser; module HTML
       tag = scan(TAG_NAME)
       prop = parse_properties
       skip /\/>/
-      el = Element.new(tag, prop, [], :self)
+      el = Tag.new(tag, prop, [], :self)
       el.scopes = scopes.dup
       el
     end

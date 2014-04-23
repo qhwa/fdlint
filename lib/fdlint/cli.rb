@@ -46,8 +46,8 @@ module Fdlint
 
         def validate_content
           opt_for_validator = {
-            :code_type  => options[:code_type],
-            :text       => options[:text]
+            :syntax  => options[:syntax],
+            :text    => options[:text]
           }
           ::Fdlint::Validator.new( nil, opt_for_validator ).validate do |file, source, results|
             printer.print( file, source, results )
@@ -72,7 +72,11 @@ module Fdlint
 
         def validate_directory( dir )
           Find.find dir do |f|
-            validate_file f unless File.directory? f
+            unless File.directory? f
+              if need_check? f
+                validate_file f
+              end
+            end
           end
         end
 
@@ -95,6 +99,19 @@ module Fdlint
             :vim     => ::Fdlint::Printer::VimPrinter.new
           }.tap {|hash| hash.default = hash[:console] }
           mapping[format]
+        end
+
+        def need_check? path
+          reg = case options[:syntax]
+                when :js, :css
+                  /\.#{options[:syntax]}$/i
+                when :html
+                  /\.html?$/i
+                else
+                  /\.(js|css|html?)$/i
+                end
+
+          path =~ reg
         end
 
     end
