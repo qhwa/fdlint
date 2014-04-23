@@ -15,6 +15,10 @@ module Fdlint
       Runner.new( options ).run
     end
 
+    def self.list_rules( options )
+      Runner.new( options ).list_rules
+    end
+
     class Runner
 
       attr_reader :options, :files
@@ -22,9 +26,7 @@ module Fdlint
       def initialize( options={} )
         @options = options
         @files   = options[:files]
-      end
 
-      def run
         # Windows 下默认是ANSI编码
         # 我们需要使用 UTF-8 编码输出
         IO.popen "chcp 65001" if ENV['OS'] =~ /windows/i
@@ -32,6 +34,9 @@ module Fdlint
         $logger = Logger.new(STDOUT).tap do |l|
           l.level = options[:debug] ? Logger::DEBUG : Logger::FATAL
         end
+      end
+
+      def run
 
         trap("SIGINT") { puts "\nGoodbye!"; exit! }
 
@@ -39,6 +44,18 @@ module Fdlint
           validate_content
         elsif !@files.empty?
           validate_files
+        end
+      end
+
+      def list_rules
+        ::Fdlint::Rule.rules.each do |syntax, rules|
+          puts "----> #{syntax} (#{rules.size})\n\n"
+          rules.each do |rule|
+            print " " * 6
+            print rule
+            print "\n"
+          end
+          print "\n"
         end
       end
 
@@ -87,6 +104,7 @@ module Fdlint
           end
           printer.post_validate path
         end
+
 
       private
 

@@ -78,6 +78,12 @@ command [:review, :check] do |c|
   end
 end
 
+command 'rule' do |c|
+  c.action do |global, opt, args|
+    Fdlint::CLI.list_rules debug: global[:debug]
+  end
+end
+
 on_error do |err|
   if defined? Bundler
     puts err.message
