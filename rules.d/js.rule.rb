@@ -177,7 +177,7 @@ review( 'expr_literal_string' ) { |string|
 }
 
 review( 'statement' ) { |stat, source, file, parser|
-  line = parser.scanned_source.lines.last
+  line = parser.scanned_source.lines.to_a.last
   if line =~ /^\t+/
     error '不要使用 tab 来表示缩进'
   elsif line =~ /^[ ]{1,3}\S/
