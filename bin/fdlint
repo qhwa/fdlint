@@ -75,6 +75,7 @@ command [:review, :check] do |c|
   end
 end
 
+desc 'list imported rules'
 command 'rule' do |c|
   c.action do |global, opt, args|
     Fdlint::CLI.list_rules debug: global[:debug]
