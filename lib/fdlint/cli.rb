@@ -2,6 +2,7 @@
 require 'optparse'
 require 'find'
 require 'logger'
+require 'fdlint/helper/logger'
 require 'fdlint/printer'
 require 'fdlint/printer/vim_printer'
 require 'fdlint/printer/nocolor_printer'
@@ -21,11 +22,16 @@ module Fdlint
 
     class Runner
 
+      include Fdlint::Helper::Logger
+
       attr_reader :options, :files
 
       def initialize( options={} )
-        @options = options
-        @files   = options[:files]
+
+        @options  = options
+        @files    = options[:files]
+        # 默认不检查已经被压缩的文件
+        @checkmin = options[:checkmin]
 
         # Windows 下默认是ANSI编码
         # 我们需要使用 UTF-8 编码输出
@@ -118,6 +124,11 @@ module Fdlint
         end
 
         def need_check? path
+          if path =~ /([\.-_])min\.(css|js|html?)$/i && !@checkmin
+            info { "ignore minified file '#{path}'" }
+            return false
+          end
+
           reg = case options[:syntax]
                 when :js, :css
                   /\.#{options[:syntax]}$/i

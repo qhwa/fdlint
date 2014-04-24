@@ -36,16 +36,12 @@ command [:review, :check] do |c|
   c.default_value :console
   c.flag :format, must_match: %w[console nocolor vim]
 
-  c.desc "ignore minified files"
+  c.desc "check minified files too"
   c.default_value false
-  c.switch [:m, :"ignore-min"], negatable: false
+  c.switch [:m, :"checkmin"]
 
   c.desc "shortcut for '--format=list'"
   c.switch [:l, :list], negatable: false
-
-  c.desc "charset for reading files"
-  c.default_value 'utf-8'
-  c.flag [:c, :charset]
 
   c.desc "the log level for filter results"
   c.default_value 'warn'
@@ -71,7 +67,8 @@ command [:review, :check] do |c|
                     opt[:html] ? :html : nil,
       :debug     => global[:debug],
       :files     => args,
-      :text      => source
+      :text      => source,
+      :checkmin  => opt[:m]
     }
 
     Fdlint::CLI.run options
