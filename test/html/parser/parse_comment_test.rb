@@ -1,13 +1,13 @@
 require_relative '../../helper'
 
-module XRayTest
+module FdlintTest
   module HTML
     module Parser
 
       class ParseCommentTest < Test::Unit::TestCase
 
-        include XRay::HTML
-        
+        include Fdlint::Parser::HTML
+
         def test_simple_comment
           parse('<!--content-->') do |e|
             assert_equal CommentElement.new('content'), e
@@ -37,7 +37,7 @@ module XRayTest
         end
 
         def parse(src, &block)
-          XRay::HTML::Parser.parse(src, &block)
+          Fdlint::Parser::HTML::HtmlParser.parse(src, &block)
         end
 
       end

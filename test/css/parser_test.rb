@@ -2,14 +2,13 @@
 
 require_relative '../helper'
 
-require 'css/parser'
+require 'fdlint/parser/css/css_parser'
 
 
 module FdlintTest
   module CSS
     class ParserTest < Test::Unit::TestCase 
-      ParseError = Fdlint::ParseError
-      include Fdlint::CSS
+      ParseError = Fdlint::Parser::ParseError
 
       def test_parse_stylesheet_empty
         css = "  \n "
@@ -261,7 +260,7 @@ END
       private
 
       def create_parser(css)
-        Parser.new css, FdlintTest::Logger.new
+        Fdlint::Parser::CSS::CssParser.new css
       end
 
       def parse_css(css, name = 'stylesheet')

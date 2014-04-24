@@ -1,86 +1,54 @@
 # encoding: utf-8
 require_relative 'base_test'
 
-require 'js/rule/checklist'
-
-module XRayTest
+module FdlintTest
   module JS
     module Rule
       
       class JqCheckTest < BaseTest
-        def test_visit_expr_member
-          js = 'jQuery.noConflict'
-          ret = visit js
-          assert_equal 2, ret.length
-        end
-       
-        def test_check_direct_jquery_call
-          js = "jQuery.namespace"
-          ret = visit js
-          assert_equal [], ret
-          
-          jses = [
-            'jQuery.bind',
-            'jQuery[method]',
-            'jQuery(function($) {})',
-            'jQuery.extend'
-          ]
 
-          jses.each do |js|
-            r = visit js
-            assert r.include? ['禁止直接使用jQuery变量，使用全局闭包写法"(function($, NS){....})(jQuery,Namespace);"，jQuery.namespace例外', :error]
-          end
-        end 
-
-        def test_check_forbit_method_call
-          jses = %w(
+        
+        should_with_result [:error, '禁止使用jQuery.sub()和jQuery.noConflict方法'] do
+          %w{
+            jQ.noConflict
             $.sub
             $.noConflict
             jQuery.sub
             jQuery.noConflict
-          )
+          }
+        end
 
-          jses.each do |js|
-            r = visit js
-            assert r.include?( ['禁止使用jQuery.sub()和jQuery.noConflict方法', :error] )
+        check_rule [:error, '禁止直接使用jQuery变量，使用全局闭包写法，jQuery.namespace例外'] do
+          should_with_result do
+            %w{
+              jQuery.bind
+              jQuery[method]
+              jQuery(function($)\ {})
+              jQuery.extend
+            }
+          end
+
+          next
+
+          should_without_result do
+            "jQuery.namespace"
           end
         end
 
-        def test_check_data_call_param
-          jses = %w(
+        should_with_result [:error, '使用".data()"读写自定义属性时需要转化成驼峰形式'] do
+          %w{
             $.data("doc-config")
             jQuery.data('doc-config')
-          )
-          jses.each do |js|
-            r = visit js
-            assert r.include? ['使用".data()"读写自定义属性时需要转化成驼峰形式', :error]
-          end
+          }
         end
 
-        def test_check_ctor_selector
-          jses = [
+        should_with_result [:warn, '使用选择器时，能确定tagName的，必须加上tagName'] do
+          [
             "$('.myclass', div)",
             "$('.myclass')",
             "$('[name=123]')",
             "$(':first')"
           ]
-          
-          jses.each do |js|
-            r = visit js
-            assert r.include? ['使用选择器时，能确定tagName的，必须加上tagName', :warn]
-          end
-
-          js = '$()'
-          ret = visit js
-          assert_equal [], ret
-        end
-
-        private
-
-        def visit(js)
-          expr = parse js, 'expr_member'
-          rule = XRay::JS::Rule::ChecklistRule.new
-          rule.send :visit_expr_member, expr
         end
 
       end

@@ -1,4 +1,7 @@
+require 'fdlint/parser/html/query'
+
 module Fdlint; module Parser
+
   module HTML
 
     Node = ::Fdlint::Parser::Node
@@ -17,7 +20,7 @@ module Fdlint; module Parser
                nil
         if name
           case patten
-          when String
+          when String, Symbol
             name =~ Regexp.new("^#{patten}$", Regexp::IGNORECASE)
           when Regexp
             name =~ patten
@@ -186,9 +189,12 @@ module Fdlint; module Parser
     end
 
     class Tag < Element
+
       include Matchable
+      include ::Fdlint::Parser::HTML::Query
 
       alias_method :name, :tag_name
+      alias_method :tag_name_equal?, :=~
     end
 
     class Document < Tag
@@ -218,6 +224,10 @@ module Fdlint; module Parser
 
       alias_method :have_dtd?, :has_dtd?
 
+      def outer_html
+        children.map(&:outer_html).to_a.join
+      end
+
     end
 
     class TextElement < Tag
@@ -233,6 +243,10 @@ module Fdlint; module Parser
       alias_method :inner_text, :text
       alias_method :inner_html, :text
       alias_method :outer_html, :text
+
+      def match?( query )
+        false
+      end
 
       def ==(other)
         text == other.text
@@ -250,7 +264,7 @@ module Fdlint; module Parser
     end
 
 
-    class CommentElement < Element
+    class CommentElement < Tag
       def initialize(text)
         super(nil)
         @text = text.to_s
@@ -281,7 +295,7 @@ module Fdlint; module Parser
 
     end
 
-    class DTDElement < Element
+    class DTDElement < Tag
 
       attr_accessor :type
 

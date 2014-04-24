@@ -1,15 +1,15 @@
 require_relative '../../helper'
 
-module XRayTest
+module FdlintTest
   module HTML
     module Parser
 
       class ParseWithMultiChildrenTest < Test::Unit::TestCase
-        
-        include XRay::HTML
+
+        include Fdlint::Parser::HTML
         
         def setup
-          @parser = XRay::HTML::Parser.new('<em>important</em> information!! Attention please!')
+          @parser = HtmlParser.new('<em>important</em> information!! Attention please!')
           @element = @parser.parse
         end
 

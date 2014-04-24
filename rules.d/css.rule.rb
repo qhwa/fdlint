@@ -7,7 +7,7 @@ review( 'selector' ) {
 
   desc "页面级别样式请用class选择符代替id选择符，以免在重用时影响其他页面"
   rule { |selector, source, file|
-    if file && file.page_level?  && selector =~ /^#/
+    if file && file.page_level?  && selector =~ /#/
       error '页面级别样式不使用id'
     end
   }

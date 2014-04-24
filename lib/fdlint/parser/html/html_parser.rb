@@ -73,9 +73,10 @@ module Fdlint; module Parser; module HTML
         text << "#{@scanner.scan(TEXT)}"
 
         # TODO: make this detection a rule
-        parse_warn "'#{$~}' not escaped" if text =~ /<|>/
+        parse_warn "'#{$~}' not escaped" if text =~ /<|>/ && !@parsing_script
       end
       TextElement.new( text ).tap do |text|
+        text.scopes   = scopes.dup
         text.position = pos
       end
     end
@@ -162,9 +163,9 @@ module Fdlint; module Parser; module HTML
 
       scopes.pop
 
-      el = Tag.new(tag, prop, children, close_type, ending)
-      el.scopes = scopes.dup
-      el
+      Tag.new(tag, prop, children, close_type, ending).tap do |el|
+        el.scopes = scopes.dup
+      end
     end
 
     def scopes

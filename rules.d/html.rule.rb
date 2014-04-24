@@ -24,8 +24,12 @@ review( 'property' ) { |prop|
     error "不能定义内嵌样式style"
   end
 
-  if prop =~ /[A-Z_]/
-    error "属性名必须小写，连字符用中横线"
+  if prop =~ /[A-Z]/
+    error "属性名必须小写"
+  end
+
+  if prop =~ /_/
+    error "属性名连字符用中横线"
   end
 
   if prop =~ 'id' and prop.value =~ /[A-Z]/
@@ -33,7 +37,10 @@ review( 'property' ) { |prop|
   end
 
   if prop =~ 'class' and prop.value =~ /[A-Z]/
-    error "class名称全部小写，单词分隔使用中横线"
+    error "class名称全部小写"
+  end
+  if prop =~ 'class' and prop.value =~ /[_]/
+    error "class名称单词分隔使用中横线"
   end
 
   if prop.value and prop.sep != '"'
@@ -67,16 +74,22 @@ review( 'tag' ) { |tag|
 
 review( 'tag' ) {
 
+  has_target = false
+
+  before( 'doc' ) {
+    has_target = false
+  }
+
   # <base target='_self'>
   after( 'tag' ) { |tag|
-    if tag =~ 'base' and tag.prop_value('target')
-      @has_target = true
+    if tag =~ 'base' and tag['target'] == '_self'
+      has_target = true
     end
   }
 
   rule { |tag|
-    unless @has_target
-      if tag =~ 'a' and tag.prop_value('href') =~ /^#/ and tag.prop_value(:target) != '_self'
+    unless has_target
+      if tag =~ 'a' and tag.prop_value('href') =~ /^#/ and tag['target'] != '_self'
         warn '功能a必须加target="_self"，除非preventDefault过'
       end
     end
@@ -84,34 +97,34 @@ review( 'tag' ) {
 
 }
 
-review( 'tag' ) {
+group( 'uniq links' ) {
 
-  after( 'tag' ) {|tag|
+  scripts_used = nil
+  styles_used  = nil
+
+  before( 'doc' ) {
+    scripts_used = []
+    styles_used  = []
+  }
+
+  review( 'tag' ) { |tag|
     if tag =~ 'script'
       src = tag['src'].to_s
-      if !src.empty?
-        @scripts_used ||= []
-        @scripts_used << src
+      if src.present?
+        if scripts_used.include?( src )
+          error "避免重复引用同一文件"
+        else
+          scripts_used << src
+        end
       end
     elsif tag.stylesheet_link?
       src = tag['href'].to_s
-      if !src.empty?
-        @styles_used ||= []
-        @styles_used << src
-      end
-    end
-  }
-
-  rule { |tag|
-    if tag =~ 'script'
-      src = tag['src'].to_s
-      if !src.empty? && (@script_used || []).include?( src )
-        error "避免重复引用同一或相同功能文件"
-      end
-    elsif tag.stylesheet_link?
-      src = tag['src'].to_s
-      if !src.empty? && (@styles_used || []).include?( src )
-        error "避免重复引用同一或相同功能文件"
+      if src.present?
+        if styles_used.include?( src )
+          error "避免重复引用同一文件"
+        else
+          styles_used << src
+        end
       end
     end
   }
@@ -152,8 +165,8 @@ review( 'tag' ) { |tag|
   end
 
   if tag.stylesheet_link?
-    if tag.has_scope? and !tag.in_scope?('head')
-      error "外链CSS置于head里(例外：应用里的footer样式)"
+    if !tag.in_scope?('head')
+      warn "外链CSS置于head里(例外：应用里的footer样式)"
     end
   end
 

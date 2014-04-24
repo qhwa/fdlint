@@ -1,26 +1,25 @@
 # encoding: utf-8
 
 require_relative '../../helper'
-require 'html/rule/check_tag_rule'
 
-module XRayTest
+module FdlintTest
   module HTML
     module Rule
       
       class CheckImgWithAltPropTest < Test::Unit::TestCase
 
-        def setup
-          @rule = XRay::HTML::Rule::CheckTagRule.new
-        end
+        include FdlintTest::HTML
 
-        def test_check_img_with_alt
-          tag = XRay::HTML::Element.new('img', {:src=>'http://pnq.cc/icon.png', :alt=>'图片'}, [], :self)
-          assert_equal [], @rule.check_html_tag(tag)
-        end
+        check_rule [:error, 'img标签必须加上alt属性'] do
 
-        def test_check_img_without_alt
-          tag = XRay::HTML::Element.new('img', {:src=>'http://pnq.cc/icon.png'}, [], :self)
-          assert_equal [["img标签必须加上alt属性", :error]], @rule.check_html_tag(tag)
+          should_with_result do
+            %Q{<img src="http://pnq.cc/icon.png" />}
+          end
+
+          should_without_result do
+            %Q{<img src="http://pnq.cc/icon.png" alt="test" />}
+          end
+
         end
 
       end

@@ -5,7 +5,7 @@ require 'test/unit/ui/console/testrunner'
 
 require File.expand_path('../helper', File.dirname(__FILE__))
 
-module XRayTest
+module FdlintTest
   
   module JS 
 
@@ -21,8 +21,6 @@ module XRayTest
         nest_try_catch_test
         jq_check_test
         no_global_test
-        all_test
-        file_checker_test
         alert_check_test
         private_method_check_test
       )
@@ -43,5 +41,5 @@ module XRayTest
   end
 end
 
-Test::Unit::UI::Console::TestRunner.run(XRayTest::JS::RuleTest) if __FILE__ == $0
+Test::Unit::UI::Console::TestRunner.run(FdlintTest::JS::RuleTest) if __FILE__ == $0
 

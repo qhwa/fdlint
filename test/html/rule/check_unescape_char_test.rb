@@ -1,31 +1,31 @@
 # encoding: utf-8
 
 require_relative '../../helper'
-require 'html/rule/check_tag_rule'
 
-module XRayTest
+module FdlintTest
   module HTML
     module Rule
       
       class CheckUnescapedCharTest < Test::Unit::TestCase
 
-        def setup
-          @rule = XRay::HTML::Rule::CheckTagRule.new
-        end
+        include FdlintTest::HTML
 
-        def test_check_normal_text_tag
-          tag = XRay::HTML::TextElement.new('hello')
-          assert_equal [], @rule.check_html_text(tag)
-        end
-      
-        def test_check_text_el_with_rt
-          tag = XRay::HTML::TextElement.new('>>>')
-          assert_equal [["特殊HTML符号(>和<)必须转义", :error]], @rule.check_html_text(tag)
-        end
+        check_rule [:error, '特殊HTML符号(>和<)必须转义'] do
 
-        def test_check_text_el_with_lt
-          tag = XRay::HTML::TextElement.new('<<<<')
-          assert_equal [["特殊HTML符号(>和<)必须转义", :error]], @rule.check_html_text(tag)
+          should_with_result do
+            [
+              %Q{<test>>>></test>},
+              %Q{<a><<<</a>},
+              %Q{<a><<<>>></a>}
+            ]
+          end
+
+          should_without_result do
+            [
+              %Q{<p/>},
+              %Q{<script> 1>5 </script>}
+            ]
+          end
         end
 
       end

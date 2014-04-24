@@ -1,32 +1,32 @@
 # encoding: utf-8
 
 require_relative '../../helper'
-require 'html/rule/check_tag_rule'
 
-module XRayTest
+module FdlintTest
   module HTML
     module Rule
       
       class CheckNoCSSImportTest < Test::Unit::TestCase
 
-        include XRay::HTML
+        include FdlintTest::HTML
 
-        def setup
-          @rule = XRay::HTML::Rule::CheckTagRule.new
-        end
+        check_rule [:error, '不通过@import在页面上引入CSS'] do
 
-        def test_check_normal
-          tag = XRay::HTML::Element.new('style', nil, [
-            TextElement.new('body { background-color:#fff; }')
-          ])
-          assert_equal [], @rule.check_html_tag(tag)
-        end
+          should_with_result do
+            <<-SRC
+              <style>
+                @import "style.css"
+              </style>
+            SRC
+          end
 
-        def test_check_style_with_import
-          tag = XRay::HTML::Element.new('style', nil, [
-            TextElement.new('@import style.css')
-          ])
-          assert_equal [["不通过@import在页面上引入CSS", :error]], @rule.check_html_tag(tag)
+          should_without_result do
+            <<-SRC
+              <style>
+                body { background-color: #fff; }
+              </style>
+            SRC
+          end
         end
 
       end

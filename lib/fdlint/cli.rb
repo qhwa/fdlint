@@ -62,10 +62,6 @@ module Fdlint
       protected
 
         def validate_content
-          opt_for_validator = {
-            :syntax  => options[:syntax],
-            :text    => options[:text]
-          }
           ::Fdlint::Validator.new( nil, opt_for_validator ).validate do |file, source, results|
             printer.print( file, source, results )
           end
@@ -99,7 +95,7 @@ module Fdlint
 
         def validate_file( path )
           printer.pre_validate path
-          ::Fdlint::Validator.new( path ).validate do |file, source, results|
+          ::Fdlint::Validator.new( path, opt_for_validator ).validate do |file, source, results|
             printer.print( file, source, results )
           end
           printer.post_validate path
@@ -132,6 +128,14 @@ module Fdlint
                 end
 
           path =~ reg
+        end
+
+        def opt_for_validator
+          {
+            :syntax     => options[:syntax],
+            :text       => options[:text],
+            :log_level  => options[:log_level]
+          }
         end
 
     end

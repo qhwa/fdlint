@@ -1,16 +1,16 @@
 require_relative '../../helper'
 
-module XRayTest
+module FdlintTest
   module HTML
     module Parser
 
       class ParseDTDTest < Test::Unit::TestCase
-        
-        include XRay::HTML
+
+        include Fdlint::Parser::HTML
         
         def test_parse_html5_dtd
           parse('<!DOCTYPE html>') do |e|
-            assert_equal DTDElement.new('html'), e
+            assert_equal Document.new(DTDElement.new('html')), e
           end
         end
 
@@ -20,9 +20,9 @@ module XRayTest
      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">)
 
           parse(src) do |e|
-            assert_equal DTDElement.new(%q(html 
+            assert_equal Document.new(DTDElement.new(%q(html 
      PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"
-     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd")), e
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd"))), e
           end
         end
 
@@ -36,7 +36,7 @@ module XRayTest
         end
 
         def parse(src, &block)
-          XRay::HTML::Parser.parse(src, &block)
+          HtmlParser.parse(src, &block)
         end
 
       end

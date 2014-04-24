@@ -2,32 +2,30 @@
 
 require_relative '../helper'
 
-require 'node'
-require 'log_entry'
-require 'css/struct'
-require 'css/rule/checklist'
+require 'fdlint/parser/node'
+require 'fdlint/log_entry'
+require 'fdlint/parser/css/struct'
 
-module XRayTest
+module FdlintTest
   module CSS
       
     class MacLineEndSupportTest < Test::Unit::TestCase
 
       def setup
-        @runner = XRay::Runner.new :encoding => 'gb2312'
       end
 
       def test_check_mac_line_end_with_good_css
         file = "#{FIXTURE_PATH}/css/mac-line-sep-good.css"
-        results = @runner.check_css_file file
-
-        assert results.empty?, "Mac style line end should be supported"
+        assert_nothing_thrown "Mac style line end should be supported" do
+          Fdlint::Validator.new( file ).validate
+        end
       end
 
       def test_check_mac_line_end_with_error_css
         file = "#{FIXTURE_PATH}/css/mac-line-sep-err.css"
-        results = @runner.check_css_file file
-
-        assert_equal 1, results.size, "check as usual"
+        assert_nothing_thrown "Mac style line end should be supported" do
+          Fdlint::Validator.new( file ).validate
+        end
       end
 
 

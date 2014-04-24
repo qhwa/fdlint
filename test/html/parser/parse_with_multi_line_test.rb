@@ -1,19 +1,19 @@
 require_relative '../../helper'
 
-module XRayTest
+module FdlintTest
   module HTML
     module Parser
 
       class ParseWithMultiLineTest < Test::Unit::TestCase
-        
-        include XRay::HTML
+
+        include Fdlint::Parser::HTML
         
         def setup
           src = %q(<div 
           class="info"
           >information</div>)
-          @parser = XRay::HTML::Parser.new(src)
-          @element = @parser.parse
+          @parser = HtmlParser.new(src)
+          @element = @parser.parse.children.first
         end
 
         def test_is_a_div_element

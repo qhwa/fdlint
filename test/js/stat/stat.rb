@@ -4,7 +4,7 @@ require_relative 'switch'
 require_relative 'iter'
 require_relative 'try'
 
-module XRayTest
+module FdlintTest
   module JS
     module Stat
       

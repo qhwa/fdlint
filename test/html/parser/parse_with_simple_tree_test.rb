@@ -1,19 +1,19 @@
 require_relative '../../helper'
 
-module XRayTest
+module FdlintTest
   module HTML
     module Parser
 
       class ParseWithSimpleTreeTest < Test::Unit::TestCase
 
-        include XRay::HTML
-        
+        include Fdlint::Parser::HTML
+
         def test_simple_tree
           parse('<div><em>important</em> information!! Attention please!</div>') do |element|
             assert_equal Element.new('div', nil, [
               Element.new('em', nil, [TextElement.new('important')]),
               TextElement.new(' information!! Attention please!')
-            ]), element, 'must contain two children'
+            ]), element.children.first, 'must contain two children'
           end
         end
 
@@ -24,13 +24,13 @@ module XRayTest
                 Element.new('em', nil, [TextElement.new('important')]),
                 TextElement.new(' information!! Attention please!')
               ])
-            ]), element, 'must contain two children'
+            ]), element.children.first, 'must contain two children'
           end
         end
 
         protected
         def parse(src, &block)
-          XRay::HTML::Parser.parse(src, &block)
+          HtmlParser.parse(src, &block)
         end
 
       end

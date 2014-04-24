@@ -1,18 +1,20 @@
 require_relative '../../helper'
 
-module XRayTest
+module FdlintTest
   module HTML
     module Parser
 
       class ParseScriptTagTest < Test::Unit::TestCase
 
-        include XRay::HTML
-        
+        include Fdlint::Parser::HTML
+
         def test_simple_script
           parse('<script>alert("hello");</script>') do |element|
-            assert_equal Element.new('script', nil, [
-              TextElement.new('alert("hello");')
-            ]), element
+            assert_equal Document.new(
+              Element.new('script', nil, [
+                TextElement.new('alert("hello");')
+              ])
+            ), element
           end
         end
 
@@ -24,7 +26,9 @@ module XRayTest
           src = %Q(<script type="text/javascript">#{script}</script>) 
 
           parse(src) do |e|
-            assert_equal Element.new('script', {:type=>"text/javascript"}, [ TextElement.new(script) ]), e
+            assert_equal Document.new(
+              Element.new('script', {:type=>"text/javascript"}, [ TextElement.new(script) ])
+            ), e
           end
         end
 
@@ -36,17 +40,20 @@ module XRayTest
           src = %Q(<head><script type="text/javascript">#{script}</script>         </head>)
 
           parse(src) do |e|
-            assert_equal Element.new('head', nil, [
-              Element.new('script', {:type=>"text/javascript"}, [ TextElement.new(script) ]),
-              TextElement.new('         ')
-            ]), e
+            assert_equal Document.new(
+              Element.new('head', nil, [
+                Element.new('script', {:type=>"text/javascript"}, [ TextElement.new(script) ]),
+                TextElement.new('         ')
+              ])
+            ), e
           end
         end
 
         protected
-        def parse(src, &block)
-          XRay::HTML::Parser.parse(src, &block)
-        end
+
+          def parse(src, &block)
+            Fdlint::Parser::HTML::HtmlParser.parse(src, &block)
+          end
 
       end
 

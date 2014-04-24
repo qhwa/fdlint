@@ -2,7 +2,7 @@ rules_for 'css', 'js'
 
 review( 'file' ) {
   rule { |file|
-    if file.name =~ /(?:[^a-z0-9%_-]|^)
+    AD_REG ||= /(?:[^a-z0-9%_-]|^)
       #以ad开头，与后面文字组合，构成常见的广告单词
       ad
       (?:
@@ -12,6 +12,8 @@ review( 'file' ) {
         |fshow|pic|vert|view|info|click|sponsor|banner
         |click|ver|name|x|log|
       )/x
+
+    if file.path =~ AD_REG
       error '路径和文件名中不应该出现ad'
     end
   }

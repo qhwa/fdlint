@@ -1,33 +1,39 @@
 # encoding: utf-8
 
 require_relative '../../helper'
-require 'html/rule/check_tag_rule'
 
-module XRayTest
+module FdlintTest
   module HTML
     module Rule
       
       class CheckHyperlinkWithTargetTest < Test::Unit::TestCase
 
-        def setup
-          @rule = XRay::HTML::Rule::CheckTagRule.new
-        end
+        include FdlintTest::HTML
 
-        def test_check_functional_a_with_target
-          tag = XRay::HTML::Element.new('a', {:href=>'#nogo', :target=>'_self'})
-          assert_equal [], @rule.check_html_tag(tag)
-        end
+        check_rule [:warn, '功能a必须加target="_self"，除非preventDefault过'] do
 
-        def test_check_functional_a_without_target
-          tag = XRay::HTML::Element.new('a', {:href=>'#nogo'})
-          assert_equal [['功能a必须加target="_self"，除非preventDefault过', :warn]], @rule.check_html_tag(tag)
-        end
+          should_with_result do
+            [
+              %Q{<a href="#nogo"></a>},
 
-        def test_when_html_has_base_tag
-          @rule.check_html_tag XRay::HTML::Element.new('base', {:target=>'_self'})
+              %Q{
+                <base target="_blank">
+                <a href="#nogo"></a>
+              }
+            ]
+          end
 
-          tag = XRay::HTML::Element.new('a', {:href=>'#nogo'})
-          assert_equal [], @rule.check_html_tag(tag)
+          should_without_result do
+            [
+              %Q{<a href="#nogo" target="_self"></a>},
+
+              %Q{
+                <base target="_self">
+                <a href="#nogo"></a>
+              }
+            ]
+          end
+
         end
 
       end

@@ -1,16 +1,16 @@
 require_relative '../../helper'
 
-module XRayTest
+module FdlintTest
   module HTML
     module Parser
 
       class ParseWithTextTest < Test::Unit::TestCase
 
-        include XRay::HTML
-        
+        include Fdlint::Parser::HTML
+
         def setup
-          @parser = XRay::HTML::Parser.new('information')
-          @element = @parser.parse
+          @parser = HtmlParser.new('information')
+          @element = @parser.parse.children.first
         end
 
         def test_type_is_element
@@ -31,11 +31,11 @@ module XRayTest
         end
 
         def test_with_lt_mark
-          assert_equal TextElement.new('1 < 3 > 2'), XRay::HTML::Parser.parse('1 < 3 > 2')
+          assert_equal TextElement.new('1 < 3 > 2'), HtmlParser.parse('1 < 3 > 2')
         end
 
         def test_with_and_mark
-          assert_equal TextElement.new('1 &lt; 3 &gt; 2'), XRay::HTML::Parser.parse('1 &lt; 3 &gt; 2')
+          assert_equal TextElement.new('1 &lt; 3 &gt; 2'), HtmlParser.parse('1 &lt; 3 &gt; 2')
         end
 
       end

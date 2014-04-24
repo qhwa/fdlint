@@ -1,47 +1,45 @@
 # encoding: utf-8
 
 require_relative '../../helper'
-require 'html/rule/check_tag_rule'
 
-module XRayTest
+module FdlintTest
   module HTML
     module Rule
       
       class CheckBlockLevelElementTest < Test::Unit::TestCase
 
-        include XRay::HTML
+        include FdlintTest::HTML
 
         def setup
-          @rule = XRay::HTML::Rule::CheckTagRule.new
+          @block_level_err = [:error, "行内标签不得包含块级标签，a标签例外"]
         end
 
         def test_check_normal
-          tag = Element.new('div', nil, [
-            Element.new('span', nil, [
-              TextElement.new('good day, commander!')
-            ])
-          ])
-          assert_equal [], @rule.check_html_tag(tag)
+          src = %Q{<div><span>good day, commander!</span></div>}
+          parse src do |results|
+            assert_not_has_result results, @block_level_err
+          end
         end
 
         def test_check_block_in_inline
-          tag = Element.new('span', nil, [
-            Element.new('div', nil, [
-              TextElement.new('good day, commander!')
-            ])
-          ])
-          assert_equal [["行内标签不得包含块级标签，a标签例外", :error]], @rule.check_html_tag(tag)
+          src = %Q{<span><div>good day, commander!</div></span>}
+          parse src do |results|
+            assert_has_result results, @block_level_err
+          end
         end
 
         def test_check_inline_inline_block
-          tag = Element.new('span', nil, [
-            Element.new('span', nil, [
-              Element.new('div', nil, [
-                TextElement.new('good day, commander!')
-              ])
-            ])
-          ])
-          assert_equal [], @rule.check_html_tag(tag)
+          src = %Q{<span><span>good day, commander!</span></span>}
+          parse src do |results|
+            assert_not_has_result results, @block_level_err
+          end
+        end
+
+        def test_check_block_in_a
+          src = %Q{<a><div>good day, commander!</div></a>}
+          parse src do |results|
+            assert_not_has_result results, @block_level_err
+          end
         end
 
       end

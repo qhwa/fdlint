@@ -1,49 +1,31 @@
 # encoding: utf-8
 
 require_relative '../../helper'
-require 'html/rule/check_tag_rule'
 
-module XRayTest
+module FdlintTest
   module HTML
     module Rule
       
       class CheckUniqueImportTest < Test::Unit::TestCase
 
-        def setup
-          @rule = XRay::HTML::Rule::CheckTagRule.new
-        end
+        include FdlintTest::HTML
 
-        def test_check_normal_script
-          tag = XRay::HTML::Element.new('script', {:src=>'http://style.china.alibaba.com/lib/fdev-v4/core/fdev-min.js'})
-          assert_equal [], @rule.visit_tag(tag)
-        end
+        check_rule [:error, '避免重复引用同一文件'] do
 
-        def test_check_repeated_script
-          tag = XRay::HTML::Element.new('script', {:src=>'http://style.china.alibaba.com/lib/fdev-v4/core/fdev-min.js'})
-          assert_equal [], @rule.visit_tag(tag)
-          (1..10).each do 
-            assert_equal [["避免重复引用同一或相同功能文件", :error]], @rule.visit_tag(tag)
+          should_with_result do
+            [
+              %Q{<script src="fdev-min.js"></script>} * 2,
+              %Q{<script src="fdev-min.js"></script>} * 5,
+              %Q{<link rel="stylesheet" href="test.css"/>} * 2,
+              %Q{<link rel="stylesheet" href="test.css"/>} * 5
+            ]
           end
-        end
 
-        def test_check_with_inline_script
-          tag = XRay::HTML::Element.new('script')
-          assert_equal [], @rule.visit_tag(tag)
-          (1..10).each do 
-            assert_equal [], @rule.visit_tag(tag)
-          end
-        end
-
-        def test_check_normal_style
-          tag = XRay::HTML::Element.new('link', {:rel => 'stylesheet', :href=>'http://style.china.alibaba.com/css/lib/fdev-v4/core/fdev-min.css'}, [], :self)
-          assert_equal [], @rule.visit_tag(tag)
-        end
-
-        def test_check_repeated_style
-          tag = XRay::HTML::Element.new('link', {:rel => 'stylesheet', :href=>'http://style.china.alibaba.com/css/lib/fdev-v4/core/fdev-min.css'}, [], :self)
-          assert_equal [], @rule.visit_tag(tag)
-          (1..10).each do 
-            assert_equal [["避免重复引用同一或相同功能文件", :error]], @rule.visit_tag(tag)
+          should_without_result do
+            [
+              %Q{<script src="fdev-min.js"></script>},
+              %Q{<link rel="stylesheet" href="test.css"/>}
+            ]
           end
         end
 

@@ -1,28 +1,24 @@
 # encoding: utf-8
 
 require_relative '../../helper'
-require 'html/rule/check_tag_rule'
 
-module XRayTest
+module FdlintTest
   module HTML
     module Rule
       
       class CheckPropHaveValueTest < Test::Unit::TestCase
 
-        include XRay::HTML
+        include FdlintTest::HTML
 
-        def setup
-          @rule = XRay::HTML::Rule::CheckTagRule.new
-        end
+        check_rule [:error, '不能仅有属性名'] do
 
-        def test_check_double_quote
-          prop = XRay::HTML::Property.new('checked', 'true')
-          assert_equal [], @rule.check_html_property(prop)
-        end
+          should_with_result do
+            %Q{<input type="radio" checked />}
+          end
 
-        def test_check_single_quote
-          prop = XRay::HTML::Property.new('checked', nil)
-          assert_equal [["不能仅有属性名", :error]], @rule.check_html_property(prop)
+          should_without_result do
+            %Q{<input type="radio" checked="true" />}
+          end
         end
 
       end

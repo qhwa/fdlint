@@ -1,47 +1,37 @@
 require 'strscan'
 
-module XRay
-  module HTML
+module Fdlint; module Parser; module HTML
     
-    class Element
-      
-      WORD = /[A-Za-z][-_\w]*/
-      CLASS = %r(\.#{WORD})
-      ID = %r(##{WORD})
-      PROP_PAIR = %r(\s*,?\s*#{WORD}(==[^\s,])?)
-      PROP = %r(\[#{WORD}.*?\])
+  module Query
+    
+    WORD      = /[A-Za-z][-_\w]*/
+    CLASS     = %r(\.#{WORD})
+    ID        = %r(##{WORD})
+    PROP_PAIR = %r(\s*,?\s*#{WORD}(==[^\s,])?)
+    PROP      = %r(\[#{WORD}.*?\])
 
-      ###
-      # This method implemented CSS selector for
-      # HTML (like Sizzle) very simply. It is not
-      # fully supported CSS selector.
-      #
-      # TODO: support full CSS3 selector
-      ###
-      def match?(str)
-        return false if is_a?(TextElement)
-        obj = query_obj(str)
-        tag = obj[:tag]
-        cls = obj[:classes]
-        props = obj[:properties]
-        unless tag.nil? or tag_name_equal? tag
-          return false
-        end
-        classes = prop_value(:class)
-        cls.each { |c| return false unless classes.include? c }
-        props.each do |n, v|
-          if v.nil?
-            return false unless has_prop? n
-          else
-            return false unless prop_value(n) == v
-          end
-        end
-        true
-      end
+    ###
+    # This method implemented CSS selector for
+    # HTML (like Sizzle) very simply. It is not
+    # fully supported CSS selector.
+    #
+    # TODO: support full CSS3 selector
+    ###
+    def match?(str)
+      query       = query_obj(str)
+      tag_query   = query[:tag]
+      class_query = query[:classes]
+      prop_query  = query[:properties]
 
-      alias_method :===, :match?
+      (tag_query.blank?   || match_tag?( tag_query )) &&
+      (class_query.blank? || match_class?( class_query )) &&
+      (prop_query.blank?  || match_prop?( prop_query ))
+    end
 
-      private
+    alias_method :===, :match?
+
+    private
+
       def query_obj(str)
         classes = []
         props = {}
@@ -73,24 +63,48 @@ module XRay
         {:tag => tag, :classes => classes, :properties => props }
       end
 
-      public
-      def query( selector, &block )
-        ret = []
-        if match?(selector)
-          ret << self 
-          yield self if block_given?
-        end
-
-        children && children.each do |node|
-          ret += node.query(selector, &block)
-        end
-
-        ret
+      def match_tag?( tag_query )
+        tag_name_equal? tag_query
       end
-      
-      alias_method :*, :query
 
+      def match_class?( class_query )
+        classes = prop_value(:class)
+        if classes.blank?
+          false
+        else
+          class_query.all? do |c|
+            classes.include? c
+          end
+        end
+      end
+
+      def match_prop?( prop_query )
+        prop_query.all? do |n, v|
+          if v.nil?
+            has_prop? n
+          else
+            prop_value(n) == v
+          end
+        end
+      end
+    public
+
+    def query( selector, &block )
+      ret = []
+      if match?(selector)
+        ret << self 
+        yield self if block_given?
+      end
+
+      children && children.each do |node|
+        ret += node.query(selector, &block)
+      end
+
+      ret
     end
+    
+    alias_method :*, :query
 
   end
-end
+
+end; end; end

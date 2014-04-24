@@ -39,6 +39,19 @@ module Fdlint
       validation && validation.long_desc
     end
 
+    LEVEL_CONST = {
+      :warn => 1,
+      :error => 2,
+      :fatal => 3
+    }
+
+    def self.level_greater_or_equal?( a, b )
+      level_number(a) >= level_number(b)
+    end
+
+    def self.level_number( symb )
+      LEVEL_CONST[symb]
+    end
 
   end
 

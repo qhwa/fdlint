@@ -102,7 +102,7 @@ review( 'expr_equal' ) { |expr|
   end
 }
 
-review( 'stat' ) { |stat|
+review( 'stat_try' ) { |stat|
   if stat.try_part.contains?('try') ||
       stat.catch_part && (stat.catch_part.contains? 'try') ||
       stat.finally_part && (stat.finally_part.contains? 'try')

@@ -1,26 +1,25 @@
 # encoding: utf-8
 
 require_relative '../../helper'
-require 'html/rule/check_tag_rule'
 
-module XRayTest
+module FdlintTest
   module HTML
     module Rule
       
       class CheckButtonTest < Test::Unit::TestCase
 
-        include XRay::HTML
+        include FdlintTest::HTML
 
         def setup
-          @rule = XRay::HTML::Rule::CheckTagRule.new
+          @button_err = [:error, "所有按钮必须用button（button/submit/reset）"]
         end
 
         def test_check_normal
           src = %q(<button type="button" name="usernmae" />
             <button type="submit" name="male" />
             <button type="reset" name="food" />)
-          XRay::HTML::Parser.parse(src).each do |tag|
-            assert_equal [], @rule.check_html_tag(tag)
+          parse src do |results|
+            assert_not_has_result results, @button_err
           end
         end
 
@@ -28,9 +27,10 @@ module XRayTest
           src = %q(<input type="button" value="btn" />
             <input type="submit" name="submit" value="submit"/>
             <input type="reset" />)
-          XRay::HTML::Parser.parse(src).each do |tag|
-            unless tag.is_a? TextElement
-              assert_equal [["所有按钮必须用button（button/submit/reset）", :error]], @rule.check_html_tag(tag)
+
+          src.each_line do |src|
+            parse src do |results|
+              assert_has_result results, @button_err
             end
           end
         end

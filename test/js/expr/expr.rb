@@ -3,7 +3,7 @@ require_relative 'left_hand'
 require_relative 'operate'
 
 
-module XRayTest
+module FdlintTest
   module JS
     module Expr
       

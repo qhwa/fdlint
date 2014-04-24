@@ -1,13 +1,13 @@
 require File.expand_path('../../helper', File.dirname(__FILE__))
 require_relative '../../helper'
 
-module XRayTest
+module FdlintTest
   module HTML
     module Parser
 
       class ParsePropertyTest < Test::Unit::TestCase
-        
-        include XRay::HTML
+
+        include Fdlint::Parser::HTML
         
         def test_data_prop
           parse('<div class="info" data-creater="vim">information</div>') do |element|
@@ -16,7 +16,7 @@ module XRayTest
                 Property.new('data-creater', 'vim')
               ], [
                 TextElement.new('information')
-              ]), element
+              ]), element.children.first
           end
         end
 
@@ -30,7 +30,7 @@ module XRayTest
               Property.new('alink', '#ff0000', ''),
               Property.new('onload', %q(try{!google.j.b&&document.f.q.focus()}catch(e){};if(document.images)new Image().src='/images/experiments/nav_logo78.png'), '"')
             ]
-            assert_equal Element.new('body', props), e
+            assert_equal Element.new('body', props), e.children.first
           end
         end
 
@@ -40,7 +40,7 @@ module XRayTest
               Property.new(:type, 'checkbox'),
               Property.new(:name, 'agreement'),
               Property.new(:checked, nil)
-            ]), e
+            ]), e.children.first
           end
         end
 
@@ -51,7 +51,7 @@ module XRayTest
               Property.new(:type, 'checkbox'),
               Property.new(:name, 'agreement'),
               Property.new(:checked, nil)
-            ]), e
+            ]), e.children.first
           end
         end
 
@@ -68,18 +68,18 @@ module XRayTest
               Property.new('ns:name', 'checkbox'),
               Property.new(:name, 'agreement'),
               Property.new(:checked, nil)
-            ]), e
+            ]), e.children.first
           end
         end
 
         def test_parse_invalid_prop_syntax
-          assert_raise(XRay::ParseError) do 
+          assert_raise(Fdlint::Parser::ParseError) do 
             parse %Q(<a href="#"title="title\n">link test</a>)
           end
         end
 
         def parse(src, &block)
-          XRay::HTML::Parser.parse(src, &block)
+          HtmlParser.parse(src, &block)
         end
       end
 

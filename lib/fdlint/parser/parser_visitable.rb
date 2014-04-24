@@ -74,7 +74,7 @@ module Fdlint
       #
       # Returns Parser's visitors
       def add_visitors(visitors)
-        if visitors === Array
+        if visitors.is_a? Array
           visitors.each do |target, visitor|
             add_visitor target, visitor
           end
@@ -116,13 +116,13 @@ module Fdlint
 
         def visit(name, node)
           walk(name, node) do |result|
-            results << result
+            results << result if result.present?
           end
         end
 
         def before(name)
           walk 'before_parse_' << name, nil do |result|
-            results << result
+            results << result if result.present?
           end
         end
 

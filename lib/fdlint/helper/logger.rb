@@ -27,7 +27,7 @@ module Fdlint; module Helper
     end
 
     def logger
-      $logger ||= ::Logger.new(STDOUT)
+      $logger ||= ::Logger.new(STDOUT, ::Logger::WARN)
     end
 
   end

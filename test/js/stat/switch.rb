@@ -1,4 +1,4 @@
-module XRayTest
+module FdlintTest
   module JS
     module Stat
       

@@ -1,34 +1,18 @@
 # encoding: utf-8
 require_relative 'base_test'
 
-require 'js/rule/checklist'
-
-module XRayTest
+module FdlintTest
   module JS
     module Rule
       
       class NewObjectAndNewArrayTest < BaseTest
 
-        def test_default
-          js = '
-            new Object();
-          '
-          ret = visit js
-          assert_equal [['使用{}代替new Object()', :error]], ret
-
-          js = '
-            new Array();
-          '
-          ret = visit js
-          assert_equal [['使用[]代替new Array()', :error]], ret
+        should_with_result [:error, '使用{}代替new Object()'] do
+          ['new Object()', 'new Object']
         end
-        
-        private
 
-        def visit(js)
-          expr = parse js, 'expr_new'
-          rule = XRay::JS::Rule::ChecklistRule.new
-          rule.visit_expr_new expr
+        should_with_result [:error, '使用[]代替new Array()'] do
+          ['new Array()', 'new Array']
         end
 
       end

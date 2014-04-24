@@ -1,50 +1,53 @@
 # encoding: utf-8
 
 require_relative '../../helper'
-require 'html/rule/check_tag_rule'
 
-module XRayTest
+module FdlintTest
   module HTML
     module Rule
       
       class CheckTagDowncaseTest < Test::Unit::TestCase
 
-        def setup
-          @rule = XRay::HTML::Rule::CheckTagRule.new
+        include FdlintTest::HTML
+
+        check_rule [:error, '标签名必须小写'] do
+
+          should_with_result do
+            %Q{<INPUT type="radio" />}
+          end
+
+          should_without_result do
+            %Q{<input type="radio" />}
+          end
         end
 
-        def test_check_normal_prop_name
-          prop = XRay::HTML::Property.new('href', '#nogo')
-          assert_equal [], @rule.check_html_property(prop)
+        check_rule [:error, '属性名连字符用中横线'] do
+          should_with_result do
+            [
+              %Q{<a data_id="1"/>}
+            ]
+          end
+
+          should_without_result do
+            %Q{<a data-id="1"/>}
+          end
         end
 
-        def test_check_normal_tag_name
-          tag = XRay::HTML::Element.new('div', {:class=>'footer'})
-          assert_equal [], @rule.check_html_tag(tag)
-        end
-      
-        def test_check_tag_with_upcase_name
-          tag = XRay::HTML::Element.new('DIV', {:class=>'footer'})
-          assert_equal [["标签名必须小写", :error]], @rule.check_html_tag(tag)
-        end
+        check_rule [:error, '属性名必须小写'] do
+          should_with_result do
+            [
+              %Q{<a dataId="1"/>},
+              %Q{<a HREF=""/>},
+              %Q{<a Href=""/>}
+            ]
+          end
 
-        def test_check_tag_with_upcase_ending
-          tag = XRay::HTML::Element.new('div', nil, [], :after, '</DIV>')
-          assert_equal [["标签名必须小写", :error]], @rule.check_html_tag(tag)
-        end
-
-        def test_check_tag_with_simple_upcase_prop_name
-          prop = XRay::HTML::Property.new('Href', 'nogo')
-          assert_equal [["属性名必须小写，连字符用中横线", :error]], @rule.check_html_property(prop)
-        end
-
-        def test_check_tag_with_style_prop
-          prop = XRay::HTML::Property.new('Style', 'nogo')
-          assert_equal [["不能定义内嵌样式style", :error], ["属性名必须小写，连字符用中横线", :error]], @rule.check_html_property(prop)
+          should_without_result do
+            %Q{<a href=""/>}
+          end
         end
 
       end
-
     end
   end
 end

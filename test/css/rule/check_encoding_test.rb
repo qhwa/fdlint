@@ -2,19 +2,17 @@
 
 require_relative '../../helper'
 
-require 'node'
-require 'css/struct'
-require 'css/rule/checklist'
+require 'fdlint/parser/node'
+require 'fdlint/parser/css/struct'
 
-module XRayTest
+module FdlintTest
   module CSS
     module Rule
       
       class CheckEncodingTest < Test::Unit::TestCase
 
         def setup
-          @runner = XRay::Runner.new :encoding => 'gb2312'
-          @expect_err = XRay::LogEntry.new("File can't be read as gb2312 charset", :fatal) 
+          @expect_err = Fdlint::LogEntry.new("File can't be read as gb2312 charset", :fatal) 
         end
 
         def test_check_utf8_file_well_written
@@ -50,8 +48,9 @@ module XRayTest
         
         private
         def check_file( file )
-          results = @runner.check_css_file file
-          yield results
+          Fdlint::Validator.new( file ).validate do |file, source, results|
+            yield results
+          end
         end
 
         def has_encoding_error?( results )

@@ -18,13 +18,11 @@ require_relative 'rule/check_head_contain_meta_and_title_test'
 require_relative 'rule/check_block_level_element_test'
 require_relative 'rule/check_form_element_name_test'
 require_relative 'rule/check_button_test'
-require_relative 'rule/check_class_count_test'
 require_relative 'rule/check_tag_closed_test'
-require_relative 'rule/check_html_template_test'
 require_relative 'rule/check_css_in_head_test'
 require_relative 'rule/check_unescape_char_test'
 
-module XRayTest
+module FdlintTest
   
   module HTML
 
@@ -47,9 +45,7 @@ module XRayTest
         tests << Rule::CheckBlockLevelElementTest.suite
         tests << Rule::CheckFormElementNameTest.suite
         tests << Rule::CheckButtonTest.suite
-        tests << Rule::CheckClassCountTest.suite
         tests << Rule::CheckTagClosedTest.suite
-        tests << Rule::CheckHTMLTemplateTest.suite
         tests << Rule::CheckCSSInHeadTest.suite
         tests << Rule::CheckUnescapedCharTest.suite
         tests
@@ -58,5 +54,5 @@ module XRayTest
   end
 end
 
-Test::Unit::UI::Console::TestRunner.run( XRayTest::HTML::RuleTest ) if __FILE__ == $0
+Test::Unit::UI::Console::TestRunner.run( FdlintTest::HTML::RuleTest ) if __FILE__ == $0
 

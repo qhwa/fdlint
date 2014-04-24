@@ -1,20 +1,18 @@
 # encoding: utf-8
 require File.expand_path('../helper', File.dirname(__FILE__))
 
-require 'js/parser'
+require 'fdlint/parser/js/js_parser'
 
 require_relative 'expr/expr'
 require_relative 'stat/stat'
 
 
-module XRayTest
+module FdlintTest
   module JS
     class ParserTest < Test::Unit::TestCase 
-      include XRay::JS
 
       include Expr::Expr
       include Stat::Stat
-
       
       def test_parse_program()
         js = '
@@ -72,8 +70,7 @@ module XRayTest
 
 
       def create_parser(js)
-        Parser.new js, XRayTest::Logger.new
-        
+        ::Fdlint::Parser::JS::JsParser.new js
       end
 
       def parse_js(action, js)

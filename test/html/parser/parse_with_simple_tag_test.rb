@@ -1,16 +1,16 @@
 require_relative '../../helper'
 
-module XRayTest
+module FdlintTest
   module HTML
     module Parser
 
       class ParseWithSimpleTagTest < Test::Unit::TestCase
         
-        include XRay::HTML
-        
+        include Fdlint::Parser::HTML
+
         def setup
-          @parser = XRay::HTML::Parser.new('<div class="info">information</div>')
-          @element = @parser.parse
+          @parser = HtmlParser.new('<div class="info">information</div>')
+          @element = @parser.parse.children.first
         end
 
         def test_is_a_div_element
@@ -32,8 +32,8 @@ module XRayTest
         end
 
         def test_raise_error_on_invalid_tag_name
-          assert_raise(XRay::ParseError) do 
-            XRay::HTML::Parser.new('<tag(name) />').parse
+          assert_raise(Fdlint::Parser::ParseError) do 
+            HtmlParser.new('<tag(name) />').parse
           end
         end
 

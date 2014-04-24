@@ -2,163 +2,146 @@
 
 require_relative '../../helper'
 
-require 'node'
-require 'css/struct'
-require 'css/rule/checklist'
+require 'fdlint/parser/node'
+require 'fdlint/parser/css/struct'
 
-module XRayTest
+module FdlintTest
   module CSS
     module Rule
       
       class CheckListRuleTest < Test::Unit::TestCase
 
-        include XRay::CSS, XRay::CSS::Rule, XRay::Rule, XRay::Context
-
-        Node = XRay::Node
-        XRay::Rule.import_all
+        Node = Fdlint::Parser::Node
+        Fdlint::Rule.rules
 
         def setup
-          self.scope = :page
+          @file = nil
         end
 
         # selector
 
         def test_check_selector_with_id
 
-          selector = Node.new '#mydiv a'
-          message, level = check_selector_with_id selector
+          # 路径中不包含 /lib/ 文件会被辨认为页面级别样式
+          # 此时检查 selecotr id 的规则才会生效
+          css_file_level :page
 
-          assert_equal :error, level
+          parse :selector, '#mydiv a' do |results|
+            assert_has_result results, [:error, '页面级别样式不使用id']
+          end
 
-          selector = Node.new 'ul #mydiv dt'
-          ret = check_selector_with_id selector
-          assert_not_nil ret
+          parse :selector, 'ul #mydiv dt' do |results|
+            assert_has_result results, [:error, '页面级别样式不使用id']
+          end
 
-          selector = Node.new '.guide-part ul li'
-          ret = check_selector_with_id selector
-          assert_nil ret
+          parse :selector, '.guide-part ul li' do |results|
+            assert results.blank?
+          end
         end
 
         def test_check_selector_with_global_tag 
-          selector = Node.new 'a'
-          message, level = check_selector_with_global_tag selector
+          # 路径中不包含 /lib/ 文件会被辨认为页面级别样式
+          # 此时检查 global selecotr 的规则才会生效
+          css_file_level :page
 
-          assert_equal :error, level
+          parse :selector, 'a' do |results|
+            assert_has_result results, [:error, '页面级别样式不能全局定义标签样式']
+          end
 
-          selector = Node.new 'body'
-          message, level = check_selector_with_global_tag selector
-
-          assert_equal :error, level
+          parse :selector, 'body' do |results|
+            assert_has_result results, [:error, '页面级别样式不能全局定义标签样式']
+          end
         end
 
         def test_check_selector_level
-          selector = Node.new '.mypart .mysubpart ul li a'
-          message, level = check_selector_level selector
+          parse :selector, '.mypart .mysubpart ul li a' do |results|
+            assert_has_result results, [:error, 'CSS级联深度不能超过4层']
+          end
 
-          assert_equal :error, level
-          
-          selector = Node.new '.mypart ul li a'
-          ret = check_selector_level selector
-          assert_nil ret
-          
-          selector = Node.new 'html>div.mypart ul li a'
-          message, level = check_selector_level selector
-          assert_equal :error, level
+          parse :selector, 'html>div.mypart ul li a' do |results|
+            assert_has_result results, [:error, 'CSS级联深度不能超过4层']
+          end
 
-          selector = Node.new 'div.mypart ul li a'
-          ret = check_selector_level selector
-          assert_nil ret
+          parse :selector, '.mypart ul li a' do |results|
+            assert results.blank?
+          end
+
+          parse :selector, 'div.mypart ul li a' do |results|
+            assert results.blank?
+          end
         end
 
         def test_check_selector_with_star
-          selector = Node.new '* html'
-          message, level = check_selector_with_star selector
-
-          assert_equal :error, level
-        end
-
-        def test_check_declarations_sequence
-          
+          parse :selector, '* html' do |results|
+            assert_has_result results, [:error, '禁止使用星号选择符']
+          end
         end
 
         # declaration
         
         def test_check_good_declaration_font
-          sel = Node.new 'font'
-          expr = Node.new 'Arial'
-          dec = Declaration.new(sel, expr)
-
-          message, level = check_declaration_font dec
-          assert_equal nil, level
-        end
-
-        def test_check_declaration_font
-          sel = Node.new 'font'
-          expr = Node.new '宋体'
-          dec = Declaration.new(sel, expr)
-
-          message, level = check_declaration_font dec
-          assert_equal :error, level
-        end
-
-        def test_check_redefine_a_hover_color
-          selector = Node.new 'a:hover'
-          
-          prop = Node.new 'color'
-          expr = Node.new '#f00'
-          dec = Declaration.new(prop, expr)
-
-          ruleset = RuleSet.new(selector, [dec])
-
-          message, level = check_ruleset_redefine_a_hover_color ruleset
-          assert_equal :error, level
-        end
-
-        def test_check_redefine_lib_css
-          selector = Node.new '.fd-hide'
-          message, level = check_selector_redefine_lib_css selector
-          assert_equal :error, level
-
-          @scope = :lib
-          ret = check_selector_redefine_lib_css selector
-          assert_nil ret 
-        end
-        
-        def test_check_property_hack
-          props = %w(_background +font-size *color)
-          props.each do |prop|
-            prop = Node.new prop
-            message, level = check_property_hack prop
-            assert_equal :error, level
+          parse :declaration, 'font: Arail;' do |results|
+            assert results.blank?
           end
         end
 
-        def test_check_property_slash_hack
-          prop = Node.new 'd\isplay'
-          message, level = check_property_hack prop
-          assert_equal :error, level
+        def test_check_declaration_font
+          parse :declaration, 'font: 宋体;' do |results|
+            assert_has_result results, [:error, '字体名称中的中文必须用ascii字符表示']
+          end
+        end
+
+        def test_check_property_hack
+          props = %w(_background +font-size *color d\isplay)
+          props.each do |prop|
+            parse :property, prop do |results|
+              assert_has_result results, [:error, '合理使用hack']
+            end
+          end
         end
 
         def test_check_selector_using_hack
-          selector = Node.new 'html*'
-          message, level = check_selector_using_hack selector
-          assert_equal :error, level
+          parse :selector, 'html*' do |results|
+            assert_has_result results, [:error, '合理使用hack']
+          end
         end
 
         def test_check_value_use_css_expression
-          expr = Node.new 'expression(onfocus=this.blur())'
-          message, level = check_value_use_css_expression expr
-          assert_equal :error, level
+          parse :value, 'expression(onfocus=this.blur())' do |results|
+            assert_has_result results, [:error, '禁止使用CSS表达式']
+          end
         end
 
         def test_check_value_use_hack
           exprs = %w(9px\0 #000\9)
           exprs.each do |expr|
-            expr = Node.new expr
-            message, level = check_value_use_hack expr
-            assert_equal :error, level
+            parse :value, expr do |results|
+              assert_has_result results, [:error, '合理使用hack']
+            end
           end
         end
+
+        private
+
+          def css_file_level level
+            if level == :page
+              @file = File.new( '.' )
+            elsif level == :lib
+              @file = File.new( File.join FIXTURE_PATH, 'css/lib/' )
+            end
+          end
+
+          def parse type, text
+            parser   = Fdlint::Parser::CSS::CssParser.new( text ).tap do |parser|
+              visitors = Fdlint::Rule.for_css_content.map do |validation|
+                validation.to_visitor file: @file
+              end
+              parser.add_visitors visitors
+              parser.send "parse_#{type}"
+            end
+
+            yield parser.results.flatten
+          end
 
       end
 

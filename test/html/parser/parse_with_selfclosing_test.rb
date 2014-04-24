@@ -1,34 +1,34 @@
 require_relative '../../helper'
 
-module XRayTest
+module FdlintTest
   module HTML
     module Parser
 
       class ParseWithSelfClosingTagTest < Test::Unit::TestCase
         
-        include XRay::HTML
-        
+        include Fdlint::Parser::HTML
+
         def test_self_close
-          XRay::HTML::Parser.parse('<div class="info" />') do |e|
-            assert_equal Element.new('div', {:class=>"info"}), e
+          HtmlParser.parse('<div class="info" />') do |e|
+            assert_equal Element.new('div', {:class=>"info"}), e.children.first
           end
         end
 
         def test_br_tag_closed_without_space
-          XRay::HTML::Parser.parse('<br/>') do |e|
-            assert_equal Element.new('br'), e
+          HtmlParser.parse('<br/>') do |e|
+            assert_equal Element.new('br'), e.children.first
           end
         end
 
         def test_close_outside
-          XRay::HTML::Parser.parse('<div class="info" ></div>') do |e|
-            assert_equal Element.new('div', {:class=>"info"}), e
+          HtmlParser.parse('<div class="info" ></div>') do |e|
+            assert_equal Element.new('div', {:class=>"info"}), e.children.first
           end
         end
 
         def test_center_tag
-          XRay::HTML::Parser.parse('<center></center>') do |e|
-            assert_equal Element.new('center'), e
+          HtmlParser.parse('<center></center>') do |e|
+            assert_equal Element.new('center'), e.children.first
           end
         end
 
