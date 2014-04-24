@@ -1,7 +1,6 @@
-fdlint -- 让前端code review更轻松
-=================================
+![fdlint-logo](http://fdlint.oss-cn-hangzhou.aliyuncs.com/fdlint-logo-white.png)
 
-![fdlint-logo](http://fdlint.oss-cn-hangzhou.aliyuncs.com/fdlint-logo-white-small.png)
+## fdlint -- 让前端code review更轻松
 
 fdlint 是根据阿里巴巴前端开发checklist开发的自动代码扫描工具。
 可以扫描出前端程序中不符合开发规范的地方。

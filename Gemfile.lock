@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    fdlint (0.2.0.pre)
+    fdlint (0.2.0)
       colored (~> 1.2)
       gli (~> 2.9.0)
       string_utf8 (~> 0.1.1)
