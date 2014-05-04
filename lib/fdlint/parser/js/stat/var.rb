@@ -5,7 +5,7 @@ module Fdlint
         
         module Var
           def parse_stat_var
-            log 'parse stat var'
+            debug { 'parse stat var' }
 
             pos = skip /var/
 
@@ -15,7 +15,7 @@ module Fdlint
           end
 
           def parse_stat_var_declarationlist
-            log 'parse stat var declarationlist'
+            debug { 'parse stat var declarationlist' }
             decs = []
             decs << parse_stat_var_declaration 
             while check /,/
@@ -26,7 +26,7 @@ module Fdlint
           end
 
           def parse_stat_var_declaration 
-            log 'parse stat var declaration'
+            debug { 'parse stat var declaration' }
             name = parse_expr_identifier
             expr = if check(/\=/)
               skip /\=/

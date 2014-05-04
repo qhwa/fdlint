@@ -22,7 +22,7 @@ module Fdlint; module Parser
       end
 
       def parse_program
-        log 'parse program'
+        debug { 'parse program' }
         parse_comments
         Program.new parse_source_elements
       end
@@ -30,13 +30,13 @@ module Fdlint; module Parser
       alias_method :parse, :parse_program
 
       def parse_source_element
-        log 'parse source_element'
+        debug { 'parse source_element' }
 
         check(/function\b/) ? parse_function_declaration : parse_statement
       end
 
       def parse_function_declaration(skip_name = false)
-        log 'parse function declaration'
+        debug { 'parse function declaration' }
 
         pos = skip /function/
 
@@ -59,14 +59,14 @@ module Fdlint; module Parser
       end
 
       def parse_singleline_comment
-        log 'parse singleline comment'
+        debug { 'parse singleline comment' }
         comment = raw_scan /\/\/.*/
         log "  #{comment}"
         comment
       end
 
       def parse_mutiline_comment
-        log 'parse mutiline comment'
+        debug { 'parse mutiline comment' }
         comment = raw_scan /\/\*[^*]*\*+([^\/*][^*]*\*+)*\//
         log "  #{comment}"
         comment

@@ -5,7 +5,7 @@ module Fdlint
 
         module If
           def parse_stat_if
-            log 'parse stat if'
+            debug { 'parse stat if' }
 
             pos = skip /if\s*\(/
             condition = parse_expression

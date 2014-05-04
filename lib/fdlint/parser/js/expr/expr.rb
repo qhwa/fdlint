@@ -15,12 +15,12 @@ module Fdlint
           include ::Fdlint::Parser::JS::Expr::Operate
           
           def parse_expression
-            log 'parse expression'
+            debug { 'parse expression' }
             parse_expr_with_operate :parse_expr_assignment, /,/ 
           end
 
           def parse_expr_assignment
-            log 'parse expr assignment'
+            debug { 'parse expr assignment' }
 
             expr = parse_expr_condition
 
@@ -33,7 +33,7 @@ module Fdlint
           end
 
           def parse_expr_condition
-            log 'parse expr condition'
+            debug { 'parse expr condition' }
             expr = parse_expr_logical_or
             if check /\?/
               skip /\?/

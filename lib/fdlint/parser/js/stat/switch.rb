@@ -5,7 +5,7 @@ module Fdlint
         
         module Switch
           def parse_stat_switch
-            log 'parse stat switch'
+            debug { 'parse stat switch' }
 
             pos = skip /switch\s*\(/
             expression = parse_expression
@@ -16,7 +16,7 @@ module Fdlint
           end
 
           def parse_stat_caseblock
-            log 'parse stat caseblock'
+            debug { 'parse stat caseblock' }
 
             pos = skip /\{/
             case_clauses = check(/case\b/) ? parse_stat_caseclauses : nil
@@ -29,13 +29,13 @@ module Fdlint
           end
 
           def parse_stat_caseclauses
-            log 'parse stat caseclauses'
+            debug { 'parse stat caseclauses' }
             stats = batch(:parse_stat_caseclause, /default\b|\}/)
             create_element Elements, stats 
           end
 
           def parse_stat_caseclause
-            log 'parse stat caseclause'
+            debug { 'parse stat caseclause' }
 
             pos = skip /case/
             expr = parse_expression
@@ -45,7 +45,7 @@ module Fdlint
           end
 
           def parse_stat_defaultclause
-            log 'parse stat defaultclause'
+            debug { 'parse stat defaultclause' }
 
             pos = skip /default\s*:/
             stats = parse_statement_list 

@@ -56,7 +56,7 @@ module Fdlint
           end
 
           def parse_expr_parentheses
-            log 'parse expr parentheses'
+            debug { 'parse expr parentheses' }
 
             pos = skip /\(/
             expr = parse_expression
@@ -66,7 +66,7 @@ module Fdlint
           end
 
           def parse_expr_array
-            log 'parse expr array'
+            debug { 'parse expr array' }
 
             pos = skip /\[/
             elms = batch(:parse_expr_assignment, /\]/, /,/)
@@ -76,7 +76,7 @@ module Fdlint
           end
 
           def parse_expr_object
-            log 'parse expr object'
+            debug { 'parse expr object' }
 
             pos = skip /\{/
             elms = batch(:parse_expr_object_item, /\}/, /,/)
@@ -86,7 +86,7 @@ module Fdlint
           end
 
           def parse_expr_object_item
-            log 'parse expr object item'
+            debug { 'parse expr object item' }
 
             name = if check R_STRING
               parse_expr_literal_string
@@ -103,7 +103,7 @@ module Fdlint
           end
 
           def parse_expr_identifier
-            log 'parse expr identifier'
+            debug { 'parse expr identifier' }
 
             id = scan(R_IDENTIFY)
             RESERVED_WORDS.include?(id.text) ? 
@@ -113,7 +113,7 @@ module Fdlint
           end
 
           def parse_expr_literal_this_null_boolean
-            log 'parse expr literal this null boolean'
+            debug { 'parse expr literal this null boolean' }
             expr = scan /this|null|true|false/
             type = expr.text.gsub(/true|false/, 'boolean')
 
@@ -121,7 +121,7 @@ module Fdlint
           end
 
           def parse_expr_literal_string
-            log 'parse expr literal string'
+            debug { 'parse expr literal string' }
 
             expr = if check /'/
               scan /'(?:(?:\\')|(?:\\\n)|[^'\n])*'/
@@ -135,19 +135,19 @@ module Fdlint
           end
 
           def parse_expr_literal_hex
-            log 'parse expr literal hex'
+            debug { 'parse expr literal hex' }
             expr = scan /0[xX][0-9a-fA-F]+/
             create_expression 'number', expr
           end
 
           def parse_expr_literal_number
-            log 'parse expr literal number'
+            debug { 'parse expr literal number' }
             expr = scan /[+-]?(?:(?:\d*[.]\d+)|(?:\d+))(?:[eE][+-]?\d+)?/
             create_expression 'number', expr
           end
 
           def parse_expr_literal_regexp
-            log 'parse expr literal regexp'
+            debug { 'parse expr literal regexp' }
             expr = scan %r{/(?:(?:\\.)|(?:\[(?:\\.|[^\[\]])+\])|[^/\\])+/[a-z]*}
             create_expression 'regexp', expr
           end
@@ -156,7 +156,7 @@ module Fdlint
 
           def create_expression(*args)
             expr = PrimaryExpression.new *args
-            log "  #{expr}"
+            debug { "  #{expr}" }
             expr
           end
 

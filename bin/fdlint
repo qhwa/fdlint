@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-require 'profile'
 
 begin # XXX: Remove this begin/rescue before distributing your app
 require 'fdlint'

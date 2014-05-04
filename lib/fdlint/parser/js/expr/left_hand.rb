@@ -6,14 +6,14 @@ module Fdlint
         module LeftHand
           
           def parse_expr_lefthand
-            log 'parse expr lefthand'
+            debug { 'parse expr lefthand' }
             expr = check(/new\b/) ? parse_expr_new : parse_expr_member
             expr.left_hand = true
             expr 
           end 
 
           def parse_expr_new
-            log 'parse expr new'
+            debug { 'parse expr new' }
 
             pos = skip /new/
             expr = check(/new\b/) ? parse_expr_new : parse_expr_member
@@ -23,7 +23,7 @@ module Fdlint
           end
 
           def parse_expr_member
-            log 'parse expr member'
+            debug { 'parse expr member' }
             parse_expr_with_operate(:parse_expr_member_left) do
               if check /[.]/
                 skip /[.]/
@@ -51,7 +51,7 @@ module Fdlint
 
 
           def parse_arguments_list
-            log 'parse arguments list'
+            debug { 'parse arguments list' }
             skip /\(/
             params = batch :parse_expr_assignment, /\)/, /,/
             skip /\)/

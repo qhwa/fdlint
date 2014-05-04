@@ -6,7 +6,7 @@ module Fdlint
         module Operate
        
           def parse_expr_postfix
-            log 'parse expr postfix'
+            debug { 'parse expr postfix' }
             expr = parse_expr_lefthand
             if check(/[ \t]*(?:\+\+|--)/, true)
               op = scan /\+\+|--/
@@ -16,7 +16,7 @@ module Fdlint
           end
 
           def parse_expr_unary
-            log 'parse expr unary'
+            debug { 'parse expr unary' }
             r = /delete|void|typeof|\+\+|--|\+|-|~|!/
             if check r
               op = scan r
@@ -27,17 +27,17 @@ module Fdlint
           end
 
           def parse_expr_mul
-            log 'parse expr mul'
+            debug { 'parse expr mul' }
             parse_expr_with_operate :parse_expr_unary, /(?:\*|\/|%)(?!=)/
           end
 
           def parse_expr_add
-            log 'parse expr add'
+            debug { 'parse expr add' }
             parse_expr_with_operate :parse_expr_mul, /(?:\+|-)(?!=)/
           end
 
           def parse_expr_shift
-            log 'parse expr shift'
+            debug { 'parse expr shift' }
             parse_expr_with_operate :parse_expr_add, /(?:<<|>>>|>>)(?!=)/
           end
 
@@ -49,32 +49,32 @@ module Fdlint
           end
 
           def parse_expr_equal
-            log 'parse expr equal'
+            debug { 'parse expr equal' }
             parse_expr_with_operate :parse_expr_relation, /===|!==|==|!=/
           end
 
           def parse_expr_bit_and
-            log 'parse expr bit and'
+            debug { 'parse expr bit and' }
             parse_expr_with_operate :parse_expr_equal, /&(?![&=])/
           end
 
           def parse_expr_bit_xor
-            log 'parse expr bit xor'
+            debug { 'parse expr bit xor' }
             parse_expr_with_operate :parse_expr_bit_and, /\^(?!=)/
           end
 
           def parse_expr_bit_or
-            log 'parse expr bit or'
+            debug { 'parse expr bit or' }
             parse_expr_with_operate :parse_expr_bit_xor, /\|(?![|=])/
           end
 
           def parse_expr_logical_and
-            log 'parse expr logical and'
+            debug { 'parse expr logical and' }
             parse_expr_with_operate :parse_expr_bit_or, /&&/
           end
 
           def parse_expr_logical_or
-            log 'parse expr logical or'
+            debug { 'parse expr logical or' }
             parse_expr_with_operate :parse_expr_logical_and, /\|\|/
           end
 

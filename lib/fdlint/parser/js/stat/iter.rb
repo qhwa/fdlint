@@ -7,7 +7,7 @@ module Fdlint
         module Iter
 
           def parse_stat_dowhile
-            log 'parse stat dowhile'
+            debug { 'parse stat dowhile' }
 
             pos = skip /do/
             body = parse_statement
@@ -20,7 +20,7 @@ module Fdlint
           end 
 
           def parse_stat_while
-            log 'parse stat while'
+            debug { 'parse stat while' }
 
             pos = skip /while\s*\(/
             condition = parse_expression
@@ -31,7 +31,7 @@ module Fdlint
           end
 
           def parse_stat_for
-            log 'parse stat for'
+            debug { 'parse stat for' }
 
             pos = skip /for/
             
