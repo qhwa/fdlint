@@ -47,6 +47,9 @@ command [:review, :check] do |c|
   c.default_value 'warn'
   c.flag [:loglevel], must_match: %s[warn error faltal]
 
+  c.desc 'Print debug logs'
+  c.switch [:d, :debug], negatable: false
+
   c.action do |global, opt, args|
 
     if args.empty?
@@ -65,7 +68,7 @@ command [:review, :check] do |c|
       :syntax    => opt[:css]  ? :css :
                     opt[:js]   ? :js  :
                     opt[:html] ? :html : nil,
-      :debug     => global[:debug],
+      :debug     => opt[:debug] || global[:debug],
       :files     => args,
       :text      => source,
       :checkmin  => opt[:m]
