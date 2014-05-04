@@ -89,7 +89,7 @@ review( 'tag' ) {
 
   rule { |tag|
     unless has_target
-      if tag =~ 'a' and tag.prop_value('href') =~ /^#/ and tag['target'] != '_self'
+      if tag =~ 'a' and tag['href'] =~ /^#/ and tag['target'] != '_self'
         warn '功能a必须加target="_self"，除非preventDefault过'
       end
     end
