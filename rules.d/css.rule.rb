@@ -26,12 +26,14 @@ review( 'selector' ) {
     end
   }
 
+  desc "星号(*)选择符的使用应该谨慎，不应该出现类似'* span' 这样的选择符"
   rule { |selector|
     if selector =~ /^\*/
       error '禁止使用星号选择符'
     end
   }
 
+  desc "尽量避免使用hack"
   rule { |selector|
     if selector =~ /\S\*/
       error '合理使用hack'
@@ -40,6 +42,7 @@ review( 'selector' ) {
 }
 
 review( 'declaration' ) {
+  desc "CSS中尽量避免出现非ASCII字符，减少字符编码问题，必要时使用转义形式处理"
   rule { |declaration|
     if declaration.property =~ /^font(-family)?$/ && declaration.value =~ /\p{Han}+/u
       error '字体名称中的中文必须用ascii字符表示'
@@ -49,7 +52,8 @@ review( 'declaration' ) {
 
 review( 'ruleset' ) {
 
-  uri 'http://wd.alibaba-inc.com/doc/page/regulations/css'
+  uri 'http://www.mozilla.org/css/base/content.css'
+  desc "从性能角度考虑，建议使用Mozilla推荐的书写顺序"
   rule { |ruleset|
     list = [
       %w(position display visible z-index overflow float clear),
@@ -78,6 +82,7 @@ review( 'ruleset' ) {
 }
 
 review( 'property' ) {
+  desc '尽量避免使用hack'
   rule { |property|
     if property =~ /[^-a-z]/
       error '合理使用hack'
@@ -86,6 +91,7 @@ review( 'property' ) {
 }
 
 review( 'value' ) {
+  desc '不推荐使用表达式(expression)'
   rule { |value|
 
     if value =~ /^expression\(/

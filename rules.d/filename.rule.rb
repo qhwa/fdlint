@@ -1,6 +1,7 @@
 rules_for 'css', 'js'
 
 review( 'file' ) {
+  desc '文件名中如果包含ad等字符，可能会被广告拦截插件误杀'
   rule { |file|
     AD_REG ||= /(?:[^a-z0-9%_-]|^)
       #以ad开头，与后面文字组合，构成常见的广告单词
