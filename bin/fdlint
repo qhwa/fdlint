@@ -23,6 +23,9 @@ version Fdlint::VERSION
 desc 'Print debug logs'
 switch [:d, :debug], negatable: false
 
+desc 'Set the directory where rules are loaded from'
+flag 'rule-dir'
+
 desc "review codes"
 arg_name 'path'
 command [:review, :check] do |c|
@@ -69,6 +72,7 @@ command [:review, :check] do |c|
                     opt[:js]   ? :js  :
                     opt[:html] ? :html : nil,
       :debug     => opt[:debug] || global[:debug],
+      :rule_dir  => global[:'rule-dir'],
       :files     => args,
       :text      => source,
       :checkmin  => opt[:m]
@@ -81,7 +85,7 @@ end
 desc 'list imported rules'
 command 'rule' do |c|
   c.action do |global, opt, args|
-    Fdlint::CLI.list_rules debug: global[:debug]
+    Fdlint::CLI.list_rules debug: global[:debug], rule_path: global['rule-dir']
   end
 end
 

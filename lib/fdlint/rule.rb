@@ -5,11 +5,17 @@ module Fdlint
 
   module Rule
 
-    RULE_PATH = File.expand_path '../../rules.d', File.dirname(__FILE__)
+    DEFAULT_RULE_PATH = File.expand_path '../../rules.d', File.dirname(__FILE__)
 
     class << self
 
       include ::Fdlint::Helper::Logger
+
+      attr_accessor :rule_path
+
+      def rule_path
+        @rule_path || DEFAULT_RULE_PATH
+      end
 
       SYNTAXES = [:css, :html, :js]
       
@@ -48,8 +54,8 @@ module Fdlint
       alias_method :rules, :all
 
       def import
-        debug { "importing rules" }
-        Dir.glob( File.join RULE_PATH, '**', '*.rule.rb' ) do |rule|
+        debug { "importing rules from #{rule_path}" }
+        Dir.glob( File.join rule_path, '**', '*.rule.rb' ) do |rule|
           begin
             DSL.instance_eval File.read(rule), rule
           rescue SyntaxError, NoMethodError => e

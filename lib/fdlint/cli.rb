@@ -37,6 +37,11 @@ module Fdlint
         # 我们需要使用 UTF-8 编码输出
         IO.popen "chcp 65001" if ENV['OS'] =~ /windows/i
 
+        rule_path = options[:rule_path]
+        if rule_path
+          Rule.rule_path = File.expand_path( rule_path )
+        end
+
         $logger = Logger.new(STDOUT).tap do |l|
           l.level = options[:debug] ? Logger::DEBUG : Logger::FATAL
         end
