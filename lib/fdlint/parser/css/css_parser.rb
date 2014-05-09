@@ -82,7 +82,7 @@ module Fdlint; module Parser
 
         selector = check(/\{/) ? nil : parse_selector
         skip /\{/
-        declarations = do_parse_declarations
+        declarations = parse_declarations
         skip /\}/
         
         RuleSet.new selector, declarations
@@ -158,19 +158,6 @@ module Fdlint; module Parser
       end
 
       private
-
-      def do_parse_declarations
-        first = true
-        batch(:parse_declaration) do
-          if check /\}/
-            false
-          else 
-            skip(first ? /[;\s]*/ : /[;\s]+/)
-            first = false
-            !check /\}/
-          end
-        end
-      end
 
       def do_parse_comment
         while true
