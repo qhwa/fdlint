@@ -89,7 +89,7 @@ module Fdlint
           next if script.has_prop?( :src )
 
           script_row = script.position.row
-          script_col = script.outer_html[/^\s*<script*?>/i].size
+          script_col = script.outer_html[/^\s*<script.*?>/mi].size
           src        = script.text
 
           Validator.new( nil,  :text => src, :syntax => :js ).validate.each do |ret|
@@ -104,7 +104,7 @@ module Fdlint
         root.query('style') do |style|
 
           style_row = style.position.row
-          style_col = style.outer_html[/^\s*<style*?>/i].size
+          style_col = style.outer_html[/^\s*<style.*?>/i].size
           src       = style.text
 
           Validator.new( nil,  :text => src, :syntax => :css ).validate.each do |ret|
