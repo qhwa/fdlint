@@ -56,6 +56,7 @@ module Fdlint
         elsif !@files.empty?
           validate_files
         end
+        raise 'invalid' unless @valid
       end
 
       def list_rules
@@ -75,6 +76,7 @@ module Fdlint
         def validate_content
           ::Fdlint::Validator.new( nil, opt_for_validator ).validate do |file, source, results|
             printer.print( file, source, results )
+            @valid ||= results.empty?
           end
         end
 
@@ -82,6 +84,7 @@ module Fdlint
           files.each do |file|
             validate_path file do |file, source, results|
               printer.print( file, source, results )
+              @valid ||= results.empty?
             end
           end
         end
@@ -108,6 +111,7 @@ module Fdlint
           printer.pre_validate path
           ::Fdlint::Validator.new( path, opt_for_validator ).validate do |file, source, results|
             printer.print( file, source, results )
+            @valid ||= results.empty?
           end
           printer.post_validate path
         end
