@@ -24,7 +24,7 @@ spec = Gem::Specification.new do |s|
   s.add_runtime_dependency("colored", "~> 1.2")
   s.add_runtime_dependency("string_utf8", "~> 0.1.1")
 
-  s.add_development_dependency("rake", "~> 0.9.2.2")
+  s.add_development_dependency("rake")
   s.add_development_dependency("test-unit")
   s.add_development_dependency("bundler")
 
