@@ -78,7 +78,7 @@ command [:review, :check] do |c|
       :checkmin  => opt[:m]
     }
 
-    exit_now!(Fdlint::CLI.run(options) ? 0 : 1)
+    Fdlint::CLI.run(options) or raise
   end
 end
 
@@ -106,11 +106,14 @@ command 'hook' do |c|
 end
 
 on_error do |err|
-  next if GLI::CustomExit === err
   if defined? Bundler
-    puts err.message
-    puts err.backtrace.join( "\n" )
+    $stderr.puts err.message
+    $stderr.puts err.backtrace.join( "\n" )
+  else
+    next if GLI::CustomExit === err
+    $stderr.puts err.message
   end
+
 end
 
 exit run(ARGV)
