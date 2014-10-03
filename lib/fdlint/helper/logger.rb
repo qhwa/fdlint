@@ -27,7 +27,7 @@ module Fdlint; module Helper
     end
 
     def logger
-      $logger ||= ::Logger.new(STDOUT).tap { |logger| logger.level = ::Logger::FATAL }
+      $logger ||= ::Logger.new(STDOUT).tap { |logger| logger.level = ::Logger::WARN }
     end
 
   end
