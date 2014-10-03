@@ -14,15 +14,15 @@ module Fdlint
       attr_reader :source
 
       def initialize(text)
-        @source    = text
-        text       = filter_text(prepare_text(text))
-        @pos_info  = PositionInfo.new text
-        @scanner   = StringScanner.new text
+        @source    = prepare_text(text).freeze
+        @pos_info  = PositionInfo.new @source
+        @scanner   = StringScanner.new @source
         @text_size = text.size
       end
 
+      EMPTY_STRING_OR_NONE = /\s*/.freeze
       def skip_empty
-        @scanner.skip(/\s*/)
+        @scanner.skip(EMPTY_STRING_OR_NONE)
       end
         
       def skip(pattern, not_skip_empty = false)
@@ -36,17 +36,17 @@ module Fdlint
       end
 
       def scanner_pos
-        pos = @text_size - @scanner.rest.size
-        @pos_info.locate pos    
+        @pos_info.locate_with_bytepos @scanner.pos
       end
 
+      EMPTY_STRINGS = /\s+/
+      NON_EMPTY_STRING = /(?=\S)/.freeze
       def check(pattern, not_skip_empty = false)
-        skip_empty = !not_skip_empty
-        if skip_empty && @scanner.check(/\s+/)
+        unless not_skip_empty
           last_pos = @scanner.pos
-          @scanner.skip /\s+/
+          @scanner.skip_until NON_EMPTY_STRING
         end
-        ret = @scanner.check pattern
+        ret = @scanner.check( pattern )
         @scanner.pos = last_pos if last_pos
         ret
       end
@@ -100,10 +100,6 @@ module Fdlint
 
       protected
       
-      def filter_text(text)
-        text
-      end
-
       def after_skip(pattern)
       end
 
@@ -130,7 +126,7 @@ module Fdlint
 
       def prepare_text(text)
         if text.respond_to? :encode!
-          text.encode! 'utf-8', :invalid => :replace, :universal_newline => true
+          text.encode 'utf-8', :invalid => :replace, :universal_newline => true
         else
           text.gsub(/\r\n/, "\n").gsub(/\r/, "\n")
         end

@@ -43,7 +43,7 @@ module Fdlint
 
           def parse_expr_relation
             not_in = expr_operate_not_in?
-            log "parse expr relational#{not_in ? '(notin)' : ''}"
+            debug { "parse expr relational#{not_in ? '(notin)' : ''}" }
             pattern = not_in ? (/>=|<=|>|<|\binstanceof\b/) : (/>=|<=|>|<|\binstanceof\b|\bin\b/)
             parse_expr_with_operate :parse_expr_shift, pattern 
           end

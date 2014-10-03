@@ -15,9 +15,9 @@ module Fdlint; module Helper
     # level - debug / info / warn / error / fatal
     #
     # Returns nil
-    def log( msg, level = :info )
+    def log( msg, level = :info, &block )
       level = :info unless LEVELS.include?( level )
-      send level, msg
+      logger.send level, msg, &block
     end
 
     LEVELS.each do |method|
@@ -27,7 +27,7 @@ module Fdlint; module Helper
     end
 
     def logger
-      $logger ||= ::Logger.new(STDOUT, ::Logger::WARN)
+      @logger ||= ::Logger.new(STDOUT).tap { |logger| logger.level = ::Logger::FATAL }
     end
 
   end

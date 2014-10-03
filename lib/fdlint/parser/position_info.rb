@@ -9,11 +9,42 @@ module Fdlint::Parser
     def inspect
       "[#{pos}, #{row}:#{column}]"
     end
+
+    def to_position
+      self
+    end
+  end
+
+  class BytePosition < Struct.new(:text, :pos)
+
+    def row
+      to_position.row
+    end
+
+    def column
+      to_position.column
+    end
+
+    def to_position
+      @position ||= PositionInfo.new(text).locate(charpos)
+    end
+
+    private
+
+      def charpos
+        scanner = StringScanner.new(text)
+        scanner.pos = pos
+        return scanner.charpos
+      end
+    
   end
 
   class PositionInfo
+
+    attr_accessor :text
   
     def initialize(text)
+      @text = text.freeze
       lines = text.split(/\n/)
 
       @lines = []
@@ -43,15 +74,21 @@ module Fdlint::Parser
       Position.new(pos, row + 1, col + 1)
     end
 
+    def locate_with_bytepos( bytepos )
+      BytePosition.new( text, bytepos )
+    end
+
     private
 
-    def find(low, high, pos)
-      return low unless low < high
+      def find(low, high, pos)
+        return low unless low < high
 
-      mid = (low + high) / 2
-      pos < @lines[mid] ? find(low, mid, pos) :
-        find(mid + 1, high, pos)
-    end
+        mid = (low + high) / 2
+        pos < @lines[mid] ? find(low, mid, pos) :
+          find(mid + 1, high, pos)
+      end
+
+
 
   end
 end

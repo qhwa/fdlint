@@ -42,7 +42,6 @@ module Fdlint
 
           old_method = "#{method}_without_visit"
           name       = method.sub /^parse_/, ''
-
           alias_method old_method, method
 
           define_method(method) do |*args, &block|
@@ -115,22 +114,18 @@ module Fdlint
       private 
 
         def visit(name, node)
-          walk(name, node) do |result|
-            results << result if result.present?
-          end
+          walk(name, node)
         end
 
         def before(name)
-          walk 'before_parse_' << name, nil do |result|
-            results << result if result.present?
-          end
+          walk "before_parse_#{name}", nil
         end
 
-        def walk(name, node, &block)
+        def walk(name, node)
           visitors = self.visitors[name.to_s]
           visitors && visitors.each do |visitor|
             result = visitor.call node, source, self
-            yield result if result && block_given?
+            results << result if result.present?
           end
         end
 

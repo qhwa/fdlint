@@ -44,6 +44,15 @@ module FdlintTest
         assert_equal Position.new(len + 5, 4, 6), info.locate(len + 5), '第4行的第6个字符'
     end
 
+    def test_position_of_6th_line
+        text, info, lines = prepair @@test_paragraph
+        len = 0
+        (0..4).each {|n| len += lines[n].length }
+        assert_equal Position.new(len, 6, 1), info.locate(len), '第6行的第一个字符'
+        assert_equal Position.new(len + 1, 6, 2), info.locate(len + 1), '第6行的第2个字符'
+        assert_equal Position.new(len + 5, 6, 6), info.locate(len + 5), '第6行的第6个字符'
+    end
+
     def test_position_all_line
         text, info, lines = prepair @@test_paragraph
         pos = 0

@@ -32,20 +32,27 @@ module Fdlint; module Parser
       def parse_source_element
         debug { 'parse source_element' }
 
-        check(/function\b/) ? parse_function_declaration : parse_statement
+        check(FUNCTION) ? parse_function_declaration : parse_statement
       end
+
+      FUNCTION              = /function\b/.freeze
+      LEFT_BRACKET          = /\(/.freeze
+      FUNCTION_ENDING       = /\)\s*\{/.freeze
+      RIGHT_PARENT_BRACKET  = /\}/.freeze
+      SINGLELINE_COMMENT    = %r{//.*}.freeze
+      MULTILINE_COMMENT_REG = %r{/\*[^*]*\*+([^\/*][^*]*\*+)*/}.freeze
 
       def parse_function_declaration(skip_name = false)
         debug { 'parse function declaration' }
 
         pos = skip /function/
 
-        name = (skip_name && check(/\(/)) ? nil : parse_function_name
-        skip /\(/
+        name = (skip_name && check(LEFT_BRACKET)) ? nil : parse_function_name
+        skip LEFT_BRACKET
         params = parse_function_parameters
-        skip /\)\s*\{/
+        skip FUNCTION_ENDING
         body = parse_source_elements true
-        skip /\}/
+        skip RIGHT_PARENT_BRACKET
          
         FunctionDeclaraion.new name, params, body, pos
       end
@@ -60,15 +67,13 @@ module Fdlint; module Parser
 
       def parse_singleline_comment
         debug { 'parse singleline comment' }
-        comment = raw_scan /\/\/.*/
-        log "  #{comment}"
+        comment = raw_scan SINGLELINE_COMMENT
         comment
       end
 
       def parse_mutiline_comment
         debug { 'parse mutiline comment' }
-        comment = raw_scan /\/\*[^*]*\*+([^\/*][^*]*\*+)*\//
-        log "  #{comment}"
+        comment = raw_scan MULTILINE_COMMENT_REG 
         comment
       end
 
@@ -76,7 +81,6 @@ module Fdlint; module Parser
 
       def create_element(klass, *args)
         elm = klass.new *args
-        log "  #{elm.text} #{elm.position}"
         elm
       end
 
@@ -94,16 +98,18 @@ module Fdlint; module Parser
       def parse_source_elements(inner = false)
         elms = batch(:parse_source_element) do
           skip_empty
-          inner ? !check(/\}/) : !eos? 
+          inner ? !check(RIGHT_PARENT_BRACKET) : !eos? 
         end
         Elements.new elms
       end
 
+      SINGLELINE_COMMENT_STARTING = %r{//}.freeze
+      MUTILINE_COMMENT_STARTING   = %r{/\*}.freeze
       def parse_comments
         while true
-          if check /\/\//
+          if check SINGLELINE_COMMENT_STARTING
             @singleline_comments << parse_singleline_comment
-          elsif check /\/\*/
+          elsif check MUTILINE_COMMENT_STARTING
             @mutiline_comments << parse_mutiline_comment
           else
             break

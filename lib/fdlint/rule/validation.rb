@@ -31,15 +31,15 @@ module Fdlint; module Rule
       Runner.new.exec( node, source, file, parser, validate_block ) do |results|
         results.map do |msg, level, opt|
           pos = if node.respond_to?( :position ) && node.position
-                  node.position
+                  node.position.to_position
                 else
                   opt[:pos]
                 end
 
           if pos
-            pos.column  += opt[:column_offset] if opt[:column_offset]
-            pos.row     += opt[:row_offset] if opt[:row_offset]
             row, column  = pos.row, pos.column
+            row     += opt[:column_offset] if opt[:column_offset]
+            column  += opt[:row_offset] if opt[:row_offset]
           end
 
           LogEntry.new( msg, level, row, column ).tap do |entry|
