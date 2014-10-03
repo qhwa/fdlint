@@ -56,7 +56,7 @@ module Fdlint
         elsif !@files.empty?
           validate_files
         end
-        raise 'invalid' unless @valid
+        @valid
       end
 
       def list_rules
