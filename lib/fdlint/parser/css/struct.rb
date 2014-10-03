@@ -26,6 +26,10 @@ module Fdlint; module Parser
         statements.select { |elm| elm.is_a? RuleSet }
       end
 
+      def font_definitions
+        rulesets.select { |rule| rule.is_a? FontDef }
+      end
+
       alias :at_rules :directives
     end
 
@@ -103,6 +107,14 @@ module Fdlint; module Parser
 
       def position
         property.position
+      end
+    end
+
+    
+    class FontDef < RuleSet
+      
+      def initialize(declarations)
+        super('@font-face', declarations)
       end
     end
 

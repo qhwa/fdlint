@@ -39,6 +39,19 @@ module FdlintTest
             at_rules[3].expression.text 
       end
 
+      def test_parse_font_definition
+        css = <<-CSS
+          @font-face {
+            font-family:'iconfont';
+            src:url("http://at.alicdn.com/t/font_1404561049_44");
+          }
+        CSS
+        sheet = parse_css(css)
+        assert_equal 1, sheet.font_definitions.size
+        assert_equal "'iconfont'", sheet.font_definitions.first.declarations.first.value.text
+        assert_equal "src", sheet.font_definitions.first.declarations.last.property.text
+      end
+
       def test_parse_ruleset
         css = '
           a { font-size: 12px }

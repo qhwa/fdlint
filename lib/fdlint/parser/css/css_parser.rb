@@ -43,11 +43,23 @@ module Fdlint; module Parser
       def parse_statement
         debug { 'parse statement' }
 
-        if check /@/
+        if check /@font-face/
+          parse_font_definition
+        elsif check /@/
           parse_directive
         else
           parse_ruleset
         end
+      end
+
+      def parse_font_definition
+        debug { 'parse font definition' }
+        skip /@font-face/
+        skip /\{/
+          declarations = parse_declarations
+        skip /\}/
+
+        FontDef.new(declarations)
       end
 
       def parse_directive
