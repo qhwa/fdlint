@@ -1,5 +1,3 @@
-![fdlint-logo](http://fdlint.oss-cn-hangzhou.aliyuncs.com/fdlint-logo-white.png)
-
 ## fdlint -- 让前端code review更轻松
 
 fdlint 是根据阿里巴巴前端开发checklist开发的自动代码扫描工具。
